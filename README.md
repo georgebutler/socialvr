@@ -1,8 +1,6 @@
 # SocialVR
 
-`npm run build` -> `production` is true
-
-`npm run dev` -> `production` is false
+https://cdn.jsdelivr.net/gh/georgebutler/socialvr@master/build/production.js
 
 `npm run build` builds the application to `build/production.js`, along with a sourcemap file for debugging.
 
