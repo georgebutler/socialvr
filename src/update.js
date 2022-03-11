@@ -3,5 +3,5 @@
 //var span = document.querySelector('#time-now');
 
 export default function update() {
-	console.log("Update")
+	console.log("\n\n\n\n\n\n\n\nUpdate\n\n\n\n\n\n\n\n")
 }
