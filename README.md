@@ -1,6 +1,6 @@
 # SocialVR
 
-https://cdn.jsdelivr.net/gh/georgebutler/socialvr@master/build/production.js
+https://cdn.jsdelivr.net/gh/georgebutler/socialvr/build/production.js
 
 `npm run build` builds the application to `build/production.js`, along with a sourcemap file for debugging.
 
