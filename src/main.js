@@ -7,3 +7,5 @@ export default () => {
 
     update();
 }
+
+console.log("MAIN");
