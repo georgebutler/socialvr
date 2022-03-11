@@ -10,6 +10,7 @@ const name = production ? 'production' : 'development'
 export default {
 	input: 'src/main.js',
 	output: {
+		name: `${name}`,
 		file: `build/${name}.js`,
 		format: 'iife', // immediately-invoked function expression — suitable for <script> tags
 		sourcemap: true
