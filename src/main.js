@@ -1,11 +1,22 @@
-import update from './update.js';
+import "./components/toolbox-button";
+import "./components/barge";
+import "./components/barge-button";
 
-export default () => {
-    // even though Rollup is bundling all your files together, errors and
-    // logs will still point to your original source modules
-    console.log('if you have sourcemaps enabled in your devtools, click on main.js:5 -->');
+import "./systems/barge";
 
-    update();
-}
+const scene = document.querySelector("a-scene");
+const environmentScene = document.querySelector("#environment-scene");
 
-console.log("MAIN");
+// Spoke environment loaded
+environmentScene.addEventListener("model-loaded", ({ detail: { model } }) => {
+
+  const [barge, bargeToolboxButton] = CreateBarge();
+  scene.appendChild(barge);
+  scene.appendChild(bargeToolboxButton);
+
+  window.startPhaseTesting = function() {
+    let phase = 1;
+    barge.emit("advancePhaseEvent");
+    console.log(`[Social VR] Barge - Current Phase: ${phase}`);
+  };
+});
