@@ -1,6 +1,5 @@
 // responsible for barge children creation and movement
 
-import { Vector3 } from "three";
 import "./utils/get-current-player-height";
 import "./utils/three-utils";
 import "./components/gltf-model-plus";
