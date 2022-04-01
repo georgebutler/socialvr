@@ -1,0 +1,4 @@
+[[headers]]
+  for = "/build/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
