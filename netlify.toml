@@ -3,4 +3,4 @@
     [headers.values]
     Access-Control-Allow-Origin = "*"
     Access-Control-Expose-Headers = "*"
-    Cross-Origin-Resource-Polify = "cross-origin"
+    Cross-Origin-Resource-Policy = "cross-origin"
