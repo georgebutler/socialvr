@@ -5,4 +5,3 @@
     Access-Control-Expose-Headers = "*"
     Cross-Origin-Resource-Policy = "cross-origin"
     X-Content-Type-Options = "nosniff"
-    Content-Type = ""
