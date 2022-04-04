@@ -1,7 +1,8 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
-import ignore from "rollup-plugin-ignore"
+import ignore from 'rollup-plugin-ignore';
+import serve from 'rollup-plugin-serve';
 
 // `npm run build` -> `production` is true
 // `npm run dev` -> `production` is false
@@ -20,12 +21,22 @@ export default {
 		resolve(), // tells Rollup how to find date-fns in node_modules
 		commonjs(), // converts date-fns to ES modules
 		production && terser(), // minify, but only in production
-		ignore([
-			"./utils/get-current-player-height",
-			"./utils/three-utils",
-			"./components/gltf-model-plus",
-			"./assets/models/BargeMesh.glb",
-			"./systems/sound-effects-system"
-		])
+		// ignore([
+		// 	"./utils/get-current-player-height",
+		// 	"./utils/three-utils",
+		// 	"./components/gltf-model-plus",
+		// 	"./assets/models/BargeMesh.glb",
+		// 	"./systems/sound-effects-system"
+		// ]),
+		serve({
+			host: 'localhost',
+  			port: 3000,
+			contentBase: ['build'],
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Expose-Headers': '*',
+				'Cross-Origin-Resource-Policy': 'cross-origin'
+			}
+		})
 	]
 };
