@@ -5,4 +5,4 @@
       Access-Control-Allow-Origin = "*"
       Access-Control-Expose-Headers = "*"
       Cross-Origin-Resource-Policy = "cross-origin"
-      Content-Security-Policy = "connect-src 'self' 'unsafe-eval' *.socialsuperpowers.net;"
+      Content-Security-Policy = "default-src *  data: blob: filesystem: about: ws: wss: 'unsafe-inline' 'unsafe-eval' 'unsafe-dynamic'; script-src * data: blob: 'unsafe-inline' 'unsafe-eval'; connect-src * data: blob: 'unsafe-inline';"
