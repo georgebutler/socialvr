@@ -89,18 +89,25 @@
     init() {
       this.direction = new THREE.Vector3();
 
-      // Load model
-      loadModel(bargeModelSrc).then(model => {
-        console.log(`[Social VR] Barge System - Mesh Loaded`);
+      // TODO: Load model
+      // loadModel(bargeModelSrc).then(model => {
+      //   console.log(`[Social VR] Barge System - Mesh Loaded`);
 
-        const mesh = cloneObject3D(model.scene);
-        mesh.scale.set(2, 2, 2);
-        mesh.matrixNeedsUpdate = true;
-        this.el.setObject3D("mesh", mesh);
+      //   const mesh = cloneObject3D(model.scene);
+      //   mesh.scale.set(2, 2, 2);
+      //   mesh.matrixNeedsUpdate = true;
+      //   this.el.setObject3D("mesh", mesh);
 
-        this.el.object3D.scale.set(0.5, 0.5, 0.5);
-        this.el.object3D.matrixNeedsUpdate = true;
-      });
+      //   this.el.object3D.scale.set(0.5, 0.5, 0.5);
+      //   this.el.object3D.matrixNeedsUpdate = true;
+      // });
+
+      const mesh = document.createElement("a-box");
+      mesh.setAttribute("height", "1");
+      mesh.setAttribute("depth", "10");
+      mesh.setAttribute("width", "10");
+      this.el.setObject3D("mesh", mesh);
+      this.el.object3D.matrixNeedsUpdate = true;
 
       // Reset Button
       const buttonResetEl = document.createElement("a-sphere");
@@ -419,6 +426,59 @@
       this.barge = null;
     },
   });
+
+  function CreateBarge() {
+    // Barge: invisible, paused
+    const barge =  document.createElement("a-entity");
+    barge.setAttribute("socialvr-barge", "");
+    barge.setAttribute("visible", false);
+    
+    // toolbox button
+    const bargeToolboxButton = document.createElement("a-sphere");
+    bargeToolboxButton.setAttribute("socailvr-toolbox-button", "Barge");
+    bargeToolboxButton.setAttribute("radius", "0.3");
+    bargeToolboxButton.setAttribute("material", "color: pink");
+    bargeToolboxButton.setAttribute("tags", "singleActionButton: true");
+    bargeToolboxButton.setAttribute("css-class", "interactable");
+    bargeToolboxButton.setAttribute("position", {
+      x: 5,
+      y: 2,
+      z: 3
+    });
+    
+    // hide phase 1 objects
+    TogglePhase1(false);
+
+    // Client
+    barge.addEventListener("advancePhaseEvent", function() {
+      TogglePhase1(true);
+      NAF.connection.broadcastData("advancePhase", {});
+    });
+    // Broadcast Event
+    NAF.connection.subscribeToDataChannel("advancePhase", TogglePhase1(true));  // TODO: arrow function?
+
+    return [barge, bargeToolboxButton];
+  }
+
+  // toggle: true/false
+  function TogglePhase1(toggle) {
+    
+    // TODO: add phase index parameter
+
+    console.log("[Social VR] Barge - Phase Initialized");
+
+    const phase1 = document.querySelector(".phase-1");
+
+    if (phase1) {
+      console.log("[Social VR] Barge - Phase 1 Found");
+
+      phase1.children.forEach(child => {
+        child.setAttribute("visible", toggle);
+      });
+    } else {
+      console.warn("[Social VR] Barge - Phase 1 Not Found");
+    }
+  }
 
   const scene = document.querySelector("a-scene");
 

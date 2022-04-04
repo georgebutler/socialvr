@@ -3,6 +3,7 @@ import "./components/barge";
 import "./components/barge-button";
 
 import "./systems/barge";
+import { CreateBarge } from "./systems/barge";
 
 const scene = document.querySelector("a-scene");
 

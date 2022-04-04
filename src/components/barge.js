@@ -21,18 +21,25 @@ AFRAME.registerComponent("socialvr-barge", {
   init() {
     this.direction = new THREE.Vector3();
 
-    // Load model
-    loadModel(bargeModelSrc).then(model => {
-      console.log(`[Social VR] Barge System - Mesh Loaded`);
+    // TODO: Load model
+    // loadModel(bargeModelSrc).then(model => {
+    //   console.log(`[Social VR] Barge System - Mesh Loaded`);
 
-      const mesh = cloneObject3D(model.scene);
-      mesh.scale.set(2, 2, 2);
-      mesh.matrixNeedsUpdate = true;
-      this.el.setObject3D("mesh", mesh);
+    //   const mesh = cloneObject3D(model.scene);
+    //   mesh.scale.set(2, 2, 2);
+    //   mesh.matrixNeedsUpdate = true;
+    //   this.el.setObject3D("mesh", mesh);
 
-      this.el.object3D.scale.set(0.5, 0.5, 0.5);
-      this.el.object3D.matrixNeedsUpdate = true;
-    });
+    //   this.el.object3D.scale.set(0.5, 0.5, 0.5);
+    //   this.el.object3D.matrixNeedsUpdate = true;
+    // });
+
+    const mesh = document.createElement("a-box");
+    mesh.setAttribute("height", "1");
+    mesh.setAttribute("depth", "10");
+    mesh.setAttribute("width", "10");
+    this.el.setObject3D("mesh", mesh);
+    this.el.object3D.matrixNeedsUpdate = true;
 
     // Reset Button
     const buttonResetEl = document.createElement("a-sphere");
