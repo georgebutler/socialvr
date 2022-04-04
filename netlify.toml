@@ -5,4 +5,4 @@
       Access-Control-Allow-Origin = "*"
       Access-Control-Expose-Headers = "*"
       Cross-Origin-Resource-Policy = "cross-origin"
-      Content-Security-Policy = "default-src 'self';"
+      Content-Security-Policy = "connect-src 'self' *;"
