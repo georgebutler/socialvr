@@ -1,4 +1,4 @@
-import "./systems/sound-effects-system";
+//import "./systems/sound-effects-system";
 
 // button for turning specified social VR systems on and off
 AFRAME.registerComponent("socailvr-toolbox-button", {

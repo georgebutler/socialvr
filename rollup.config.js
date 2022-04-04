@@ -20,12 +20,12 @@ export default {
 		resolve(), // tells Rollup how to find date-fns in node_modules
 		commonjs(), // converts date-fns to ES modules
 		production && terser(), // minify, but only in production
-		ignore([
-			"./utils/get-current-player-height",
-			"./utils/three-utils",
-			"./components/gltf-model-plus",
-			"./assets/models/BargeMesh.glb",
-			"./systems/sound-effects-system"
-		])
+		// ignore([
+		// 	"./utils/get-current-player-height",
+		// 	"./utils/three-utils",
+		// 	"./components/gltf-model-plus",
+		// 	"./assets/models/BargeMesh.glb",
+		// 	"./systems/sound-effects-system"
+		// ])
 	]
 };

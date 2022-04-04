@@ -1,9 +1,9 @@
 // responsible for barge children creation and movement
 
-import "./utils/get-current-player-height";
-import "./utils/three-utils";
-import "./components/gltf-model-plus";
-import bargeModelSrc from "./assets/models/BargeMesh.glb";
+// import "./utils/get-current-player-height";
+// import "./utils/three-utils";
+// import "./components/gltf-model-plus";
+// import bargeModelSrc from "./assets/models/BargeMesh.glb";
 
 let positions = [];
 let lastKeyChange = 0;
