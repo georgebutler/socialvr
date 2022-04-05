@@ -11,6 +11,7 @@ AFRAME.registerSystem("socialvr-barge", {
     if (this.barge != null) {
       this.el.removeChild(this.barge);
     }
+    
     this.barge = el;
   },
 
