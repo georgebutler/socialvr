@@ -24,7 +24,7 @@ export function CreateBarge() {
   // Barge: invisible, paused
   const barge =  document.createElement("a-entity");
   barge.setAttribute("socialvr-barge", "");
-  barge.setAttribute("visible", false);
+  barge.setAttribute("visible", true);
   
   // toolbox button
   const bargeToolboxButton = document.createElement("a-sphere");
