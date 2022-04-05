@@ -1,15 +1,16 @@
-// import "./components/toolbox-button";
-// import "./components/barge";
-// import "./components/barge-button";
+import "./components/toolbox-button";
+import "./components/barge";
+import "./components/barge-button";
 
-// import "./systems/barge";
+import "./systems/barge";
 
 const scene = document.querySelector("a-scene");
+const [barge, bargeToolboxButton] = CreateBarge();
+
+scene.appendChild(barge);
+scene.appendChild(bargeToolboxButton);
 
 console.log("[Social VR] Barge - Create Barge");
-// const [barge, bargeToolboxButton] = CreateBarge();
-// scene.appendChild(barge);
-// scene.appendChild(bargeToolboxButton);
 
 // window.startPhaseTesting = function() {
 //   let phase = 1;
