@@ -22,7 +22,7 @@ AFRAME.registerComponent("socialvr-barge", {
     this.direction = new THREE.Vector3();
 
     // Load model
-    loadModel(bargeModelSrc).then(model => {
+    window.APP.utils.GLTFModelPlus.loadModel(bargeModelSrc).then(model => {
       console.log(`[Social VR] Barge System - Mesh Loaded`);
 
       const mesh = cloneObject3D(model.scene);
