@@ -20,7 +20,7 @@ AFRAME.registerComponent("socialvr-barge", {
     window.APP.utils.GLTFModelPlus.loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/Bomb.glb").then(model => {
       console.log(`[Social VR] Barge System - Mesh Loaded`);
 
-      const mesh = cloneObject3D(model.scene);
+      const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
       mesh.scale.set(2, 2, 2);
       mesh.matrixNeedsUpdate = true;
       this.el.setObject3D("mesh", mesh);
