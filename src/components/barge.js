@@ -3,7 +3,6 @@
 import "./utils/get-current-player-height";
 import "./utils/three-utils";
 import "./components/gltf-model-plus";
-import bargeModelSrc from "./assets/models/BargeMesh.glb";
 
 let positions = [];
 let lastKeyChange = 0;
@@ -22,7 +21,7 @@ AFRAME.registerComponent("socialvr-barge", {
     this.direction = new THREE.Vector3();
 
     // Load model
-    window.APP.utils.GLTFModelPlus.loadModel(bargeModelSrc).then(model => {
+    window.APP.utils.GLTFModelPlus.loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/Bomb.glb").then(model => {
       console.log(`[Social VR] Barge System - Mesh Loaded`);
 
       const mesh = cloneObject3D(model.scene);
