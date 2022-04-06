@@ -1,6 +1,5 @@
-import "./systems/sound-effects-system";
-
 // button for turning specified social VR systems on and off
+
 AFRAME.registerComponent("socailvr-toolbox-button", {
   dependencies: ["is-remote-hover-target", "hoverable-visuals"],
 
@@ -32,7 +31,7 @@ AFRAME.registerComponent("socailvr-toolbox-button", {
 
   onClick: function() {
     this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
-      SOUND_SNAP_ROTATE,
+      11,
       this.el.object3D
     );
 

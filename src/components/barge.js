@@ -1,9 +1,5 @@
 // responsible for barge children creation and movement
 
-import "./utils/get-current-player-height";
-import "./utils/three-utils";
-import "./components/gltf-model-plus";
-
 let positions = [];
 let lastKeyChange = 0;
 

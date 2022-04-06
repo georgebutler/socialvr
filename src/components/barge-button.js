@@ -1,5 +1,3 @@
-import "./systems/sound-effects-system";
-
 AFRAME.registerComponent("socialvr-barge-button", {
   dependencies: ["is-remote-hover-target", "hoverable-visuals"],
   
@@ -25,7 +23,7 @@ AFRAME.registerComponent("socialvr-barge-button", {
   onClick: function() {
     this.el.emit(`${this.data}BargeEvent`);
     this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
-      SOUND_SNAP_ROTATE,
+      11,
       this.el.object3D
     );
   }
