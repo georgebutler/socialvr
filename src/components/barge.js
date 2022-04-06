@@ -14,7 +14,7 @@ AFRAME.registerComponent("socialvr-barge", {
   },
 
   init() {
-    this.direction = new window.APP.utils.THREE.Vector3(0, 0, 0);
+    this.direction = new window.APP.utils.THREE.Vector3();
 
     // Load model
     window.APP.utils.GLTFModelPlus.loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/Bomb.glb").then(model => {
