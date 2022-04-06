@@ -14,7 +14,7 @@ AFRAME.registerComponent("socialvr-barge", {
   },
 
   init() {
-    this.direction = new THREE.Vector3();
+    this.direction = new window.APP.utils.THREE.vector3();
 
     // Load model
     window.APP.utils.GLTFModelPlus.loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/Bomb.glb").then(model => {
@@ -240,10 +240,10 @@ AFRAME.registerComponent("socialvr-barge", {
       console.warn("No waypoints found!");
       console.warn("Registering some default waypoints for the barge.");
 
-      positions.push(new Vector3(8.48, 0, 0.67));
-      positions.push(new Vector3(8.48, 0, 14.67));
-      positions.push(new Vector3(-3.51, 0, 14.67));
-      positions.push(new Vector3(-3.51, 0, 24.67));
+      positions.push(new window.APP.utils.THREE.Vector3(8.48, 0, 0.67));
+      positions.push(new window.APP.utils.THREE.Vector3(8.48, 0, 14.67));
+      positions.push(new window.APP.utils.THREE.Vector3(-3.51, 0, 14.67));
+      positions.push(new window.APP.utils.THREE.Vector3(-3.51, 0, 24.67));
     }
 
     console.log(positions);
