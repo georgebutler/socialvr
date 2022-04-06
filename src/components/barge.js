@@ -160,7 +160,7 @@ AFRAME.registerComponent("socialvr-barge", {
 
           avatar.el.setAttribute("position", {
             x: avposition.x + direction.x,
-            y: position.y - this.data.height / 2 + getCurrentPlayerHeight() / 2,
+            y: position.y - this.data.height / 2 + window.APP.utils.getCurrentPlayerHeight() / 2,
             z: avposition.z + direction.z
           });
         } else {
@@ -218,7 +218,7 @@ AFRAME.registerComponent("socialvr-barge", {
         // Move character
         avatar.el.setAttribute("position", {
           x: avposition.x,
-          y: position.y - this.data.height / 2 + getCurrentPlayerHeight() / 2,
+          y: position.y - this.data.height / 2 + window.APP.utils.getCurrentPlayerHeight() / 2,
           z: avposition.z
         });
       } else {
