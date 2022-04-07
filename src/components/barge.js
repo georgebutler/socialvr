@@ -17,15 +17,20 @@ AFRAME.registerComponent("socialvr-barge", {
 
   init() {
     this.direction = new window.APP.utils.THREE.Vector3();
+    this.bbox = new window.APP.utils.THREE.Box3();
 
     // Load model
     window.APP.utils.GLTFModelPlus.loadModel(modelURL).then(model => {
       console.log(`[Social VR] Barge System - Mesh Loaded`);
-      const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
 
+      const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
+      mesh.geometry.computeBoundingBox();
+
+      this.bbox = new window.APP.utils.THREE.Box3().setFromObject(obj);
       this.el.setObject3D("mesh", mesh);
+
       // this.el.object3D.scale.set(1, 1, 1);
-      this.el.object3D.matrixNeedsUpdate = true;
+      // this.el.object3D.matrixNeedsUpdate = true;
     });
 
     // Reset Button
@@ -142,6 +147,10 @@ AFRAME.registerComponent("socialvr-barge", {
           y: position.y + direction.y,
           z: position.z + direction.z
         });
+
+        if (this.bbox.containsPoint(avposition)) {
+          console.log("It works!!");
+        }
 
         // Avatar Movement
         if (
