@@ -19,7 +19,9 @@ AFRAME.registerComponent("socialvr-barge", {
     // Load model
     window.APP.utils.GLTFModelPlus.loadModel(modelURL).then(model => {
       console.log(`[Social VR] Barge System - Mesh Loaded`);
+      
       const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
+
       this.bbox = new window.APP.utils.THREE.Box3().setFromObject(mesh);
       this.el.setObject3D("mesh", mesh);
 
@@ -70,6 +72,7 @@ AFRAME.registerComponent("socialvr-barge", {
     this.el.appendChild(buttonStopEl);
 
     const bargeSpawn = document.querySelector(".BargeSpawn");
+
     if (bargeSpawn) {
       this.el.setAttribute("position", bargeSpawn.getAttribute("position"));
     }
@@ -138,6 +141,9 @@ AFRAME.registerComponent("socialvr-barge", {
           z: position.z + direction.z
         });
 
+        // Bounding Box calculation
+        this.bbox.copy(this.el.object3D.geometry.boundingBox).applyMatrix4(this.el.object3D.matrixWorld);
+
         // Avatar Movement
         if (this.bbox.containsPoint(avposition)) {
           characterController.barge = true;
@@ -177,9 +183,13 @@ AFRAME.registerComponent("socialvr-barge", {
           }
         });
       } else {
-        // Avatar Movement check
+        // Avatar floor height check
         if (this.bbox.containsPoint(avposition)) {
-          characterController.barge = true;
+          avatar.el.setAttribute("position", {
+            x: avposition.x,
+            y: position.y - 1 / 2 + window.APP.utils.getCurrentPlayerHeight() / 2,
+            z: avposition.z
+          });
         }
 
         // NaN check
