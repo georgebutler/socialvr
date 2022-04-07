@@ -7,9 +7,6 @@ let lastKeyChange = 0;
 
 AFRAME.registerComponent("socialvr-barge", {
   schema: {
-    width: { type: "number", default: 4 },
-    height: { type: "number", default: 1 },
-    depth: { type: "number", default: 4 },
     speed: { type: "number", default: 1 },
     moving: { type: "boolean", default: false },
     targetKey: { type: "number", default: 0 }
@@ -23,7 +20,6 @@ AFRAME.registerComponent("socialvr-barge", {
     window.APP.utils.GLTFModelPlus.loadModel(modelURL).then(model => {
       console.log(`[Social VR] Barge System - Mesh Loaded`);
       const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
-
       this.bbox = new window.APP.utils.THREE.Box3().setFromObject(mesh);
       this.el.setObject3D("mesh", mesh);
 
@@ -113,11 +109,6 @@ AFRAME.registerComponent("socialvr-barge", {
     }
 
     const position = this.el.object3D.position;
-    const bargeMinX = position.x - this.data.width / 2;
-    const bargeMaxX = position.x + this.data.width / 2;
-    const bargeMinZ = position.z - this.data.depth / 2;
-    const bargeMaxZ = position.z + this.data.depth / 2;
-
     const avatar = window.APP.componentRegistry["player-info"][0];
     const avposition = avatar.el.getAttribute("position");
     const characterController = this.el.sceneEl.systems["hubs-systems"].characterController;
@@ -136,6 +127,7 @@ AFRAME.registerComponent("socialvr-barge", {
       if (position.distanceToSquared(targetPosition) >= 1) {
         const factor = this.data.speed / direction.length();
 
+        // Barge movement
         ["x", "y", "z"].forEach(function(axis) {
           direction[axis] *= factor * (dt / 1000);
         });
@@ -146,22 +138,13 @@ AFRAME.registerComponent("socialvr-barge", {
           z: position.z + direction.z
         });
 
-        if (this.bbox.containsPoint(avposition)) {
-          console.log("It works!!");
-        }
-
         // Avatar Movement
-        if (
-          avposition.x >= bargeMinX &&
-          avposition.x <= bargeMaxX &&
-          avposition.z >= bargeMinZ &&
-          avposition.z <= bargeMaxZ
-        ) {
+        if (this.bbox.containsPoint(avposition)) {
           characterController.barge = true;
 
           avatar.el.setAttribute("position", {
             x: avposition.x + direction.x,
-            y: position.y - this.data.height / 2 + window.APP.utils.getCurrentPlayerHeight() / 2,
+            y: position.y - 1 / 2 + window.APP.utils.getCurrentPlayerHeight() / 2,
             z: avposition.z + direction.z
           });
         } else {
@@ -172,58 +155,41 @@ AFRAME.registerComponent("socialvr-barge", {
         const floaties = document.querySelectorAll('[floaty-object=""]');
 
         floaties.forEach((floaty) => {
-          const x = floaty.object3D.position.x
-          const y = floaty.object3D.position.y
-          const z = floaty.object3D.position.z
+          if (this.bbox.containsPoint(floaty.object3D.position)) {
+            const x = floaty.object3D.position.x
+            const y = floaty.object3D.position.y
+            const z = floaty.object3D.position.z
 
-          floaty.object3D.position.set(x + direction.x, y - direction.y, z + direction.z)
-        })
+            floaty.object3D.position.set(x + direction.x, y - direction.y, z + direction.z)
+          }
+        });
 
         // Interactable Movement
         const interactables = document.querySelectorAll('[interactable=""]');
 
         interactables.forEach((interactable) => {
-          const x = interactable.object3D.position.x
-          const y = interactable.object3D.position.y
-          const z = interactable.object3D.position.z
+          if (this.bbox.containsPoint(interactable.object3D.position)) {
+            const x = interactable.object3D.position.x
+            const y = interactable.object3D.position.y
+            const z = interactable.object3D.position.z
 
-          interactable.object3D.position.set(x + direction.x, y - direction.y, z + direction.z)
-        })
+            interactable.object3D.position.set(x + direction.x, y - direction.y, z + direction.z)
+          }
+        });
       } else {
-        if (
-          avposition.x < bargeMinX &&
-          avposition.x > bargeMaxX &&
-          avposition.z < bargeMinZ &&
-          avposition.z > bargeMaxZ
-        ) {
-          characterController.barge = false;
+        // Avatar Movement check
+        if (this.bbox.containsPoint(avposition)) {
+          characterController.barge = true;
         }
 
+        // NaN check
         if (isNaN(lastKeyChange) || t >= lastKeyChange) {
           lastKeyChange = t + 100;
           this.data.targetKey = this.data.targetKey + 1;
         }
 
         // console.log(t);
-        console.log(this.data.targetKey);
-      }
-    } else {
-      if (
-        avposition.x >= bargeMinX &&
-        avposition.x <= bargeMaxX &&
-        avposition.z >= bargeMinZ &&
-        avposition.z <= bargeMaxZ
-      ) {
-        characterController.barge = true;
-
-        // Move character
-        avatar.el.setAttribute("position", {
-          x: avposition.x,
-          y: position.y - this.data.height / 2 + window.APP.utils.getCurrentPlayerHeight() / 2,
-          z: avposition.z
-        });
-      } else {
-        characterController.barge = false;
+        // console.log(this.data.targetKey);
       }
     }
   },
