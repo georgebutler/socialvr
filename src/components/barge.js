@@ -22,11 +22,9 @@ AFRAME.registerComponent("socialvr-barge", {
     // Load model
     window.APP.utils.GLTFModelPlus.loadModel(modelURL).then(model => {
       console.log(`[Social VR] Barge System - Mesh Loaded`);
-
       const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
-      mesh.geometry.computeBoundingBox();
 
-      this.bbox = new window.APP.utils.THREE.Box3().setFromObject(obj);
+      this.bbox = new window.APP.utils.THREE.Box3().setFromObject(mesh);
       this.el.setObject3D("mesh", mesh);
 
       // this.el.object3D.scale.set(1, 1, 1);
