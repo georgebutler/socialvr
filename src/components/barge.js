@@ -19,12 +19,9 @@ AFRAME.registerComponent("socialvr-barge", {
     // Load model
     window.APP.utils.GLTFModelPlus.loadModel(modelURL).then(model => {
       console.log(`[Social VR] Barge System - Mesh Loaded`);
-      
       const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
-
-      this.model = model
-      this.bbox = new window.APP.utils.THREE.Box3().setFromObject(mesh);
       this.el.setObject3D("mesh", mesh);
+      window.APP.utils.autoBoxCollider.computeObjectAABB(mesh, this.bbox);
 
       // this.el.object3D.scale.set(1, 1, 1);
       // this.el.object3D.matrixNeedsUpdate = true;
@@ -145,7 +142,7 @@ AFRAME.registerComponent("socialvr-barge", {
         // Bounding Box calculation
         // TODO: Get bounding box from hubs util
         // https://github.com/mozilla/hubs/blob/1cbbf79a6354c7d03638bee72fb757616d2418c9/src/utils/auto-box-collider.js
-        this.bbox.copy(this.el.object3D.boundingBox).applyMatrix4(this.el.object3D.matrixWorld);
+        // this.bbox.copy(this.el.object3D.boundingBox).applyMatrix4(this.el.object3D.matrixWorld);
 
         // Avatar Movement
         if (this.bbox.containsPoint(avposition)) {
