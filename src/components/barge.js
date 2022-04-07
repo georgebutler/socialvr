@@ -22,6 +22,7 @@ AFRAME.registerComponent("socialvr-barge", {
       
       const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
 
+      this.model = model
       this.bbox = new window.APP.utils.THREE.Box3().setFromObject(mesh);
       this.el.setObject3D("mesh", mesh);
 
@@ -142,7 +143,9 @@ AFRAME.registerComponent("socialvr-barge", {
         });
 
         // Bounding Box calculation
-        this.bbox.copy(this.el.object3D.geometry.boundingBox).applyMatrix4(this.el.object3D.matrixWorld);
+        // TODO: Get bounding box from hubs util
+        // https://github.com/mozilla/hubs/blob/1cbbf79a6354c7d03638bee72fb757616d2418c9/src/utils/auto-box-collider.js
+        this.bbox.copy(this.el.object3D.boundingBox).applyMatrix4(this.el.object3D.matrixWorld);
 
         // Avatar Movement
         if (this.bbox.containsPoint(avposition)) {
