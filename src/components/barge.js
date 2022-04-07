@@ -24,7 +24,7 @@ AFRAME.registerComponent("socialvr-barge", {
       const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
 
       this.el.setObject3D("mesh", mesh);
-      this.el.object3D.scale.set(0.1, 0.1, 0.1);
+      this.el.object3D.scale.set(1, 1, 1);
       this.el.object3D.matrixNeedsUpdate = true;
     });
 
