@@ -229,23 +229,14 @@ AFRAME.registerComponent("socialvr-barge", {
 
   // eslint-disable-next-line no-unused-vars
   _resetBarge(senderId, dataType, data, targetId) {
-    const avatar = window.APP.componentRegistry["player-info"][0];
-    const avposition = avatar.el.getAttribute("position");
-    const bargeMinX = this.el.object3D.position.x - this.data.width / 2;
-    const bargeMaxX = this.el.object3D.position.x + this.data.width / 2;
-    const bargeMinZ = this.el.object3D.position.z - this.data.depth / 2;
-    const bargeMaxZ = this.el.object3D.position.z + this.data.depth / 2;
-
     this.data.targetKey = 0;
     this.data.moving = false;
-    this.el.setAttribute("position", { x: 0, y: 0, z: 0 });
-    if (
-      avposition.x >= bargeMinX &&
-      avposition.x <= bargeMaxX &&
-      avposition.z >= bargeMinZ &&
-      avposition.z <= bargeMaxZ
-    ) {
-      avatar.el.setAttribute("position", { x: 0, y: 0, z: 0 });
+    this.el.setAttribute("position", new window.APP.utils.THREE.Vector3(0, 0, 0));
+
+    const avatar = window.APP.componentRegistry["player-info"][0];
+
+    if (this.bbox.containsPoint(avatar.el.getAttribute("position"))) {
+      avatar.el.setAttribute("position", new window.APP.utils.THREE.Vector3(0, 0, 0));
     }
   },
 
