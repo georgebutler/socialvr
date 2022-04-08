@@ -26,7 +26,7 @@ AFRAME.registerComponent("socialvr-barge", {
       this.el.object3D.scale.set(0.6, 0.6, 0.6);
       this.el.object3D.matrixNeedsUpdate = true;
 
-      this.bbox.setFromObject(this.el.getObject3D("mesh"), true);
+      this.bbox.setFromObject(this.el.getObject3D("mesh"), false);
     }).catch((e) => {
       console.error(`[Social VR] Barge System - ${e}`);
     })
@@ -80,7 +80,7 @@ AFRAME.registerComponent("socialvr-barge", {
     }
 
     // DEBUG
-    const box = new window.APP.utils.THREE.BoxHelper(this.el.getObject3D("mesh"), 0xffff00);
+    const box = new window.APP.utils.THREE.BoxHelper(this.el.getObject3D("mesh"), 0xff0000);
     this.el.sceneEl.object3D.add(box);
 
     // Client
