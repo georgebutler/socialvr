@@ -21,11 +21,12 @@ AFRAME.registerComponent("socialvr-barge", {
       console.log(`[Social VR] Barge System - Mesh Loaded`);
 
       const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
-      window.APP.utils.autoBoxCollider.computeObjectAABB(mesh, this.bbox);
-
+      //window.APP.utils.autoBoxCollider.computeObjectAABB(mesh, this.bbox);
       this.el.setObject3D("mesh", mesh);
       this.el.object3D.scale.set(0.6, 0.6, 0.6);
       this.el.object3D.matrixNeedsUpdate = true;
+
+      this.bbox.setFromObject(this.el.getObject3D(), true);
     });
 
     // Reset Button
@@ -75,6 +76,10 @@ AFRAME.registerComponent("socialvr-barge", {
     if (bargeSpawn) {
       this.el.setAttribute("position", bargeSpawn.getAttribute("position"));
     }
+
+    // DEBUG
+    const box = new window.APP.utils.THREE.BoxHelper(this.el.getObject3D(), 0xffff00);
+    this.el.scene.add(box);
 
     // Client
     this.el.addEventListener("startBargeEvent", this.startBarge.bind(this));
@@ -151,7 +156,7 @@ AFRAME.registerComponent("socialvr-barge", {
 
           avatar.el.setAttribute("position", {
             x: avposition.x + direction.x,
-            y: position.y - 1 / 2 + window.APP.utils.getCurrentPlayerHeight() / 2,
+            y: position.y - 2 / 2 + window.APP.utils.getCurrentPlayerHeight() / 2,
             z: avposition.z + direction.z
           });
         } else {
@@ -188,7 +193,7 @@ AFRAME.registerComponent("socialvr-barge", {
         if (this.bbox.containsPoint(avposition)) {
           avatar.el.setAttribute("position", {
             x: avposition.x,
-            y: position.y - 1 / 2 + window.APP.utils.getCurrentPlayerHeight() / 2,
+            y: position.y - 2 / 2 + window.APP.utils.getCurrentPlayerHeight() / 2,
             z: avposition.z
           });
         }
