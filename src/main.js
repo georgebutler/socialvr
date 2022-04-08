@@ -1,19 +1,24 @@
-import "./components/toolbox-button";
-import "./components/barge";
-import "./components/barge-button";
+import "./components/speech";
+// import "./components/toolbox-button";
+// import "./components/barge";
+// import "./components/barge-button";
 
-import "./systems/barge";
-import { CreateBarge } from "./systems/barge";
+import "./systems/speech";
+// import "./systems/barge";
+// import { CreateBarge } from "./systems/barge";
 
 const scene = document.querySelector("a-scene");
 
-console.log("[Social VR] Barge - Create Barge");
-const [barge, bargeToolboxButton] = CreateBarge();
-scene.appendChild(barge);
-scene.appendChild(bargeToolboxButton);
+const speech =  document.createElement("socialvr-speech");
+scene.appendChild(speech);
 
-window.startPhaseTesting = function() {
-  let phase = 1;
-  barge.emit("advancePhaseEvent");
-  console.log(`[Social VR] Barge - Current Phase: ${phase}`);
-};
+// console.log("[Social VR] Barge - Create Barge");
+// const [barge, bargeToolboxButton] = CreateBarge();
+// scene.appendChild(barge);
+// scene.appendChild(bargeToolboxButton);
+
+// window.startPhaseTesting = function() {
+//   let phase = 1;
+//   barge.emit("advancePhaseEvent");
+//   console.log(`[Social VR] Barge - Current Phase: ${phase}`);
+// };
