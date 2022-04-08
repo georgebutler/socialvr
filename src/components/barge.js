@@ -80,7 +80,7 @@ AFRAME.registerComponent("socialvr-barge", {
     }
 
     // DEBUG
-    const box = new window.APP.utils.THREE.BoxHelper(this.el.getObject3D("mesh"), new window.APP.utils.THREE.Color(0x8B0000));
+    const box = new window.APP.utils.THREE.BoxHelper(this.el.getObject3D("mesh"), 0x8B0000);
     this.el.sceneEl.object3D.add(box);
 
     // Client
@@ -154,7 +154,7 @@ AFRAME.registerComponent("socialvr-barge", {
 
         // Avatar Movement
         if (this.bbox.containsPoint(avposition)) {
-          characterController.barge = true;
+          characterController.fly = true;
 
           avatar.el.setAttribute("position", {
             x: avposition.x + direction.x,
@@ -162,7 +162,7 @@ AFRAME.registerComponent("socialvr-barge", {
             z: avposition.z + direction.z
           });
         } else {
-          characterController.barge = false;
+          characterController.fly = false;
         }
 
         // Floaty Movement
