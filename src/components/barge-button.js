@@ -1,3 +1,5 @@
+//import "./systems/sound-effects-system";
+
 AFRAME.registerComponent("socialvr-barge-button", {
   dependencies: ["is-remote-hover-target", "hoverable-visuals"],
   
