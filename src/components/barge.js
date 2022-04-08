@@ -1,6 +1,6 @@
 // responsible for barge children creation and movement
 
-const modelURL = "https://statuesque-rugelach-4185bd.netlify.app/assets/triangle_barge_translucent_floor.glb"
+const modelURL = "https://statuesque-rugelach-4185bd.netlify.app/assets/barge_testing.glb"
 
 let positions = [];
 let lastKeyChange = 0;
