@@ -79,7 +79,7 @@ AFRAME.registerComponent("socialvr-barge", {
 
       // DEBUG
       const box = new window.APP.utils.THREE.BoxHelper(this.el.getObject3D("mesh"), 0xffff00);
-      this.el.sceneEl.add(box);
+      this.el.sceneEl.object3D.add(box);
 
       // Client
       this.el.addEventListener("startBargeEvent", this.startBarge.bind(this));
