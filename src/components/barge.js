@@ -26,7 +26,7 @@ AFRAME.registerComponent("socialvr-barge", {
       this.el.object3D.scale.set(0.6, 0.6, 0.6);
       this.el.object3D.matrixNeedsUpdate = true;
 
-      this.bbox.setFromObject(this.el.getObject3D(), true);
+      this.bbox.setFromObject(this.el.getObject3D("mesh"), true);
     });
 
     // Reset Button
@@ -79,7 +79,7 @@ AFRAME.registerComponent("socialvr-barge", {
 
     // DEBUG
     const box = new window.APP.utils.THREE.BoxHelper(this.el.getObject3D(), 0xffff00);
-    this.el.scene.add(box);
+    this.el.appendChild(box);
 
     // Client
     this.el.addEventListener("startBargeEvent", this.startBarge.bind(this));
