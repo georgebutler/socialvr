@@ -27,6 +27,10 @@ AFRAME.registerComponent("socialvr-barge", {
       this.el.object3D.matrixNeedsUpdate = true;
 
       this.bbox.setFromObject(this.el.getObject3D("mesh"), false);
+
+      // DEBUG
+      const box = new window.APP.utils.THREE.BoxHelper(this.el.getObject3D("mesh"), 0xffff00);
+      this.el.sceneEl.object3D.add(box);
     }).catch((e) => {
       console.error(`[Social VR] Barge System - ${e}`);
     })
@@ -78,10 +82,6 @@ AFRAME.registerComponent("socialvr-barge", {
     if (bargeSpawn) {
       this.el.setAttribute("position", bargeSpawn.getAttribute("position"));
     }
-
-    // DEBUG
-    const box = new window.APP.utils.THREE.BoxHelper(this.el.getObject3D("mesh"), 0x8B0000);
-    this.el.sceneEl.object3D.add(box);
 
     // Client
     this.el.addEventListener("startBargeEvent", this.startBarge.bind(this));
@@ -146,11 +146,6 @@ AFRAME.registerComponent("socialvr-barge", {
           y: position.y + direction.y,
           z: position.z + direction.z
         });
-
-        // Bounding Box calculation
-        // TODO: Get bounding box from hubs util
-        // https://github.com/mozilla/hubs/blob/1cbbf79a6354c7d03638bee72fb757616d2418c9/src/utils/auto-box-collider.js
-        // this.bbox.copy(this.el.object3D.boundingBox).applyMatrix4(this.el.object3D.matrixWorld);
 
         // Avatar Movement
         if (this.bbox.containsPoint(avposition)) {
