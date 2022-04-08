@@ -17,7 +17,8 @@ AFRAME.registerComponent("socialvr-barge", {
     this.bbox = new window.APP.utils.THREE.Box3();
 
     // Load model
-    window.APP.utils.GLTFModelPlus.loadModel(modelURL).then(model => {
+    window.APP.utils.GLTFModelPlus.loadModel(modelURL)
+    .then(model => {
       console.log(`[Social VR] Barge System - Mesh Loaded`);
 
       const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
@@ -27,71 +28,73 @@ AFRAME.registerComponent("socialvr-barge", {
       this.el.object3D.matrixNeedsUpdate = true;
 
       this.bbox.setFromObject(this.el.getObject3D("mesh"), true);
-    });
 
-    // Reset Button
-    const buttonResetEl = document.createElement("a-sphere");
-    buttonResetEl.setAttribute("socialvr-barge-button", "reset");
-    buttonResetEl.setAttribute("radius", "0.15");
-    buttonResetEl.setAttribute("material", "color: #3B56DC");
-    buttonResetEl.setAttribute("tags", "singleActionButton: true");
-    buttonResetEl.setAttribute("css-class", "interactable");
-    buttonResetEl.setAttribute("position", {
-      x: this.el.object3D.position.x + (2 - 0.2),
-      y: this.el.object3D.position.y + 1,
-      z: this.el.object3D.position.z
-    });
-    this.el.appendChild(buttonResetEl);
+      // Reset Button
+      const buttonResetEl = document.createElement("a-sphere");
+      buttonResetEl.setAttribute("socialvr-barge-button", "reset");
+      buttonResetEl.setAttribute("radius", "0.15");
+      buttonResetEl.setAttribute("material", "color: #3B56DC");
+      buttonResetEl.setAttribute("tags", "singleActionButton: true");
+      buttonResetEl.setAttribute("css-class", "interactable");
+      buttonResetEl.setAttribute("position", {
+        x: this.el.object3D.position.x + (2 - 0.2),
+        y: this.el.object3D.position.y + 1,
+        z: this.el.object3D.position.z
+      });
+      this.el.appendChild(buttonResetEl);
 
-    // Start Button
-    const buttonGoEl = document.createElement("a-sphere");
-    buttonGoEl.setAttribute("socialvr-barge-button", "start");
-    buttonGoEl.setAttribute("radius", "0.15");
-    buttonGoEl.setAttribute("material", "color: #32CD32");
-    buttonGoEl.setAttribute("tags", "singleActionButton: true");
-    buttonGoEl.setAttribute("css-class", "interactable");
-    buttonGoEl.setAttribute("position", {
-      x: this.el.object3D.position.x + (2 - 0.2),
-      y: this.el.object3D.position.y + 1,
-      z: this.el.object3D.position.z + 1 // Right
-    });
-    this.el.appendChild(buttonGoEl);
+      // Start Button
+      const buttonGoEl = document.createElement("a-sphere");
+      buttonGoEl.setAttribute("socialvr-barge-button", "start");
+      buttonGoEl.setAttribute("radius", "0.15");
+      buttonGoEl.setAttribute("material", "color: #32CD32");
+      buttonGoEl.setAttribute("tags", "singleActionButton: true");
+      buttonGoEl.setAttribute("css-class", "interactable");
+      buttonGoEl.setAttribute("position", {
+        x: this.el.object3D.position.x + (2 - 0.2),
+        y: this.el.object3D.position.y + 1,
+        z: this.el.object3D.position.z + 1 // Right
+      });
+      this.el.appendChild(buttonGoEl);
 
-    // Stop Button
-    const buttonStopEl = document.createElement("a-sphere");
-    buttonStopEl.setAttribute("socialvr-barge-button", "stop");
-    buttonStopEl.setAttribute("radius", "0.15");
-    buttonStopEl.setAttribute("material", "color: #FF0000");
-    buttonStopEl.setAttribute("tags", "singleActionButton: true");
-    buttonStopEl.setAttribute("css-class", "interactable");
-    buttonStopEl.setAttribute("position", {
-      x: this.el.object3D.position.x + (2 - 0.2),
-      y: this.el.object3D.position.y + 1,
-      z: this.el.object3D.position.z - 1 // Left
-    });
-    this.el.appendChild(buttonStopEl);
+      // Stop Button
+      const buttonStopEl = document.createElement("a-sphere");
+      buttonStopEl.setAttribute("socialvr-barge-button", "stop");
+      buttonStopEl.setAttribute("radius", "0.15");
+      buttonStopEl.setAttribute("material", "color: #FF0000");
+      buttonStopEl.setAttribute("tags", "singleActionButton: true");
+      buttonStopEl.setAttribute("css-class", "interactable");
+      buttonStopEl.setAttribute("position", {
+        x: this.el.object3D.position.x + (2 - 0.2),
+        y: this.el.object3D.position.y + 1,
+        z: this.el.object3D.position.z - 1 // Left
+      });
+      this.el.appendChild(buttonStopEl);
 
-    const bargeSpawn = document.querySelector(".BargeSpawn");
+      const bargeSpawn = document.querySelector(".BargeSpawn");
 
-    if (bargeSpawn) {
-      this.el.setAttribute("position", bargeSpawn.getAttribute("position"));
-    }
+      if (bargeSpawn) {
+        this.el.setAttribute("position", bargeSpawn.getAttribute("position"));
+      }
 
-    // DEBUG
-    const box = new window.APP.utils.THREE.BoxHelper(this.bbox, 0xffff00);
-    this.el.sceneEl.add(box);
+      // DEBUG
+      const box = new window.APP.utils.THREE.BoxHelper(this.el.getObject3D("mesh"), 0xffff00);
+      this.el.sceneEl.add(box);
 
-    // Client
-    this.el.addEventListener("startBargeEvent", this.startBarge.bind(this));
-    this.el.addEventListener("stopBargeEvent", this.stopBarge.bind(this));
-    this.el.addEventListener("resetBargeEvent", this.resetBarge.bind(this));
+      // Client
+      this.el.addEventListener("startBargeEvent", this.startBarge.bind(this));
+      this.el.addEventListener("stopBargeEvent", this.stopBarge.bind(this));
+      this.el.addEventListener("resetBargeEvent", this.resetBarge.bind(this));
 
-    // Broadcast Event
-    NAF.connection.subscribeToDataChannel("startBarge", this._startBarge.bind(this));
-    NAF.connection.subscribeToDataChannel("stopBarge", this._stopBarge.bind(this));
-    NAF.connection.subscribeToDataChannel("resetBarge", this._resetBarge.bind(this));
+      // Broadcast Event
+      NAF.connection.subscribeToDataChannel("startBarge", this._startBarge.bind(this));
+      NAF.connection.subscribeToDataChannel("stopBarge", this._stopBarge.bind(this));
+      NAF.connection.subscribeToDataChannel("resetBarge", this._resetBarge.bind(this));
 
-    this.system.register(this.el);
+      this.system.register(this.el);
+    }).catch((e) => {
+      console.error(e);
+    })
   },
 
   remove() {
