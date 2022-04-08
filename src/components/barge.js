@@ -19,12 +19,13 @@ AFRAME.registerComponent("socialvr-barge", {
     // Load model
     window.APP.utils.GLTFModelPlus.loadModel(modelURL).then(model => {
       console.log(`[Social VR] Barge System - Mesh Loaded`);
+
       const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
-      this.el.setObject3D("mesh", mesh);
       window.APP.utils.autoBoxCollider.computeObjectAABB(mesh, this.bbox);
 
-      // this.el.object3D.scale.set(1, 1, 1);
-      // this.el.object3D.matrixNeedsUpdate = true;
+      this.el.setObject3D("mesh", mesh);
+      this.el.object3D.scale.set(0.6, 0.6, 0.6);
+      this.el.object3D.matrixNeedsUpdate = true;
     });
 
     // Reset Button
