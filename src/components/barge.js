@@ -29,8 +29,8 @@ AFRAME.registerComponent("socialvr-barge", {
       this.bbox.setFromObject(this.el.getObject3D("mesh"), false);
 
       // DEBUG
-      const box = new window.APP.utils.THREE.BoxHelper(this.el.getObject3D("mesh"), 0xffff00);
-      this.el.sceneEl.object3D.add(box);
+      this.debugHelper = new window.APP.utils.THREE.BoxHelper(this.el.getObject3D("mesh"), 0xffff00);
+      this.el.sceneEl.object3D.add(this.debugHelper);
     }).catch((e) => {
       console.error(`[Social VR] Barge System - ${e}`);
     })
@@ -141,6 +141,13 @@ AFRAME.registerComponent("socialvr-barge", {
           direction[axis] *= factor * (dt / 1000);
         });
 
+        // Bounding box movement
+        this.bbox.translate(direction);
+
+        // DEBUG movement
+        this.debugHelper.update();
+
+        // Mesh movement
         this.el.setAttribute("position", {
           x: position.x + direction.x,
           y: position.y + direction.y,
@@ -156,8 +163,6 @@ AFRAME.registerComponent("socialvr-barge", {
             y: position.y - 2 / 2 + window.APP.utils.getCurrentPlayerHeight() / 2,
             z: avposition.z + direction.z
           });
-        } else {
-          characterController.fly = false;
         }
 
         // Floaty Movement
