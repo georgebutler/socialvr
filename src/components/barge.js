@@ -230,10 +230,10 @@ AFRAME.registerComponent("socialvr-barge", {
       console.warn("No waypoints found!");
       console.warn("Registering some default waypoints for the barge.");
 
-      positions.push(new window.APP.utils.THREE.Vector3(8.48, 0, 0.67));
-      positions.push(new window.APP.utils.THREE.Vector3(8.48, 0, 14.67));
-      positions.push(new window.APP.utils.THREE.Vector3(-3.51, 0, 14.67));
-      positions.push(new window.APP.utils.THREE.Vector3(-3.51, 0, 24.67));
+      positions.push(new window.APP.utils.THREE.Vector3(10, 0, 0));
+      positions.push(new window.APP.utils.THREE.Vector3(10, 0, 20));
+      positions.push(new window.APP.utils.THREE.Vector3(-10, 10, 20));
+      positions.push(new window.APP.utils.THREE.Vector3(-10, 20, 30));
     }
 
     console.log(positions);
