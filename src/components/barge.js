@@ -148,11 +148,17 @@ AFRAME.registerComponent("socialvr-barge", {
         this.debugHelper.update();
 
         // Mesh movement
+        this.el.object3D.translateX(direction.x);
+        this.el.object3D.translateY(direction.y);
+        this.el.object3D.translateZ(direction.z);
+
+        /*
         this.el.setAttribute("position", {
           x: position.x + direction.x,
           y: position.y + direction.y,
           z: position.z + direction.z
         });
+        */
 
         // Avatar Movement
         if (this.bbox.containsPoint(avposition)) {
@@ -256,6 +262,9 @@ AFRAME.registerComponent("socialvr-barge", {
     if (this.bbox.containsPoint(avatar.el.getAttribute("position"))) {
       avatar.el.setAttribute("position", new window.APP.utils.THREE.Vector3(0, 0, 0));
     }
+
+    // DEBUG movement
+    this.debugHelper.update();
   },
 
   startBarge() {
