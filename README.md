@@ -10,8 +10,6 @@
 `npm run dev` builds the application to `build/development.js`, along with a sourcemap file for debugging.
 
 ### Local Development
-NOTE: not working currently due to CSP issue, use netlify url instead
-
 `npm run dev` starts server at localhost:3000
 
 `ngrok http 3000` starts ngrok server at url in terminal output
