@@ -19,16 +19,21 @@ AFRAME.registerComponent("socialvr-barge", {
     .then(model => {
       console.log(`[Social VR] Barge System - Mesh Loaded`);
       const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
+      const min = new window.APP.utils.THREE.Vector3(-4, -4, -100);
+      const max = new window.APP.utils.THREE.Vector3(4, 4, 100);
 
       this.el.setObject3D("mesh", mesh);
       this.el.object3D.scale.set(0.6, 0.6, 0.6);
       this.el.object3D.matrixNeedsUpdate = true;
-
-      this.bbox.setFromObject(this.el.getObject3D("mesh"), false);
+      this.bbox = new window.APP.utils.THREE.Box3(min, max);
 
       // DEBUG
       this.debugHelper = new window.APP.utils.THREE.BoxHelper(this.el.getObject3D("mesh"), 0xffff00);
       this.el.sceneEl.object3D.add(this.debugHelper);
+      this.debugHelper.update();
+
+      console.log(`Min: ${this.bbox.min.x}, ${this.bbox.min.y}, ${this.bbox.min.z}`)
+      console.log(`Max: ${this.bbox.max.x}, ${this.bbox.max.y}, ${this.bbox.max.z}`)
     }).catch((e) => {
       console.error(`[Social VR] Barge System - ${e}`);
     })
