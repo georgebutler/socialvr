@@ -1,7 +1,5 @@
 // responsible for barge children creation and movement
 
-const modelURL = "https://statuesque-rugelach-4185bd.netlify.app/assets/barge_testing.glb"
-
 let positions = [];
 let lastKeyChange = 0;
 
@@ -17,7 +15,7 @@ AFRAME.registerComponent("socialvr-barge", {
     this.bbox = new window.APP.utils.THREE.Box3();
 
     // Load model
-    window.APP.utils.GLTFModelPlus.loadModel(modelURL)
+    window.APP.utils.GLTFModelPlus.loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/barge_testing.glb")
     .then(model => {
       console.log(`[Social VR] Barge System - Mesh Loaded`);
       const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
