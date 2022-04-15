@@ -35,66 +35,53 @@ AFRAME.registerComponent("socialvr-speech", {
   },
 
   tick(t, dt) {
-    if (true) {
-
-      const muted = this.playerInfo.data.muted;
-      const speaking = !muted && this.localAudioAnalyser.volume > MIC_PRESENCE_VOLUME_THRESHOLD;
-    
-      // maintain speech event state of local user, send events as needed
-      if (speaking) {
-        if (this.continuousSpeechTime === 0) {
-          // speech event started
-          const eventData = { speaker: this.playerInfo.playerSessionId, speakerName: this.playerInfo.displayName };
-          this.startSpeech(null, null, eventData, null); // local
-          NAF.connection.broadcastData("startSpeechEvent", eventData); // networked
-        }
-        this.continuousSpeechTime += SPEECH_TIME_PER_TICK;
-        this.continuousSpeechLeniencyTime = CONTINUOUS_SPEECH_LENIENCY_TIME;
-        // if this is a single really long speech event, break it off and start a new one
-        if (this.continuousSpeechTime >= MAX_SPEECH_TIME_FOR_EVENT) {
-          this.doStopSpeech(this.continuousSpeechTime);
-          this.continuousSpeechTime = 0;
-        }
-      } else {
-        if (this.continuousSpeechLeniencyTime > 0) {
-          this.continuousSpeechLeniencyTime -= SPEECH_TIME_PER_TICK;
-        }
-        if (this.continuousSpeechLeniencyTime <= 0 && this.continuousSpeechTime >= MIN_SPEECH_TIME_FOR_EVENT) {
-          // speech event ended
-          this.doStopSpeech(this.continuousSpeechTime);
-          this.continuousSpeechTime = 0;
-        }
+    const muted = this.playerInfo.data.muted;
+    const speaking = !muted && this.localAudioAnalyser.volume > MIC_PRESENCE_VOLUME_THRESHOLD;
+  
+    // maintain speech event state of local user, send events as needed
+    if (speaking) {
+      if (this.continuousSpeechTime === 0) {
+        // speech event started
+        const eventData = { speaker: this.playerInfo.playerSessionId, speakerName: this.playerInfo.displayName };
+        this.startSpeech(null, null, eventData, null); // local
+        NAF.connection.broadcastData("startSpeechEvent", eventData); // networked
       }
-    
-      // update speech orb sizes and positions
-      for (const finishedOrb of document.querySelectorAll(".speechOrb.finished")) {
-        const pos = finishedOrb.getAttribute("position");
-        pos.y += ORB_GROWTH_PER_TICK; // synchronize movement speed with orb growth rate
-        finishedOrb.setAttribute("position", pos);
-
-        //finishedOrb.object3D.translateY(ORB_GROWTH_PER_TICK);
+      this.continuousSpeechTime += SPEECH_TIME_PER_TICK;
+      this.continuousSpeechLeniencyTime = CONTINUOUS_SPEECH_LENIENCY_TIME;
+      // if this is a single really long speech event, break it off and start a new one
+      if (this.continuousSpeechTime >= MAX_SPEECH_TIME_FOR_EVENT) {
+        this.doStopSpeech(this.continuousSpeechTime);
+        this.continuousSpeechTime = 0;
       }
-
-      for (const activeOrb of Object.values(this.activeSpeechOrbs)) {
-        // grow each active speech orb by ORB_GROWTH_PER_TICK
-        const size = MIN_ORB_SIZE + ORB_GROWTH_PER_TICK;
-        activeOrb.setAttribute("geometry", {
-          primitive: "cylinder",
-          segmentsHeight: 1,
-          segmentsRadial: 6,
-          radius: 0.1,
-          height: size
-        });
-    
-        // move its center upward by half of the growth amount,
-        // to keep the bottom position fixed at the "now" plane
-        // const pos = activeOrb.getAttribute("position");
-        // pos.y += ORB_GROWTH_PER_TICK / 2;
-        // activeOrb.setAttribute("position", pos);
-
-        activeOrb.object3D.translateY(ORB_GROWTH_PER_TICK / 2);
+    } else {
+      if (this.continuousSpeechLeniencyTime > 0) {
+        this.continuousSpeechLeniencyTime -= SPEECH_TIME_PER_TICK;
       }
-      
+      if (this.continuousSpeechLeniencyTime <= 0 && this.continuousSpeechTime >= MIN_SPEECH_TIME_FOR_EVENT) {
+        // speech event ended
+        this.doStopSpeech(this.continuousSpeechTime);
+        this.continuousSpeechTime = 0;
+      }
+    }
+  
+    // update speech orb sizes and positions
+    for (const finishedOrb of document.querySelectorAll(".speechOrb.finished")) {
+      const pos = finishedOrb.getAttribute("position");
+      pos.y += ORB_GROWTH_PER_TICK; // synchronize movement speed with orb growth rate
+      finishedOrb.setAttribute("position", pos);
+    }
+
+    for (const activeOrb of Object.values(this.activeSpeechOrbs)) {
+      // grow each active speech orb by ORB_GROWTH_PER_TICK
+      const size = parseFloat(activeOrb.getAttribute("height")) + ORB_GROWTH_PER_TICK;
+      activeOrb.setAttribute("height", size);
+      activeOrb.setAttribute("radius", 0.1);
+  
+      // move its center upward by half of the growth amount,
+      // to keep the bottom position fixed at the "now" plane
+      const pos = activeOrb.getAttribute("position");
+      pos.y += ORB_GROWTH_PER_TICK / 2;
+      activeOrb.setAttribute("position", pos);
     }
   },
 
@@ -116,7 +103,8 @@ AFRAME.registerComponent("socialvr-speech", {
     playerPos.y = 1.5;
     const offset = new THREE.Vector3().subVectors(playerPos, centerPos).normalize();
     const orbPos = new THREE.Vector3().addVectors(centerPos, offset);
-    newOrb.setAttribute("position", orbPos);
+
+    newOrb.object3D.position.copy(orbPos);
   },
 
   doStopSpeech(speechTime) {
@@ -133,14 +121,10 @@ AFRAME.registerComponent("socialvr-speech", {
   stopSpeech(senderId, dataType, data, targetId) {
     const activeOrb = this.activeSpeechOrbs[data.speaker];
     if (activeOrb) {
-      activeOrb.setAttribute("geometry", {
-        primitive: "cylinder",
-        segmentsHeight: 1,
-        segmentsRadial: 6,
-        radius: 0.1,
-        height: data.size
-      });
       activeOrb.classList.add("finished");
+      activeOrb.setAttribute("radius", 0.1);
+      activeOrb.setAttribute("height", data.size);
+
       delete this.activeSpeechOrbs[data.speaker];
     }
   },
@@ -184,17 +168,13 @@ AFRAME.registerComponent("socialvr-speech", {
     color = color || "yellow";
   
     // create, color, position, and scale the orb
-    const orb = document.createElement("a-entity");
+    const orb = document.createElement("a-cylinder");
     orb.classList.add("speechOrb");
-    orb.setAttribute("geometry", {
-      primitive: "cylinder",
-      segmentsHeight: 1,
-      segmentsRadial: 6,
-      radius: 0.1,
-      height: size
-    });
-    //orb.setAttribute("geometry", `primitive:cylinder; segmentsHeight:1; segmentsRadial:6; radius:0.1; height:${size}`);
-    orb.setAttribute("material", `color:${color}; shader:flat`);
+    orb.setAttribute("segments-height", 1);
+    orb.setAttribute("segments-radial", 6);
+    orb.setAttribute("radius", 1);
+    orb.setAttribute("height", size);
+    orb.setAttribute("color", color);
   
     // add the orb to the scene
     this.el.sceneEl.appendChild(orb);
