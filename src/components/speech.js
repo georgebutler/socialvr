@@ -1,22 +1,207 @@
-import { Vector3 } from "three";
+const MIC_PRESENCE_VOLUME_THRESHOLD = 0.00001;
+
+const SPEECH_TIME_PER_TICK = 10; // every speech tick = 10ms of realtime
+const MIN_SPEECH_TIME_FOR_EVENT = 100; // 0.1s realtime
+const MAX_SPEECH_TIME_FOR_EVENT = 5000; // 5s realtime
+const CONTINUOUS_SPEECH_LENIENCY_TIME = 100; // 0.1s realtime
+
+const ORB_CONTAINER_POS = [0, 0, 0]; // [7,0,2]
+const ORB_CONTAINER_SIZE = 1;
+const ORB_CONTAINER_DEPTH = 4;
+
+const MIN_ORB_SIZE = 0.05;
+const MAX_ORB_SIZE = 0.9;
+const SPEECH_ORB_LIFETIME = 1000 * 60 * 5; // 5mins realtime
+const ORB_GROWTH_PER_TICK = (MAX_ORB_SIZE - MIN_ORB_SIZE) / ((MAX_SPEECH_TIME_FOR_EVENT - MIN_SPEECH_TIME_FOR_EVENT) / SPEECH_TIME_PER_TICK);
 
 AFRAME.registerComponent("socialvr-speech", {
-    schema: {
-        height: { type: "number", default: 0.5 }
-    },
+  init() {
+    this.localAudioAnalyser = this.el.sceneEl.systems["local-audio-analyser"];
+    this.playerInfo = APP.componentRegistry["player-info"][0];
 
-    init() {
-        this.geometry = new THREE.CylinderGeometry(0.1, 0.1, this.data.height, 6, 1);
-        this.material = new THREE.MeshStandardMaterial({ color: "#AAA" });
-        this.mesh = new THREE.Mesh(this.geometry, this.material);
+    this.activeSpeechOrbs = {};
+    this.continuousSpeechTime = 0;
+    this.continuousSpeechLeniencyTime = 0;
 
-        this.el.setObject3D("mesh", this.mesh);
-    },
+    NAF.connection.subscribeToDataChannel("startSpeechEvent", this.startSpeech.bind(this));
+    NAF.connection.subscribeToDataChannel("stopSpeechEvent", this.stopSpeech.bind(this));
 
-    remove() {
-        this.el.removeObject3D("mesh");
-    },
+    console.log("[Social VR] Speech System - Initialized");
+  },
 
-    tick(t, dt) {
+  remove() {
+    NAF.connection.unsubscribeToDataChannel("startSpeechEvent");
+    NAF.connection.unsubscribeToDataChannel("stopSpeechEvent");
+  },
+
+  tick(t, dt) {
+    if (true) {
+
+      const muted = this.playerInfo.data.muted;
+      const speaking = !muted && this.localAudioAnalyser.volume > MIC_PRESENCE_VOLUME_THRESHOLD;
+    
+      // maintain speech event state of local user, send events as needed
+      if (speaking) {
+        if (this.continuousSpeechTime === 0) {
+          // speech event started
+          const eventData = { speaker: this.playerInfo.playerSessionId, speakerName: this.playerInfo.displayName };
+          this.startSpeech(null, null, eventData, null); // local
+          NAF.connection.broadcastData("startSpeechEvent", eventData); // networked
+        }
+        this.continuousSpeechTime += SPEECH_TIME_PER_TICK;
+        this.continuousSpeechLeniencyTime = CONTINUOUS_SPEECH_LENIENCY_TIME;
+        // if this is a single really long speech event, break it off and start a new one
+        if (this.continuousSpeechTime >= MAX_SPEECH_TIME_FOR_EVENT) {
+          this.doStopSpeech(this.continuousSpeechTime);
+          this.continuousSpeechTime = 0;
+        }
+      } else {
+        if (this.continuousSpeechLeniencyTime > 0) {
+          this.continuousSpeechLeniencyTime -= SPEECH_TIME_PER_TICK;
+        }
+        if (this.continuousSpeechLeniencyTime <= 0 && this.continuousSpeechTime >= MIN_SPEECH_TIME_FOR_EVENT) {
+          // speech event ended
+          this.doStopSpeech(this.continuousSpeechTime);
+          this.continuousSpeechTime = 0;
+        }
+      }
+    
+      // update speech orb sizes and positions
+      for (const finishedOrb of document.querySelectorAll(".speechOrb.finished")) {
+        const pos = finishedOrb.getAttribute("position");
+        pos.y += ORB_GROWTH_PER_TICK; // synchronize movement speed with orb growth rate
+        finishedOrb.setAttribute("position", pos);
+
+        //finishedOrb.object3D.translateY(ORB_GROWTH_PER_TICK);
+      }
+
+      for (const activeOrb of Object.values(this.activeSpeechOrbs)) {
+        // grow each active speech orb by ORB_GROWTH_PER_TICK
+        const size = MIN_ORB_SIZE + ORB_GROWTH_PER_TICK;
+        activeOrb.setAttribute("geometry", {
+          primitive: "cylinder",
+          segmentsHeight: 1,
+          segmentsRadial: 6,
+          radius: 0.1,
+          height: size
+        });
+    
+        // move its center upward by half of the growth amount,
+        // to keep the bottom position fixed at the "now" plane
+        // const pos = activeOrb.getAttribute("position");
+        // pos.y += ORB_GROWTH_PER_TICK / 2;
+        // activeOrb.setAttribute("position", pos);
+
+        activeOrb.object3D.translateY(ORB_GROWTH_PER_TICK / 2);
+      }
+      
     }
-})
+  },
+
+  startSpeech(senderId, dataType, data, targetId) { 
+    // if no already-active speech orb for this speaker, spawn one
+    const activeOrb = this.activeSpeechOrbs[data.speaker];
+    if (activeOrb) {
+      activeOrb.classList.add("finished"); // FIXME replace w/ stopSpeech call for consistency?
+    }
+    const speakerInfo = this.getPlayerInfo(data.speaker);
+    const newOrb = this.spawnOrb(MIN_ORB_SIZE, this.playerInfoToColor(speakerInfo));
+    this.activeSpeechOrbs[data.speaker] = newOrb;
+  
+    // position the orb relative to the player and the center of the scene
+    const centerObj = this.el;
+    const centerPos = centerObj ? centerObj.object3D.position.clone() : new THREE.Vector3(...ORB_CONTAINER_POS);
+    centerPos.y = 1.5;
+    const playerPos = speakerInfo.el.object3D.position.clone();
+    playerPos.y = 1.5;
+    const offset = new THREE.Vector3().subVectors(playerPos, centerPos).normalize();
+    const orbPos = new THREE.Vector3().addVectors(centerPos, offset);
+    newOrb.setAttribute("position", orbPos);
+  },
+
+  doStopSpeech(speechTime) {
+    const orbSize = this.scale(speechTime, MIN_SPEECH_TIME_FOR_EVENT, MAX_SPEECH_TIME_FOR_EVENT, MIN_ORB_SIZE, MAX_ORB_SIZE);
+    const eventData = {
+      size: orbSize,
+      speaker: this.playerInfo.playerSessionId,
+      speakerName: this.playerInfo.displayName
+    };
+    this.stopSpeech(null, null, eventData, null); // local
+    NAF.connection.broadcastData("stopSpeechEvent", eventData); // networked
+  },
+
+  stopSpeech(senderId, dataType, data, targetId) {
+    const activeOrb = this.activeSpeechOrbs[data.speaker];
+    if (activeOrb) {
+      activeOrb.setAttribute("geometry", {
+        primitive: "cylinder",
+        segmentsHeight: 1,
+        segmentsRadial: 6,
+        radius: 0.1,
+        height: data.size
+      });
+      activeOrb.classList.add("finished");
+      delete this.activeSpeechOrbs[data.speaker];
+    }
+  },
+
+  scale(num, oldLower, oldUpper, newLower, newUpper) {
+    const oldRange = oldUpper - oldLower;
+    const newRange = newUpper - newLower;
+    return ((num - oldLower) / oldRange) * newRange + newLower;
+  },
+
+  getPlayerInfo(sessionID) {
+    const playerInfos = APP.componentRegistry["player-info"];
+    return playerInfos.find(pi => pi.playerSessionId === sessionID);
+  },
+
+  sessionIDToColor(sessionID) {
+    return "#" + sessionID.substring(0, 6); // just use first 6 chars lol
+  },
+  
+  playerInfoToColor(playerInfo) {
+    // keys are "Avatar listing sid"s from Approved Avatars admin tab
+    const colorsByAvatar = {
+      WUvZgGK: "lightskyblue",
+      qpOOt9I: "hotpink",
+      "2s2UuzN": "red",
+      wAUg76e: "limegreen",
+      RczWQgy: "#222",
+      xb4PVBE: "yellow",
+      yw4c83R: "purple",
+      "4r1KpVk": "orange",
+      bs7pLac: "darkblue"
+    };
+    const avatarURL = playerInfo.data.avatarSrc;
+    for (const avatarSID of Object.keys(colorsByAvatar)) {
+      if (avatarURL.includes(avatarSID)) return colorsByAvatar[avatarSID];
+    }
+    return this.sessionIDToColor(playerInfo.playerSessionId);
+  },
+
+  spawnOrb(size, color) {
+    color = color || "yellow";
+  
+    // create, color, position, and scale the orb
+    const orb = document.createElement("a-entity");
+    orb.classList.add("speechOrb");
+    orb.setAttribute("geometry", {
+      primitive: "cylinder",
+      segmentsHeight: 1,
+      segmentsRadial: 6,
+      radius: 0.1,
+      height: size
+    });
+    //orb.setAttribute("geometry", `primitive:cylinder; segmentsHeight:1; segmentsRadial:6; radius:0.1; height:${size}`);
+    orb.setAttribute("material", `color:${color}; shader:flat`);
+  
+    // add the orb to the scene
+    this.el.sceneEl.appendChild(orb);
+  
+    // queue the orb for deletion later
+    setTimeout(() => orb.remove(), SPEECH_ORB_LIFETIME);
+  
+    return orb;
+  }
+});
