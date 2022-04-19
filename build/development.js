@@ -72,7 +72,6 @@
 
   const width = 100;
   const depth = 100;
-  const modelBarge = "https://hubscloud-assets.socialsuperpowers.net/files/f42c2e16-be56-4ffd-8a36-1a83123be134.glb";
 
   AFRAME.registerComponent("socialvr-barge", {
     schema: {
@@ -83,30 +82,6 @@
 
     init() {
       this.direction = new window.APP.utils.THREE.Vector3();
-      this.bbox = new window.APP.utils.THREE.Box3();
-
-      // Load barge model
-      window.APP.utils.GLTFModelPlus.loadModel(modelBarge).then((model) => {
-        console.log(`[Social VR] Barge System - Mesh Loaded`);
-        const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
-        const min = new window.APP.utils.THREE.Vector3(-6, -6, -100);
-        const max = new window.APP.utils.THREE.Vector3(6, 6, 100);
-
-        this.el.setObject3D("mesh", mesh);
-        this.el.object3D.scale.set(1, 1, 1);
-        this.el.object3D.matrixNeedsUpdate = true;
-        this.bbox = new window.APP.utils.THREE.Box3(min, max);
-
-        // DEBUG
-        //this.debugHelper = new window.APP.utils.THREE.BoxHelper(this.el.getObject3D("mesh"), 0xffff00);
-        //this.el.sceneEl.object3D.add(this.debugHelper);
-        //this.debugHelper.update();
-
-        //console.log(`Min: ${this.bbox.min.x}, ${this.bbox.min.y}, ${this.bbox.min.z}`)
-        //console.log(`Max: ${this.bbox.max.x}, ${this.bbox.max.y}, ${this.bbox.max.z}`)
-      }).catch((e) => {
-        console.error(`[Social VR] Barge System - ${e}`);
-      });
 
       // Reset Button
       const buttonResetEl = document.createElement("a-sphere");
@@ -120,7 +95,6 @@
         y: this.el.object3D.position.y + 1,
         z: this.el.object3D.position.z
       });
-      this.el.appendChild(buttonResetEl);
 
       // Start Button
       const buttonGoEl = document.createElement("a-sphere");
@@ -134,8 +108,7 @@
         y: this.el.object3D.position.y + 1,
         z: this.el.object3D.position.z + 1 // Right
       });
-      this.el.appendChild(buttonGoEl);
-
+      
       // Stop Button
       const buttonStopEl = document.createElement("a-sphere");
       buttonStopEl.setAttribute("socialvr-barge-button", "stop");
@@ -148,6 +121,9 @@
         y: this.el.object3D.position.y + 1,
         z: this.el.object3D.position.z - 1 // Left
       });
+      
+      this.el.appendChild(buttonResetEl);
+      this.el.appendChild(buttonGoEl);
       this.el.appendChild(buttonStopEl);
 
       window.APP.utils.waitForDOMContentLoaded().then(() => {
@@ -157,7 +133,7 @@
           this.el.object3D.position.set(bargeSpawn.object3D.position.x, bargeSpawn.object3D.position.y, bargeSpawn.object3D.position.z);
           bargeSpawn.object3D.visible = false;
         } else {
-          this.el.object3D.position.set(-30, 2, 0);
+          this.el.object3D.position.set(-20, 2, 0);
         }
       });
 
@@ -224,9 +200,6 @@
           ["x", "y", "z"].forEach(function(axis) {
             direction[axis] *= factor * (dt / 1000);
           });
-
-          // Bounding box movement
-          this.bbox.translate(direction);
 
           // DEBUG movement
           // this.debugHelper.update();
@@ -336,15 +309,8 @@
       const avatar = window.APP.componentRegistry["player-info"][0];
       const characterController = this.el.sceneEl.systems["hubs-systems"].characterController;
 
-      if (this.bbox.containsPoint(avatar.el.getAttribute("position"))) {
-        avatar.el.setAttribute("position", new window.APP.utils.THREE.Vector3(0, 0, 0));
-      }
-
-      // Reset flight
-      characterController.fly = false;
-
-      // DEBUG movement
-      // this.debugHelper.update();
+      avatar.el.setAttribute("position", new window.APP.utils.THREE.Vector3(0, 0, 0));
+      characterController.barge = false;
     },
 
     startBarge() {
@@ -426,16 +392,16 @@
       window.APP.utils.GLTFModelPlus
       .loadModel(gltf.props.src)
       .then((model) => {
-        const obj = document.createElement("a-entity");
         const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
-        // const orientation = new window.APP.utils.THREE.Quaternion().setFromEuler(transform.props.rotation);
+        const obj = document.createElement("a-entity");
 
         obj.setObject3D("mesh", mesh);
         obj.setAttribute("position", transform.props.position);
-        // obj.setAttribute("rotation", transform.props.rotation);
+        obj.setAttribute("rotation", transform.props.rotation);
         obj.setAttribute("scale", transform.props.scale);
         obj.object3D.matrixNeedsUpdate = true;
 
+        barge.object3D.attach(obj.object3D);
         barge.appendChild(obj);
       })
       .catch((e) => {
@@ -463,35 +429,14 @@
       z: 3
     });
 
-    const attached = [
-      "phase1instruct_block.glb",
-      "phase1_sign.glb",
-      "phase2_sign.glb",
-      "phase3_sign.glb",
-      "abilities_block.glb",
-      "skills_block.glb",
-      "podium.glb phase2",
-      "podium.glb 1 phase2",
-      "podium.glb 2 phase2",
-      "startButton",
-      "phase1CompleteButton",
-      "phase2CompleteButton",
-      "trough_3.2 phase1",
-      "trough_3.1 phase1",
-      "trough_3 phase1"
-    ];
-
     fetch("https://statuesque-rugelach-4185bd.netlify.app/assets/barge-master.spoke")
     .then(response => {
       return response.json();
     })
     .then((data) => {
       for (var item in data.entities) {
-        console.log(data.entities[item]);
-        
-        if (attached.includes(data.entities[item].name)) {
-          LoadAndAttachMesh(data.entities[item], barge);
-        }
+        // console.log(data.entities[item]);
+        LoadAndAttachMesh(data.entities[item], barge);
       }
     })
     .catch((e) => {

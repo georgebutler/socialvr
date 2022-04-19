@@ -5,7 +5,6 @@ let lastKeyChange = 0;
 
 const width = 100;
 const depth = 100;
-const modelBarge = "https://hubscloud-assets.socialsuperpowers.net/files/f42c2e16-be56-4ffd-8a36-1a83123be134.glb"
 
 AFRAME.registerComponent("socialvr-barge", {
   schema: {
@@ -16,30 +15,6 @@ AFRAME.registerComponent("socialvr-barge", {
 
   init() {
     this.direction = new window.APP.utils.THREE.Vector3();
-    this.bbox = new window.APP.utils.THREE.Box3();
-
-    // Load barge model
-    window.APP.utils.GLTFModelPlus.loadModel(modelBarge).then((model) => {
-      console.log(`[Social VR] Barge System - Mesh Loaded`);
-      const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
-      const min = new window.APP.utils.THREE.Vector3(-6, -6, -100);
-      const max = new window.APP.utils.THREE.Vector3(6, 6, 100);
-
-      this.el.setObject3D("mesh", mesh);
-      this.el.object3D.scale.set(1, 1, 1);
-      this.el.object3D.matrixNeedsUpdate = true;
-      this.bbox = new window.APP.utils.THREE.Box3(min, max);
-
-      // DEBUG
-      //this.debugHelper = new window.APP.utils.THREE.BoxHelper(this.el.getObject3D("mesh"), 0xffff00);
-      //this.el.sceneEl.object3D.add(this.debugHelper);
-      //this.debugHelper.update();
-
-      //console.log(`Min: ${this.bbox.min.x}, ${this.bbox.min.y}, ${this.bbox.min.z}`)
-      //console.log(`Max: ${this.bbox.max.x}, ${this.bbox.max.y}, ${this.bbox.max.z}`)
-    }).catch((e) => {
-      console.error(`[Social VR] Barge System - ${e}`);
-    })
 
     // Reset Button
     const buttonResetEl = document.createElement("a-sphere");
@@ -53,7 +28,6 @@ AFRAME.registerComponent("socialvr-barge", {
       y: this.el.object3D.position.y + 1,
       z: this.el.object3D.position.z
     });
-    this.el.appendChild(buttonResetEl);
 
     // Start Button
     const buttonGoEl = document.createElement("a-sphere");
@@ -67,8 +41,7 @@ AFRAME.registerComponent("socialvr-barge", {
       y: this.el.object3D.position.y + 1,
       z: this.el.object3D.position.z + 1 // Right
     });
-    this.el.appendChild(buttonGoEl);
-
+    
     // Stop Button
     const buttonStopEl = document.createElement("a-sphere");
     buttonStopEl.setAttribute("socialvr-barge-button", "stop");
@@ -81,6 +54,9 @@ AFRAME.registerComponent("socialvr-barge", {
       y: this.el.object3D.position.y + 1,
       z: this.el.object3D.position.z - 1 // Left
     });
+    
+    this.el.appendChild(buttonResetEl);
+    this.el.appendChild(buttonGoEl);
     this.el.appendChild(buttonStopEl);
 
     window.APP.utils.waitForDOMContentLoaded().then(() => {
@@ -90,7 +66,7 @@ AFRAME.registerComponent("socialvr-barge", {
         this.el.object3D.position.set(bargeSpawn.object3D.position.x, bargeSpawn.object3D.position.y, bargeSpawn.object3D.position.z);
         bargeSpawn.object3D.visible = false;
       } else {
-        this.el.object3D.position.set(-30, 2, 0);
+        this.el.object3D.position.set(-20, 2, 0);
       }
     })
 
@@ -157,9 +133,6 @@ AFRAME.registerComponent("socialvr-barge", {
         ["x", "y", "z"].forEach(function(axis) {
           direction[axis] *= factor * (dt / 1000);
         });
-
-        // Bounding box movement
-        this.bbox.translate(direction);
 
         // DEBUG movement
         // this.debugHelper.update();
@@ -269,15 +242,8 @@ AFRAME.registerComponent("socialvr-barge", {
     const avatar = window.APP.componentRegistry["player-info"][0];
     const characterController = this.el.sceneEl.systems["hubs-systems"].characterController;
 
-    if (this.bbox.containsPoint(avatar.el.getAttribute("position"))) {
-      avatar.el.setAttribute("position", new window.APP.utils.THREE.Vector3(0, 0, 0));
-    }
-
-    // Reset flight
-    characterController.fly = false;
-
-    // DEBUG movement
-    // this.debugHelper.update();
+    avatar.el.setAttribute("position", new window.APP.utils.THREE.Vector3(0, 0, 0));
+    characterController.barge = false;
   },
 
   startBarge() {

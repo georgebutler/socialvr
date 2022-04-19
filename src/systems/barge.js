@@ -28,16 +28,16 @@ function LoadAndAttachMesh(data, barge) {
     window.APP.utils.GLTFModelPlus
     .loadModel(gltf.props.src)
     .then((model) => {
-      const obj = document.createElement("a-entity");
       const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
-      // const orientation = new window.APP.utils.THREE.Quaternion().setFromEuler(transform.props.rotation);
+      const obj = document.createElement("a-entity");
 
       obj.setObject3D("mesh", mesh);
       obj.setAttribute("position", transform.props.position);
-      // obj.setAttribute("rotation", transform.props.rotation);
+      obj.setAttribute("rotation", transform.props.rotation);
       obj.setAttribute("scale", transform.props.scale);
       obj.object3D.matrixNeedsUpdate = true;
 
+      barge.object3D.attach(obj.object3D);
       barge.appendChild(obj);
     })
     .catch((e) => {
@@ -65,35 +65,14 @@ export function CreateBarge() {
     z: 3
   });
 
-  const attached = [
-    "phase1instruct_block.glb",
-    "phase1_sign.glb",
-    "phase2_sign.glb",
-    "phase3_sign.glb",
-    "abilities_block.glb",
-    "skills_block.glb",
-    "podium.glb phase2",
-    "podium.glb 1 phase2",
-    "podium.glb 2 phase2",
-    "startButton",
-    "phase1CompleteButton",
-    "phase2CompleteButton",
-    "trough_3.2 phase1",
-    "trough_3.1 phase1",
-    "trough_3 phase1"
-  ];
-
   fetch("https://statuesque-rugelach-4185bd.netlify.app/assets/barge-master.spoke")
   .then(response => {
     return response.json();
   })
   .then((data) => {
     for (var item in data.entities) {
-      console.log(data.entities[item]);
-      
-      if (attached.includes(data.entities[item].name)) {
-        LoadAndAttachMesh(data.entities[item], barge);
-      }
+      // console.log(data.entities[item]);
+      LoadAndAttachMesh(data.entities[item], barge);
     }
   })
   .catch((e) => {
