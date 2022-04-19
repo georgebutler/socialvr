@@ -204,7 +204,7 @@ AFRAME.registerComponent("socialvr-barge", {
   _startBarge(senderId, dataType, data, targetId) {
     positions = [];
 
-    for (let i = 1; i < 100; i++) {
+    for (let i = 0; i < 100; i++) {
       const wp = document.querySelector(".Waypoint_" + i);
 
       if (wp) {
