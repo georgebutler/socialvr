@@ -70,6 +70,12 @@
   let positions = [];
   let lastKeyChange = 0;
 
+  const width = 100;
+  const depth = 100;
+  const modelBarge = "https://hubscloud-assets.socialsuperpowers.net/files/f42c2e16-be56-4ffd-8a36-1a83123be134.glb";
+  const modelFlag1 = "https://hubscloud-assets.socialsuperpowers.net/files/570557bb-b5d5-4199-bd36-495c7e0496ff.glb";
+  const modelFlag2 = "https://hubscloud-assets.socialsuperpowers.net/files/8b4e9bfe-f820-4317-a9b1-bdf74a04336c.glb";
+
   AFRAME.registerComponent("socialvr-barge", {
     schema: {
       speed: { type: "number", default: 1 },
@@ -81,26 +87,49 @@
       this.direction = new window.APP.utils.THREE.Vector3();
       this.bbox = new window.APP.utils.THREE.Box3();
 
-      // Load model
-      window.APP.utils.GLTFModelPlus.loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/barge_testing.glb")
-      .then(model => {
+      // Load barge model
+      window.APP.utils.GLTFModelPlus.loadModel(modelBarge).then((model) => {
         console.log(`[Social VR] Barge System - Mesh Loaded`);
         const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
-        const min = new window.APP.utils.THREE.Vector3(-4, -4, -100);
-        const max = new window.APP.utils.THREE.Vector3(4, 4, 100);
+        const min = new window.APP.utils.THREE.Vector3(-6, -6, -100);
+        const max = new window.APP.utils.THREE.Vector3(6, 6, 100);
 
         this.el.setObject3D("mesh", mesh);
-        this.el.object3D.scale.set(0.6, 0.6, 0.6);
+        this.el.object3D.scale.set(1, 1, 1);
         this.el.object3D.matrixNeedsUpdate = true;
         this.bbox = new window.APP.utils.THREE.Box3(min, max);
 
-        // DEBUG
-        this.debugHelper = new window.APP.utils.THREE.BoxHelper(this.el.getObject3D("mesh"), 0xffff00);
-        this.el.sceneEl.object3D.add(this.debugHelper);
-        this.debugHelper.update();
+        // Flag 1
+        window.APP.utils.GLTFModelPlus.loadModel(modelFlag1).then((model) => {
+          const obj = document.createElement("a-entity");
+          const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
 
-        console.log(`Min: ${this.bbox.min.x}, ${this.bbox.min.y}, ${this.bbox.min.z}`);
-        console.log(`Max: ${this.bbox.max.x}, ${this.bbox.max.y}, ${this.bbox.max.z}`);
+          obj.setObject3D("mesh", mesh);
+          obj.object3D.matrixNeedsUpdate = true;
+          obj.object3D.position.set(-4.4096465993449305, 0.3500000000000001, -5.22301500667883);
+          obj.object3D.rotation.set(0, -30.00000000000003, 0);
+          this.el.appendChild(obj);
+        });
+
+        // Flag 2
+        window.APP.utils.GLTFModelPlus.loadModel(modelFlag2).then((model) => {
+          const obj = document.createElement("a-entity");
+          const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
+
+          obj.setObject3D("mesh", mesh);
+          obj.object3D.matrixNeedsUpdate = true;
+          obj.object3D.position.set(4, 0.3500000000000001, 0.1693029598018416);
+          obj.object3D.rotation.set(0, 5.000000000000118, 0);
+          this.el.appendChild(obj);
+        });
+
+        // DEBUG
+        //this.debugHelper = new window.APP.utils.THREE.BoxHelper(this.el.getObject3D("mesh"), 0xffff00);
+        //this.el.sceneEl.object3D.add(this.debugHelper);
+        //this.debugHelper.update();
+
+        //console.log(`Min: ${this.bbox.min.x}, ${this.bbox.min.y}, ${this.bbox.min.z}`)
+        //console.log(`Max: ${this.bbox.max.x}, ${this.bbox.max.y}, ${this.bbox.max.z}`)
       }).catch((e) => {
         console.error(`[Social VR] Barge System - ${e}`);
       });
@@ -147,11 +176,16 @@
       });
       this.el.appendChild(buttonStopEl);
 
-      const bargeSpawn = document.querySelector(".BargeSpawn");
+      window.APP.utils.waitForDOMContentLoaded().then(() => {
+        const bargeSpawn = document.querySelector(".barge-placeholder");
 
-      if (bargeSpawn) {
-        this.el.setAttribute("position", bargeSpawn.getAttribute("position"));
-      }
+        if (bargeSpawn) {
+          this.el.object3D.position.set(bargeSpawn.object3D.position.x, bargeSpawn.object3D.position.y, bargeSpawn.object3D.position.z);
+          bargeSpawn.object3D.visible = false;
+        } else {
+          this.el.object3D.position.set(-30, 2, 0);
+        }
+      });
 
       // Client
       this.el.addEventListener("startBargeEvent", this.startBarge.bind(this));
@@ -192,6 +226,12 @@
       const avposition = avatar.el.getAttribute("position");
       const characterController = this.el.sceneEl.systems["hubs-systems"].characterController;
 
+      // Bounding box randomly breaks so let's do it the old school way.
+      const bargeMinX = position.x - width / 2;
+      const bargeMaxX = position.x + width / 2;
+      const bargeMinZ = position.z - depth / 2;
+      const bargeMaxZ = position.z + depth / 2;
+
       if (this.data.moving) {
         const targetPosition = positions[this.data.targetKey];
         const direction = this.direction;
@@ -215,7 +255,7 @@
           this.bbox.translate(direction);
 
           // DEBUG movement
-          this.debugHelper.update();
+          // this.debugHelper.update();
 
           // Mesh movement
           this.el.setAttribute("position", {
@@ -225,8 +265,8 @@
           });
 
           // Avatar Movement
-          if (this.bbox.containsPoint(avposition)) {
-            characterController.fly = true;
+          if (avposition.x >= bargeMinX && avposition.x <= bargeMaxX && avposition.z >= bargeMinZ && avposition.z <= bargeMaxZ) {
+            characterController.barge = true;
 
             avatar.el.setAttribute("position", {
               x: avposition.x + direction.x,
@@ -239,7 +279,7 @@
           const floaties = document.querySelectorAll('[floaty-object=""]');
 
           floaties.forEach((floaty) => {
-            if (this.bbox.containsPoint(floaty.object3D.position)) {
+            if (floaty.object3D.position.x >= bargeMinX && floaty.object3D.position.x <= bargeMaxX && floaty.object3D.position.z >= bargeMinZ && floaty.object3D.position.z <= bargeMaxZ) {
               const x = floaty.object3D.position.x;
               const y = floaty.object3D.position.y;
               const z = floaty.object3D.position.z;
@@ -252,7 +292,7 @@
           const interactables = document.querySelectorAll('[interactable=""]');
 
           interactables.forEach((interactable) => {
-            if (this.bbox.containsPoint(interactable.object3D.position)) {
+            if (interactable.object3D.position.x >= bargeMinX && interactable.object3D.position.x <= bargeMaxX && interactable.object3D.position.z >= bargeMinZ && interactable.object3D.position.z <= bargeMaxZ) {
               const x = interactable.object3D.position.x;
               const y = interactable.object3D.position.y;
               const z = interactable.object3D.position.z;
@@ -262,12 +302,8 @@
           });
         } else {
           // Avatar floor height check
-          if (this.bbox.containsPoint(avposition)) {
-            avatar.el.setAttribute("position", {
-              x: avposition.x,
-              y: position.y - 2 / 2 + window.APP.utils.getCurrentPlayerHeight() / 2,
-              z: avposition.z
-            });
+          if (avposition.x >= bargeMinX && avposition.x <= bargeMaxX && avposition.z >= bargeMinZ && avposition.z <= bargeMaxZ) {
+            characterController.barge = false;
           }
 
           // NaN check
@@ -280,6 +316,8 @@
           // console.log(this.data.targetKey);
         }
       }
+
+      characterController.fly = characterController.barge;
     },
 
     // eslint-disable-next-line no-unused-vars
@@ -332,7 +370,7 @@
       characterController.fly = false;
 
       // DEBUG movement
-      this.debugHelper.update();
+      // this.debugHelper.update();
     },
 
     startBarge() {
@@ -410,11 +448,11 @@
     // Barge: invisible, paused
     const barge =  document.createElement("a-entity");
     barge.setAttribute("socialvr-barge", "");
-    barge.setAttribute("visible", false);
+    barge.setAttribute("visible", true);
     
     // toolbox button
     const bargeToolboxButton = document.createElement("a-sphere");
-    bargeToolboxButton.setAttribute("socailvr-toolbox-button", "Barge");
+    bargeToolboxButton.setAttribute("socialvr-toolbox-button", "Barge");
     bargeToolboxButton.setAttribute("radius", "0.3");
     bargeToolboxButton.setAttribute("material", "color: pink");
     bargeToolboxButton.setAttribute("tags", "singleActionButton: true");

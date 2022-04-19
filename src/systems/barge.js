@@ -24,11 +24,11 @@ export function CreateBarge() {
   // Barge: invisible, paused
   const barge =  document.createElement("a-entity");
   barge.setAttribute("socialvr-barge", "");
-  barge.setAttribute("visible", false);
+  barge.setAttribute("visible", true);
   
   // toolbox button
   const bargeToolboxButton = document.createElement("a-sphere");
-  bargeToolboxButton.setAttribute("socailvr-toolbox-button", "Barge");
+  bargeToolboxButton.setAttribute("socialvr-toolbox-button", "Barge");
   bargeToolboxButton.setAttribute("radius", "0.3");
   bargeToolboxButton.setAttribute("material", "color: pink");
   bargeToolboxButton.setAttribute("tags", "singleActionButton: true");
