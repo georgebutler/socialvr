@@ -27,14 +27,24 @@ AFRAME.registerComponent("socialvr-speech", {
     NAF.connection.subscribeToDataChannel("stopSpeechEvent", this.stopSpeech.bind(this));
 
     console.log("[Social VR] Speech System - Initialized");
+    this.system.register(this.el);
   },
 
   remove() {
     NAF.connection.unsubscribeToDataChannel("startSpeechEvent");
     NAF.connection.unsubscribeToDataChannel("stopSpeechEvent");
+    
+    this.system.unregister();
   },
 
   tick(t, dt) {
+    // TODO: more elegant solution?
+    if (this.el.getAttribute("visible")) {
+      this.el.play();
+    } else {
+      this.el.pause();
+    }
+
     const muted = this.playerInfo.data.muted;
     const speaking = !muted && this.localAudioAnalyser.volume > MIC_PRESENCE_VOLUME_THRESHOLD;
   

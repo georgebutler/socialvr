@@ -2,21 +2,21 @@
 
 AFRAME.registerSystem("socialvr-barge", {
   init: function() {
-    console.log("[Social VR] Barge System - Initialized")
-    
-    this.barge = null;
+    console.log("[Social VR] Barge System - Initialized");
+    this.tool = null;
   },
 
   register: function(el) {
-    if (this.barge != null) {
-      this.el.removeChild(this.barge);
+    if (this.tool != null) {
+      this.el.removeChild(this.tool);
     }
     
-    this.barge = el;
+    console.log("[Social VR] Barge Component - Registered");
+    this.tool = el;
   },
 
   unregister: function() {
-    this.barge = null;
+    this.tool = null;
   },
 });
 
@@ -27,17 +27,9 @@ export function CreateBarge() {
   barge.setAttribute("visible", false);
   
   // toolbox button
-  const bargeToolboxButton = document.createElement("a-sphere");
-  bargeToolboxButton.setAttribute("socailvr-toolbox-button", "Barge");
-  bargeToolboxButton.setAttribute("radius", "0.3");
-  bargeToolboxButton.setAttribute("material", "color: pink");
-  bargeToolboxButton.setAttribute("tags", "singleActionButton: true");
-  bargeToolboxButton.setAttribute("css-class", "interactable");
-  bargeToolboxButton.setAttribute("position", {
-    x: 5,
-    y: 2,
-    z: 3
-  });
+  const bargeToolboxButton = document.createElement("a-entity");
+  bargeToolboxButton.setAttribute("socailvr-toolbox-button", "barge");
+  bargeToolboxButton.setAttribute("position", { x: 0, y: 2, z: 0 });
   
   // hide phase 1 objects
   TogglePhase1(false);

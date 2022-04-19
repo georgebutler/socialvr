@@ -3,9 +3,17 @@
 AFRAME.registerComponent("socailvr-toolbox-button", {
   dependencies: ["is-remote-hover-target", "hoverable-visuals"],
 
-  schema: {type: "string", default: "Barge"},
+  schema: {type: "string", default: "barge"},
 
   init: function() {
+    // TODO: auto position toolbox button based on existing buttons
+
+    // TODO: custom apearances
+    this.el.setAttribute("geometry", "primitive:sphere; radius:0.3");
+    this.el.setAttribute("material", "color: pink");
+    this.el.setAttribute("tags", "singleActionButton:true");
+    this.el.setAttribute("css-class", "interactable");
+
     // button text
     const textEl = document.createElement("a-entity");
     textEl.setAttribute("text", `value: ${this.data.toUpperCase()}; align: center; color: black`);
@@ -16,17 +24,12 @@ AFRAME.registerComponent("socailvr-toolbox-button", {
     this.onClick = this.onClick.bind(this);
     this.el.object3D.addEventListener("interact", this.onClick);
 
-    // precondition: barge already in the scene
-    this.barge = this.el.sceneEl.systems["socialvr-barge"].barge;
-    
-    NAF.connection.subscribeToDataChannel("createBarge", this.createBarge.bind(this));
-    NAF.connection.subscribeToDataChannel("removeBarge", this.removeBarge.bind(this));
+    NAF.connection.subscribeToDataChannel("buttonClicked", this.handleClick.bind(this));
   },
 
   remove: function() {
     this.el.object3D.removeEventListener("interact", this.onClick);
-    NAF.connection.unsubscribeToDataChannel("createBarge");
-    NAF.connection.unsubscribeToDataChannel("removeBarge");
+    NAF.connection.unsubscribeToDataChannel("buttonClicked");
   },
 
   onClick: function() {
@@ -35,29 +38,25 @@ AFRAME.registerComponent("socailvr-toolbox-button", {
       this.el.object3D
     );
 
-    switch (this.data) {
-      case "Barge":
-        if (this.barge.getAttribute("visible")) {
-          this.removeBarge();
-          NAF.connection.broadcastData("removeBarge", {});
-        } else {
-          this.createBarge();
-          NAF.connection.broadcastData("createBarge", {});          
-        }
+    this.handleClick();
+    NAF.connection.broadcastData("buttonClicked", {});
+  },
 
-      default:
-        console.log(`Invalid social VR system ${this.data}`);
+  handleClick(senderId, dataType, data, targetId) {
+    const tool = this.el.sceneEl.systems[`socialvr-${this.data.toLowerCase()}`].tool;
+
+    if (tool.getAttribute("visible")) {
+      // REMOVE
+
+      // handle reset events
+      tool.emit("resetBargeEvent");
+
+      tool.setAttribute("visible", false);
+      tool.pause();
+    } else {
+      // CREATE
+      tool.setAttribute("visible", true);
+      tool.play();
     }
-  },
-
-  createBarge() {
-    this.barge.setAttribute("visible", true);
-    this.barge.play();
-  },
-
-  removeBarge() {
-    this.barge.emit("resetBargeEvent");   // current behavior: onboard passengers teleport back to spawn
-    this.barge.setAttribute("visible", false);
-    this.barge.pause();
   }
 });
