@@ -432,11 +432,7 @@
 
         obj.setObject3D("mesh", mesh);
         obj.setAttribute("position", transform.props.position);
-        obj.setAttribute("rotation", {
-          x: window.APP.utils.THREE.Math.degToRad(transform.props.rotation.x),
-          y: window.APP.utils.THREE.Math.degToRad(transform.props.rotation.y),
-          z: window.APP.utils.THREE.Math.degToRad(transform.props.rotation.z)
-        });
+        // obj.setAttribute("rotation", transform.props.rotation);
         obj.setAttribute("scale", transform.props.scale);
         obj.object3D.matrixNeedsUpdate = true;
 
@@ -474,7 +470,9 @@
       "phase3_sign.glb",
       "abilities_block.glb",
       "skills_block.glb",
-      "podium",
+      "podium.glb phase2",
+      "podium.glb 1 phase2",
+      "podium.glb 2 phase2",
       "startButton",
       "phase1CompleteButton",
       "phase2CompleteButton",
@@ -508,6 +506,7 @@
       TogglePhase1(true);
       NAF.connection.broadcastData("advancePhase", {});
     });
+
     // Broadcast Event
     NAF.connection.subscribeToDataChannel("advancePhase", TogglePhase1(true));  // TODO: arrow function?
 
@@ -521,13 +520,13 @@
 
     console.log("[Social VR] Barge - Phase Initialized");
 
-    const phase1 = document.querySelector(".phase-1");
+    const phase1 = document.querySelectorAll(".phase-1");
 
-    if (phase1) {
+    if (phase1.length > 0) {
       console.log("[Social VR] Barge - Phase 1 Found");
 
-      phase1.children.forEach(child => {
-        child.setAttribute("visible", toggle);
+      phase1.forEach(el => {
+        el.setAttribute("visible", toggle);
       });
     } else {
       console.warn("[Social VR] Barge - Phase 1 Not Found");
