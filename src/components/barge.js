@@ -6,8 +6,6 @@ let lastKeyChange = 0;
 const width = 100;
 const depth = 100;
 const modelBarge = "https://hubscloud-assets.socialsuperpowers.net/files/f42c2e16-be56-4ffd-8a36-1a83123be134.glb"
-const modelFlag1 = "https://hubscloud-assets.socialsuperpowers.net/files/570557bb-b5d5-4199-bd36-495c7e0496ff.glb"
-const modelFlag2 = "https://hubscloud-assets.socialsuperpowers.net/files/8b4e9bfe-f820-4317-a9b1-bdf74a04336c.glb"
 
 AFRAME.registerComponent("socialvr-barge", {
   schema: {
@@ -31,30 +29,6 @@ AFRAME.registerComponent("socialvr-barge", {
       this.el.object3D.scale.set(1, 1, 1);
       this.el.object3D.matrixNeedsUpdate = true;
       this.bbox = new window.APP.utils.THREE.Box3(min, max);
-
-      // Flag 1
-      window.APP.utils.GLTFModelPlus.loadModel(modelFlag1).then((model) => {
-        const obj = document.createElement("a-entity");
-        const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
-
-        obj.setObject3D("mesh", mesh);
-        obj.object3D.matrixNeedsUpdate = true;
-        obj.object3D.position.set(-4.4096465993449305, 0.3500000000000001, -5.22301500667883);
-        obj.object3D.rotation.set(0, -30.00000000000003, 0);
-        this.el.appendChild(obj);
-      })
-
-      // Flag 2
-      window.APP.utils.GLTFModelPlus.loadModel(modelFlag2).then((model) => {
-        const obj = document.createElement("a-entity");
-        const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
-
-        obj.setObject3D("mesh", mesh);
-        obj.object3D.matrixNeedsUpdate = true;
-        obj.object3D.position.set(4, 0.3500000000000001, 0.1693029598018416);
-        obj.object3D.rotation.set(0, 5.000000000000118, 0);
-        this.el.appendChild(obj);
-      })
 
       // DEBUG
       //this.debugHelper = new window.APP.utils.THREE.BoxHelper(this.el.getObject3D("mesh"), 0xffff00);

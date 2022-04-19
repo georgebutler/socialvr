@@ -20,9 +20,34 @@ AFRAME.registerSystem("socialvr-barge", {
   },
 });
 
+function LoadAndAttachMesh(data, barge) {
+  let gltf = data.components.find(el => el.name === "gltf-model");
+  let transform = data.components.find(el => el.name === "transform");
+
+  if (gltf && transform) {
+    window.APP.utils.GLTFModelPlus
+    .loadModel(gltf.props.src)
+    .then((model) => {
+      const obj = document.createElement("a-entity");
+      const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
+  
+      obj.setObject3D("mesh", mesh);
+      obj.setAttribute("position", transform.props.position);
+      obj.setAttribute("rotation", transform.props.rotation);
+      obj.setAttribute("scale", transform.props.scale);
+      obj.object3D.matrixNeedsUpdate = true;
+
+      barge.appendChild(obj);
+    })
+    .catch((e) => {
+      console.error(e);
+    })
+  }
+}
+
 export function CreateBarge() {
   // Barge: invisible, paused
-  const barge =  document.createElement("a-entity");
+  const barge = document.createElement("a-entity");
   barge.setAttribute("socialvr-barge", "");
   barge.setAttribute("visible", true);
   
@@ -37,6 +62,32 @@ export function CreateBarge() {
     x: 5,
     y: 2,
     z: 3
+  });
+
+  const attached = [
+    "phase1instruct_block.glb",
+    "phase1_sign.glb",
+    "phase2_sign.glb",
+    "phase3_sign.glb",
+    "Geography_ranked_block.glb",
+    "Customer_service_ranked_block.glb"
+  ];
+
+  fetch("https://statuesque-rugelach-4185bd.netlify.app/assets/barge-master.spoke")
+  .then(response => {
+    return response.json();
+  })
+  .then((data) => {
+    for (var item in data.entities) {
+      console.log(data.entities[item]);
+      
+      if (attached.includes(data.entities[item].name)) {
+        LoadAndAttachMesh(data.entities[item], barge);
+      }
+    }
+  })
+  .catch((e) => {
+    console.error(e);
   });
   
   // hide phase 1 objects
