@@ -428,10 +428,15 @@
       .then((model) => {
         const obj = document.createElement("a-entity");
         const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
-    
+        // const orientation = new window.APP.utils.THREE.Quaternion().setFromEuler(transform.props.rotation);
+
         obj.setObject3D("mesh", mesh);
         obj.setAttribute("position", transform.props.position);
-        obj.setAttribute("rotation", transform.props.rotation);
+        obj.setAttribute("rotation", {
+          x: window.APP.utils.THREE.Math.degToRad(transform.props.rotation.x),
+          y: window.APP.utils.THREE.Math.degToRad(transform.props.rotation.y),
+          z: window.APP.utils.THREE.Math.degToRad(transform.props.rotation.z)
+        });
         obj.setAttribute("scale", transform.props.scale);
         obj.object3D.matrixNeedsUpdate = true;
 
@@ -467,8 +472,15 @@
       "phase1_sign.glb",
       "phase2_sign.glb",
       "phase3_sign.glb",
-      "Geography_ranked_block.glb",
-      "Customer_service_ranked_block.glb"
+      "abilities_block.glb",
+      "skills_block.glb",
+      "podium",
+      "startButton",
+      "phase1CompleteButton",
+      "phase2CompleteButton",
+      "trough_3.2 phase1",
+      "trough_3.1 phase1",
+      "trough_3 phase1"
     ];
 
     fetch("https://statuesque-rugelach-4185bd.netlify.app/assets/barge-master.spoke")
