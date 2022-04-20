@@ -17,7 +17,7 @@ AFRAME.registerComponent("socailvr-toolbox-button", {
     // button text
     const textEl = document.createElement("a-entity");
     textEl.setAttribute("text", `value: ${this.data.toUpperCase()}; align: center; color: black`);
-    textEl.setAttribute("rotation", "0 270 0");
+    textEl.setAttribute("rotation", "0 90 0");
     textEl.setAttribute("position", "0 0.4 0");
     this.el.appendChild(textEl);
 
@@ -50,6 +50,7 @@ AFRAME.registerComponent("socailvr-toolbox-button", {
 
       // handle reset events
       tool.emit("resetBargeEvent");
+      tool.emit("clearSpeechEvent");
 
       tool.setAttribute("visible", false);
       tool.pause();

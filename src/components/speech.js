@@ -23,16 +23,24 @@ AFRAME.registerComponent("socialvr-speech", {
     this.continuousSpeechTime = 0;
     this.continuousSpeechLeniencyTime = 0;
 
-    NAF.connection.subscribeToDataChannel("startSpeechEvent", this.startSpeech.bind(this));
-    NAF.connection.subscribeToDataChannel("stopSpeechEvent", this.stopSpeech.bind(this));
+    // Client
+    this.el.addEventListener("clearSpeechEvent", this.clearSpeech.bind(this));
+
+    // Broadcast Event
+    NAF.connection.subscribeToDataChannel("startSpeech", this._startSpeech.bind(this));
+    NAF.connection.subscribeToDataChannel("stopSpeech", this._stopSpeech.bind(this));
+    NAF.connection.subscribeToDataChannel("clearSpeech", this._clearSpeech.bind(this));
 
     console.log("[Social VR] Speech System - Initialized");
     this.system.register(this.el);
   },
 
   remove() {
-    NAF.connection.unsubscribeToDataChannel("startSpeechEvent");
-    NAF.connection.unsubscribeToDataChannel("stopSpeechEvent");
+    this.el.removeEventListener("clearSpeechEvent", this.clearSpeech.bind(this));
+
+    NAF.connection.unsubscribeToDataChannel("startSpeech");
+    NAF.connection.unsubscribeToDataChannel("stopSpeech");
+    NAF.connection.unsubscribeToDataChannel("clearSpeech");
     
     this.system.unregister();
   },
@@ -53,8 +61,8 @@ AFRAME.registerComponent("socialvr-speech", {
       if (this.continuousSpeechTime === 0) {
         // speech event started
         const eventData = { speaker: this.playerInfo.playerSessionId, speakerName: this.playerInfo.displayName };
-        this.startSpeech(null, null, eventData, null); // local
-        NAF.connection.broadcastData("startSpeechEvent", eventData); // networked
+        this._startSpeech(null, null, eventData, null); // local
+        NAF.connection.broadcastData("startSpeech", eventData); // networked
       }
       this.continuousSpeechTime += SPEECH_TIME_PER_TICK;
       this.continuousSpeechLeniencyTime = CONTINUOUS_SPEECH_LENIENCY_TIME;
@@ -95,7 +103,7 @@ AFRAME.registerComponent("socialvr-speech", {
     }
   },
 
-  startSpeech(senderId, dataType, data, targetId) { 
+  _startSpeech(senderId, dataType, data, targetId) { 
     // if no already-active speech orb for this speaker, spawn one
     const activeOrb = this.activeSpeechOrbs[data.speaker];
     if (activeOrb) {
@@ -108,9 +116,11 @@ AFRAME.registerComponent("socialvr-speech", {
     // position the orb relative to the player and the center of the scene
     const centerObj = this.el;
     const centerPos = centerObj ? centerObj.object3D.position.clone() : new THREE.Vector3(...ORB_CONTAINER_POS);
-    centerPos.y = 1.5;
+    //centerPos.y = 1.5;
+    centerPos.y = 0.5;
     const playerPos = speakerInfo.el.object3D.position.clone();
-    playerPos.y = 1.5;
+    //playerPos.y = 1.5;
+    playerPos.y = 0.5;
     const offset = new THREE.Vector3().subVectors(playerPos, centerPos).normalize();
     const orbPos = new THREE.Vector3().addVectors(centerPos, offset);
 
@@ -124,11 +134,11 @@ AFRAME.registerComponent("socialvr-speech", {
       speaker: this.playerInfo.playerSessionId,
       speakerName: this.playerInfo.displayName
     };
-    this.stopSpeech(null, null, eventData, null); // local
-    NAF.connection.broadcastData("stopSpeechEvent", eventData); // networked
+    this._stopSpeech(null, null, eventData, null); // local
+    NAF.connection.broadcastData("stopSpeech", eventData); // networked
   },
 
-  stopSpeech(senderId, dataType, data, targetId) {
+  _stopSpeech(senderId, dataType, data, targetId) {
     const activeOrb = this.activeSpeechOrbs[data.speaker];
     if (activeOrb) {
       activeOrb.classList.add("finished");
@@ -187,11 +197,22 @@ AFRAME.registerComponent("socialvr-speech", {
     orb.setAttribute("color", color);
   
     // add the orb to the scene
-    this.el.sceneEl.appendChild(orb);
+    this.el.appendChild(orb);
   
     // queue the orb for deletion later
     setTimeout(() => orb.remove(), SPEECH_ORB_LIFETIME);
   
     return orb;
+  },
+
+  _clearSpeech(senderId, dataType, data, targetId) {
+    for (const finishedOrb of document.querySelectorAll(".speechOrb.finished")) {
+      finishedOrb.parentNode.removeChild(finishedOrb);
+    }
+  },
+
+  clearSpeech() {
+    this._clearSpeech(null, null, {}, null);
+    NAF.connection.broadcastData("clearSpeech", {});
   }
 });
