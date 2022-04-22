@@ -3,8 +3,8 @@
 let positions = [];
 let lastKeyChange = 0;
 
-const width = 100;
-const depth = 100;
+const width = 24;
+const depth = 24;
 
 AFRAME.registerComponent("socialvr-barge", {
   schema: {
@@ -200,7 +200,6 @@ AFRAME.registerComponent("socialvr-barge", {
     characterController.fly = characterController.barge;
   },
 
-  // eslint-disable-next-line no-unused-vars
   _startBarge(senderId, dataType, data, targetId) {
     positions = [];
 

@@ -70,8 +70,8 @@
   let positions = [];
   let lastKeyChange = 0;
 
-  const width = 100;
-  const depth = 100;
+  const width = 24;
+  const depth = 24;
 
   AFRAME.registerComponent("socialvr-barge", {
     schema: {
@@ -267,11 +267,10 @@
       characterController.fly = characterController.barge;
     },
 
-    // eslint-disable-next-line no-unused-vars
     _startBarge(senderId, dataType, data, targetId) {
       positions = [];
 
-      for (let i = 1; i < 100; i++) {
+      for (let i = 0; i < 100; i++) {
         const wp = document.querySelector(".Waypoint_" + i);
 
         if (wp) {

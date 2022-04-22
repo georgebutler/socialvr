@@ -25,6 +25,8 @@ function LoadAndAttachMesh(data, barge) {
   let transform = data.components.find(el => el.name === "transform");
 
   if (gltf && transform) {
+    let visible = data.components.find(el => el.name === "visible");
+
     window.APP.utils.GLTFModelPlus
     .loadModel(gltf.props.src)
     .then((model) => {
@@ -36,6 +38,7 @@ function LoadAndAttachMesh(data, barge) {
       obj.setAttribute("rotation", transform.props.rotation);
       obj.setAttribute("scale", transform.props.scale);
       obj.object3D.matrixNeedsUpdate = true;
+      obj.object3D.visible = visible.props.visible;
 
       barge.object3D.attach(obj.object3D);
       barge.appendChild(obj);
@@ -65,7 +68,7 @@ export function CreateBarge() {
     z: 3
   });
 
-  fetch("https://statuesque-rugelach-4185bd.netlify.app/assets/barge-master-for-export-4-19-22.spoke")
+  fetch("https://statuesque-rugelach-4185bd.netlify.app/assets/barge-master-for-export-4-22-22.spoke")
   .then(response => {
     return response.json();
   })
