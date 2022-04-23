@@ -20,7 +20,7 @@ AFRAME.registerSystem("socialvr-barge", {
   },
 });
 
-function LoadAndAttachMesh(data, barge) {
+function LoadAndAttach(data, barge) {
   let gltf = data.components.find(el => el.name === "gltf-model");
   let transform = data.components.find(el => el.name === "transform");
 
@@ -30,18 +30,44 @@ function LoadAndAttachMesh(data, barge) {
     window.APP.utils.GLTFModelPlus
     .loadModel(gltf.props.src)
     .then((model) => {
-      const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
-      const obj = document.createElement("a-entity");
+      const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene, false);
 
-      obj.setObject3D("mesh", mesh);
-      obj.setAttribute("position", transform.props.position);
-      obj.setAttribute("rotation", transform.props.rotation);
-      obj.setAttribute("scale", transform.props.scale);
-      obj.object3D.matrixNeedsUpdate = true;
-      obj.object3D.visible = visible.props.visible;
+      if (data.name === "barge-model") {
+        barge.setObject3D("mesh", mesh);
+        barge.object3D.position.set(transform.props.position.x - 20, transform.props.position.y, transform.props.position.z);
+        // barge.object3D.rotateOnWorldAxis(new window.APP.utils.THREE.Vector3(1, 0, 0), transform.props.rotation.x);
+        // barge.object3D.rotateOnWorldAxis(new window.APP.utils.THREE.Vector3(0, 1, 0), transform.props.rotation.y);
+        // barge.object3D.rotateOnWorldAxis(new window.APP.utils.THREE.Vector3(0, 0, 1), transform.props.rotation.z);
+        // barge.object3D.rotation.set(transform.props.rotation.x, transform.props.rotation.y, transform.props.rotation.z);
+        // barge.object3D.scale.set(transform.props.scale.x, transform.props.scale.y, transform.props.scale.z);
+        // barge.object3D.rotateX(transform.props.rotation.x);
+        // barge.object3D.rotateY(transform.props.rotation.y);
+        // barge.object3D.rotateZ(transform.props.rotation.z);
+        barge.object3D.matrixNeedsUpdate = true;
+      } else {
+        const obj = document.createElement("a-entity");
 
-      barge.object3D.attach(obj.object3D);
-      barge.appendChild(obj);
+        obj.setObject3D("mesh", mesh);
+        obj.object3D.position.set(transform.props.position.x, transform.props.position.y, transform.props.position.z);
+        // obj.object3D.rotation.set(transform.props.rotation.x, transform.props.rotation.y, transform.props.rotation.z);
+        // obj.object3D.rotateY(transform.props.rotation.y);
+        // obj.object3D.rotateZ(transform.props.rotation.z);
+        obj.object3D.rotateOnWorldAxis(new window.APP.utils.THREE.Vector3(1, 0, 0), transform.props.rotation.x);
+        obj.object3D.rotateOnWorldAxis(new window.APP.utils.THREE.Vector3(0, 1, 0), transform.props.rotation.y);
+        obj.object3D.rotateOnWorldAxis(new window.APP.utils.THREE.Vector3(0, 0, 1), transform.props.rotation.z);
+        obj.object3D.scale.set(transform.props.scale.x, transform.props.scale.y, transform.props.scale.z);
+        obj.object3D.visible = visible.props.visible;
+        obj.object3D.matrixNeedsUpdate = true;
+  
+        //barge.object3D.attach(obj.object3D);
+        const classes = data.name.split(" ");
+        classes.forEach((c) => {
+          obj.classList.add(c);
+        });
+        
+        barge.appendChild(obj);
+        // barge.object3D.add(obj.object3D);
+      }
     })
     .catch((e) => {
       console.error(e);
@@ -75,7 +101,7 @@ export function CreateBarge() {
   .then((data) => {
     for (var item in data.entities) {
       // console.log(data.entities[item]);
-      LoadAndAttachMesh(data.entities[item], barge);
+      LoadAndAttach(data.entities[item], barge);
     }
   })
   .catch((e) => {

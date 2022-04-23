@@ -126,17 +126,6 @@
       this.el.appendChild(buttonGoEl);
       this.el.appendChild(buttonStopEl);
 
-      window.APP.utils.waitForDOMContentLoaded().then(() => {
-        const bargeSpawn = document.querySelector(".barge-placeholder");
-
-        if (bargeSpawn) {
-          this.el.object3D.position.set(bargeSpawn.object3D.position.x, bargeSpawn.object3D.position.y, bargeSpawn.object3D.position.z);
-          bargeSpawn.object3D.visible = false;
-        } else {
-          this.el.object3D.position.set(-20, 2, 0);
-        }
-      });
-
       // Client
       this.el.addEventListener("startBargeEvent", this.startBarge.bind(this));
       this.el.addEventListener("stopBargeEvent", this.stopBarge.bind(this));
@@ -147,6 +136,20 @@
       NAF.connection.subscribeToDataChannel("stopBarge", this._stopBarge.bind(this));
       NAF.connection.subscribeToDataChannel("resetBarge", this._resetBarge.bind(this));
 
+      /** 
+      this.el.sceneEl.addEventListener("environment-scene-loaded", (model) => {
+        const bargeSpawn = document.querySelector(".barge-placeholder");
+
+        if (bargeSpawn) {
+          this.el.object3D.position.set(bargeSpawn.object3D.position.x, bargeSpawn.object3D.position.y, bargeSpawn.object3D.position.z);
+          bargeSpawn.object3D.visible = false;
+        } else {
+          this.el.object3D.position.set(-20, 2, 0);
+        }
+      })
+      */
+
+      // this.el.object3D.position.set(-20, 2, 0);
       this.system.register(this.el);
     },
 
@@ -217,7 +220,7 @@
 
             avatar.el.setAttribute("position", {
               x: avposition.x + direction.x,
-              y: position.y - 2 / 2 + window.APP.utils.getCurrentPlayerHeight() / 2,
+              y: this.el.object3D.position.y + window.APP.utils.getCurrentPlayerHeight() / 2,
               z: avposition.z + direction.z
             });
           }
@@ -383,25 +386,54 @@
     },
   });
 
-  function LoadAndAttachMesh(data, barge) {
+  function LoadAndAttach(data, barge) {
     let gltf = data.components.find(el => el.name === "gltf-model");
     let transform = data.components.find(el => el.name === "transform");
 
     if (gltf && transform) {
+      let visible = data.components.find(el => el.name === "visible");
+
       window.APP.utils.GLTFModelPlus
       .loadModel(gltf.props.src)
       .then((model) => {
-        const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene);
-        const obj = document.createElement("a-entity");
+        const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene, false);
 
-        obj.setObject3D("mesh", mesh);
-        obj.setAttribute("position", transform.props.position);
-        obj.setAttribute("rotation", transform.props.rotation);
-        obj.setAttribute("scale", transform.props.scale);
-        obj.object3D.matrixNeedsUpdate = true;
+        if (data.name === "barge-model") {
+          barge.setObject3D("mesh", mesh);
+          barge.object3D.position.set(transform.props.position.x - 20, transform.props.position.y, transform.props.position.z);
+          // barge.object3D.rotateOnWorldAxis(new window.APP.utils.THREE.Vector3(1, 0, 0), transform.props.rotation.x);
+          // barge.object3D.rotateOnWorldAxis(new window.APP.utils.THREE.Vector3(0, 1, 0), transform.props.rotation.y);
+          // barge.object3D.rotateOnWorldAxis(new window.APP.utils.THREE.Vector3(0, 0, 1), transform.props.rotation.z);
+          // barge.object3D.rotation.set(transform.props.rotation.x, transform.props.rotation.y, transform.props.rotation.z);
+          // barge.object3D.scale.set(transform.props.scale.x, transform.props.scale.y, transform.props.scale.z);
+          // barge.object3D.rotateX(transform.props.rotation.x);
+          // barge.object3D.rotateY(transform.props.rotation.y);
+          // barge.object3D.rotateZ(transform.props.rotation.z);
+          barge.object3D.matrixNeedsUpdate = true;
+        } else {
+          const obj = document.createElement("a-entity");
 
-        barge.object3D.attach(obj.object3D);
-        barge.appendChild(obj);
+          obj.setObject3D("mesh", mesh);
+          obj.object3D.position.set(transform.props.position.x, transform.props.position.y, transform.props.position.z);
+          // obj.object3D.rotation.set(transform.props.rotation.x, transform.props.rotation.y, transform.props.rotation.z);
+          // obj.object3D.rotateY(transform.props.rotation.y);
+          // obj.object3D.rotateZ(transform.props.rotation.z);
+          obj.object3D.rotateOnWorldAxis(new window.APP.utils.THREE.Vector3(1, 0, 0), transform.props.rotation.x);
+          obj.object3D.rotateOnWorldAxis(new window.APP.utils.THREE.Vector3(0, 1, 0), transform.props.rotation.y);
+          obj.object3D.rotateOnWorldAxis(new window.APP.utils.THREE.Vector3(0, 0, 1), transform.props.rotation.z);
+          obj.object3D.scale.set(transform.props.scale.x, transform.props.scale.y, transform.props.scale.z);
+          obj.object3D.visible = visible.props.visible;
+          obj.object3D.matrixNeedsUpdate = true;
+    
+          //barge.object3D.attach(obj.object3D);
+          const classes = data.name.split(" ");
+          classes.forEach((c) => {
+            obj.classList.add(c);
+          });
+          
+          barge.appendChild(obj);
+          // barge.object3D.add(obj.object3D);
+        }
       })
       .catch((e) => {
         console.error(e);
@@ -428,14 +460,14 @@
       z: 3
     });
 
-    fetch("https://statuesque-rugelach-4185bd.netlify.app/assets/barge-master-for-export-4-19-22.spoke")
+    fetch("https://statuesque-rugelach-4185bd.netlify.app/assets/barge-master-for-export-4-22-22.spoke")
     .then(response => {
       return response.json();
     })
     .then((data) => {
       for (var item in data.entities) {
         // console.log(data.entities[item]);
-        LoadAndAttachMesh(data.entities[item], barge);
+        LoadAndAttach(data.entities[item], barge);
       }
     })
     .catch((e) => {

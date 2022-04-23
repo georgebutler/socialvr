@@ -59,17 +59,6 @@ AFRAME.registerComponent("socialvr-barge", {
     this.el.appendChild(buttonGoEl);
     this.el.appendChild(buttonStopEl);
 
-    window.APP.utils.waitForDOMContentLoaded().then(() => {
-      const bargeSpawn = document.querySelector(".barge-placeholder");
-
-      if (bargeSpawn) {
-        this.el.object3D.position.set(bargeSpawn.object3D.position.x, bargeSpawn.object3D.position.y, bargeSpawn.object3D.position.z);
-        bargeSpawn.object3D.visible = false;
-      } else {
-        this.el.object3D.position.set(-20, 2, 0);
-      }
-    })
-
     // Client
     this.el.addEventListener("startBargeEvent", this.startBarge.bind(this));
     this.el.addEventListener("stopBargeEvent", this.stopBarge.bind(this));
@@ -80,6 +69,20 @@ AFRAME.registerComponent("socialvr-barge", {
     NAF.connection.subscribeToDataChannel("stopBarge", this._stopBarge.bind(this));
     NAF.connection.subscribeToDataChannel("resetBarge", this._resetBarge.bind(this));
 
+    /** 
+    this.el.sceneEl.addEventListener("environment-scene-loaded", (model) => {
+      const bargeSpawn = document.querySelector(".barge-placeholder");
+
+      if (bargeSpawn) {
+        this.el.object3D.position.set(bargeSpawn.object3D.position.x, bargeSpawn.object3D.position.y, bargeSpawn.object3D.position.z);
+        bargeSpawn.object3D.visible = false;
+      } else {
+        this.el.object3D.position.set(-20, 2, 0);
+      }
+    })
+    */
+
+    // this.el.object3D.position.set(-20, 2, 0);
     this.system.register(this.el);
   },
 
@@ -150,7 +153,7 @@ AFRAME.registerComponent("socialvr-barge", {
 
           avatar.el.setAttribute("position", {
             x: avposition.x + direction.x,
-            y: position.y - 2 / 2 + window.APP.utils.getCurrentPlayerHeight() / 2,
+            y: this.el.object3D.position.y + window.APP.utils.getCurrentPlayerHeight() / 2,
             z: avposition.z + direction.z
           });
         }
