@@ -391,7 +391,11 @@
     let transform = data.components.find(el => el.name === "transform");
 
     if (gltf && transform) {
-      let visible = data.components.find(el => el.name === "visible");
+      let position = new window.APP.utils.THREE.Vector3(transform.props.position.x, transform.props.position.y, transform.props.position.z);
+      let rotation = new window.APP.utils.THREE.Euler(transform.props.rotation.x, transform.props.rotation.y, transform.props.rotation.z, "XYZ");
+      let scale = new window.APP.utils.THREE.Vector3(transform.props.scale.x, transform.props.scale.y, transform.props.scale.z);
+
+      data.components.find(el => el.name === "visible");
 
       window.APP.utils.GLTFModelPlus
       .loadModel(gltf.props.src)
@@ -400,39 +404,26 @@
 
         if (data.name === "barge-model") {
           barge.setObject3D("mesh", mesh);
-          barge.object3D.position.set(transform.props.position.x - 20, transform.props.position.y, transform.props.position.z);
-          // barge.object3D.rotateOnWorldAxis(new window.APP.utils.THREE.Vector3(1, 0, 0), transform.props.rotation.x);
-          // barge.object3D.rotateOnWorldAxis(new window.APP.utils.THREE.Vector3(0, 1, 0), transform.props.rotation.y);
-          // barge.object3D.rotateOnWorldAxis(new window.APP.utils.THREE.Vector3(0, 0, 1), transform.props.rotation.z);
-          // barge.object3D.rotation.set(transform.props.rotation.x, transform.props.rotation.y, transform.props.rotation.z);
-          // barge.object3D.scale.set(transform.props.scale.x, transform.props.scale.y, transform.props.scale.z);
-          // barge.object3D.rotateX(transform.props.rotation.x);
-          // barge.object3D.rotateY(transform.props.rotation.y);
-          // barge.object3D.rotateZ(transform.props.rotation.z);
+          barge.object3D.position.copy(position);
+          barge.object3D.rotation.copy(rotation);
+          barge.object3D.scale.copy(scale);
           barge.object3D.matrixNeedsUpdate = true;
         } else {
           const obj = document.createElement("a-entity");
-
           obj.setObject3D("mesh", mesh);
-          obj.object3D.position.set(transform.props.position.x, transform.props.position.y, transform.props.position.z);
-          // obj.object3D.rotation.set(transform.props.rotation.x, transform.props.rotation.y, transform.props.rotation.z);
-          // obj.object3D.rotateY(transform.props.rotation.y);
-          // obj.object3D.rotateZ(transform.props.rotation.z);
-          obj.object3D.rotateOnWorldAxis(new window.APP.utils.THREE.Vector3(1, 0, 0), transform.props.rotation.x);
-          obj.object3D.rotateOnWorldAxis(new window.APP.utils.THREE.Vector3(0, 1, 0), transform.props.rotation.y);
-          obj.object3D.rotateOnWorldAxis(new window.APP.utils.THREE.Vector3(0, 0, 1), transform.props.rotation.z);
-          obj.object3D.scale.set(transform.props.scale.x, transform.props.scale.y, transform.props.scale.z);
-          obj.object3D.visible = visible.props.visible;
-          obj.object3D.matrixNeedsUpdate = true;
-    
-          //barge.object3D.attach(obj.object3D);
+
           const classes = data.name.split(" ");
           classes.forEach((c) => {
             obj.classList.add(c);
           });
+
+          obj.object3D.position.copy(position);
+          obj.object3D.rotation.copy(rotation);
+          obj.object3D.scale.copy(scale);
           
-          barge.appendChild(obj);
-          // barge.object3D.add(obj.object3D);
+          document.querySelector("a-scene").appendChild(obj);
+          obj.object3D.updateMatrixWorld();
+          barge.object3D.attach(obj.object3D);
         }
       })
       .catch((e) => {
