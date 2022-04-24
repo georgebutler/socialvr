@@ -1,21 +1,21 @@
 // responsible for barge creation and advancing phase
 
 AFRAME.registerSystem("socialvr-barge", {
-  init: function() {
+  init: function () {
     console.log("[Social VR] Barge System - Initialized")
-    
+
     this.barge = null;
   },
 
-  register: function(el) {
+  register: function (el) {
     if (this.barge != null) {
       this.el.removeChild(this.barge);
     }
-    
+
     this.barge = el;
   },
 
-  unregister: function() {
+  unregister: function () {
     this.barge = null;
   },
 });
@@ -32,37 +32,37 @@ function LoadAndAttach(data, barge) {
     let visible = data.components.find(el => el.name === "visible");
 
     window.APP.utils.GLTFModelPlus
-    .loadModel(gltf.props.src)
-    .then((model) => {
-      const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene, false);
+      .loadModel(gltf.props.src)
+      .then((model) => {
+        const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene, false);
 
-      if (data.name === "barge-model") {
-        barge.setObject3D("mesh", mesh);
-        barge.object3D.position.copy(position);
-        barge.object3D.rotation.copy(rotation);
-        barge.object3D.scale.copy(scale);
-        barge.object3D.matrixNeedsUpdate = true;
-      } else {
-        const obj = document.createElement("a-entity");
-        obj.setObject3D("mesh", mesh);
+        if (data.name === "barge-model") {
+          barge.setObject3D("mesh", mesh);
+          barge.object3D.position.copy(position);
+          barge.object3D.rotation.copy(rotation);
+          barge.object3D.scale.copy(new window.APP.utils.THREE.Vector3(1, 1, 1));
+          barge.object3D.matrixNeedsUpdate = true;
+        } else {
+          const obj = document.createElement("a-entity");
+          obj.setObject3D("mesh", mesh);
 
-        const classes = data.name.split(" ");
-        classes.forEach((c) => {
-          obj.classList.add(c);
-        });
+          const classes = data.name.split(" ");
+          classes.forEach((c) => {
+            obj.classList.add(c);
+          });
 
-        obj.object3D.position.copy(position);
-        obj.object3D.rotation.copy(rotation);
-        obj.object3D.scale.copy(scale);
-        
-        document.querySelector("a-scene").appendChild(obj);
-        obj.object3D.updateMatrixWorld();
-        barge.object3D.attach(obj.object3D);
-      }
-    })
-    .catch((e) => {
-      console.error(e);
-    })
+          obj.object3D.position.copy(position);
+          obj.object3D.rotation.copy(rotation);
+          obj.object3D.scale.copy(scale);
+
+          document.querySelector("a-scene").appendChild(obj);
+          obj.object3D.updateMatrixWorld();
+          barge.object3D.attach(obj.object3D);
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+      })
   }
 }
 
@@ -71,7 +71,7 @@ export function CreateBarge() {
   const barge = document.createElement("a-entity");
   barge.setAttribute("socialvr-barge", "");
   barge.setAttribute("visible", true);
-  
+
   // toolbox button
   const bargeToolboxButton = document.createElement("a-sphere");
   bargeToolboxButton.setAttribute("socialvr-toolbox-button", "Barge");
@@ -86,42 +86,43 @@ export function CreateBarge() {
   });
 
   fetch("https://statuesque-rugelach-4185bd.netlify.app/assets/barge-master-for-export-4-22-22.spoke")
-  .then(response => {
-    return response.json();
-  })
-  .then((data) => {
-    for (var item in data.entities) {
-      // console.log(data.entities[item]);
-      LoadAndAttach(data.entities[item], barge);
-    }
-  })
-  .catch((e) => {
-    console.error(e);
-  });
-  
-  // hide phase 1 objects
-  TogglePhase1(false);
+    .then(response => {
+      return response.json();
+    })
+    .then((data) => {
+      for (var item in data.entities) {
+        // console.log(data.entities[item]);
+        LoadAndAttach(data.entities[item], barge);
+      }
+    })
+    .then(() => {
+      // hide phase 1 objects
+      TogglePhase1(false);
 
-  // Client
-  barge.addEventListener("advancePhaseEvent", function() {
-    TogglePhase1(true);
-    NAF.connection.broadcastData("advancePhase", {});
-  });
+      // Client
+      barge.addEventListener("advancePhaseEvent", function () {
+        TogglePhase1(true);
+        NAF.connection.broadcastData("advancePhase", {});
+      });
 
-  // Broadcast Event
-  NAF.connection.subscribeToDataChannel("advancePhase", TogglePhase1(true));  // TODO: arrow function?
+      // Broadcast Event
+      NAF.connection.subscribeToDataChannel("advancePhase", TogglePhase1(true));  // TODO: arrow function?
+    })
+    .catch((e) => {
+      console.error(e);
+    });
 
   return [barge, bargeToolboxButton];
 }
 
 // toggle: true/false
 function TogglePhase1(toggle) {
-  
+
   // TODO: add phase index parameter
 
   console.log("[Social VR] Barge - Phase Initialized");
 
-  const phase1 = document.querySelectorAll(".phase-1");
+  const phase1 = document.querySelectorAll(".phase1");
 
   if (phase1.length > 0) {
     console.log("[Social VR] Barge - Phase 1 Found");

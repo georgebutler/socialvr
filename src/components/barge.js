@@ -69,20 +69,6 @@ AFRAME.registerComponent("socialvr-barge", {
     NAF.connection.subscribeToDataChannel("stopBarge", this._stopBarge.bind(this));
     NAF.connection.subscribeToDataChannel("resetBarge", this._resetBarge.bind(this));
 
-    /** 
-    this.el.sceneEl.addEventListener("environment-scene-loaded", (model) => {
-      const bargeSpawn = document.querySelector(".barge-placeholder");
-
-      if (bargeSpawn) {
-        this.el.object3D.position.set(bargeSpawn.object3D.position.x, bargeSpawn.object3D.position.y, bargeSpawn.object3D.position.z);
-        bargeSpawn.object3D.visible = false;
-      } else {
-        this.el.object3D.position.set(-20, 2, 0);
-      }
-    })
-    */
-
-    // this.el.object3D.position.set(-20, 2, 0);
     this.system.register(this.el);
   },
 
@@ -137,15 +123,15 @@ AFRAME.registerComponent("socialvr-barge", {
           direction[axis] *= factor * (dt / 1000);
         });
 
-        // DEBUG movement
-        // this.debugHelper.update();
-
         // Mesh movement
         this.el.setAttribute("position", {
           x: position.x + direction.x,
           y: position.y + direction.y,
           z: position.z + direction.z
         });
+
+        //this.el.object3D.position.set(this.el.object3D.position.add(direction));
+        //this.el.object3D.updateMatrixWorld();
 
         // Avatar Movement
         if (avposition.x >= bargeMinX && avposition.x <= bargeMaxX && avposition.z >= bargeMinZ && avposition.z <= bargeMaxZ) {
