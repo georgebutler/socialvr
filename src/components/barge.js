@@ -130,8 +130,16 @@ AFRAME.registerComponent("socialvr-barge", {
           z: position.z + direction.z
         });
 
-        //this.el.object3D.position.set(this.el.object3D.position.add(direction));
-        //this.el.object3D.updateMatrixWorld();
+        // Child Movement
+        const children = document.querySelectorAll('.socialvr-barge-child');
+
+        children.forEach((child) => {
+            child.setAttribute("position", {
+              x: child.object3D.position.x + direction.x,
+              y: child.object3D.position.y + direction.y,
+              z: child.object3D.position.z + direction.z
+            });
+        });
 
         // Avatar Movement
         if (avposition.x >= bargeMinX && avposition.x <= bargeMaxX && avposition.z >= bargeMinZ && avposition.z <= bargeMaxZ) {
@@ -149,11 +157,11 @@ AFRAME.registerComponent("socialvr-barge", {
 
         floaties.forEach((floaty) => {
           if (floaty.object3D.position.x >= bargeMinX && floaty.object3D.position.x <= bargeMaxX && floaty.object3D.position.z >= bargeMinZ && floaty.object3D.position.z <= bargeMaxZ) {
-            const x = floaty.object3D.position.x
-            const y = floaty.object3D.position.y
-            const z = floaty.object3D.position.z
-
-            floaty.object3D.position.set(x + direction.x, y - direction.y, z + direction.z)
+            floaty.setAttribute("position", {
+              x: floaty.object3D.position.x + direction.x,
+              y: floaty.object3D.position.y + direction.y,
+              z: floaty.object3D.position.z + direction.z
+            });
           }
         });
 
@@ -162,11 +170,11 @@ AFRAME.registerComponent("socialvr-barge", {
 
         interactables.forEach((interactable) => {
           if (interactable.object3D.position.x >= bargeMinX && interactable.object3D.position.x <= bargeMaxX && interactable.object3D.position.z >= bargeMinZ && interactable.object3D.position.z <= bargeMaxZ) {
-            const x = interactable.object3D.position.x
-            const y = interactable.object3D.position.y
-            const z = interactable.object3D.position.z
-
-            interactable.object3D.position.set(x + direction.x, y - direction.y, z + direction.z)
+            interactable.setAttribute("position", {
+              x: interactable.object3D.position.x + direction.x,
+              y: interactable.object3D.position.y + direction.y,
+              z: interactable.object3D.position.z + direction.z
+            });
           }
         });
       } else {

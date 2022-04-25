@@ -6,13 +6,12 @@ import "./systems/barge";
 import { CreateBarge } from "./systems/barge";
 
 const scene = document.querySelector("a-scene");
-
 scene.addEventListener("environment-scene-loaded", () => {
+  console.log("[Social VR] Barge - Create Barge");
+
   const [barge, bargeToolboxButton] = CreateBarge();
   scene.appendChild(barge);
   scene.appendChild(bargeToolboxButton);
-
-  console.log("[Social VR] Barge - Create Barge");
 
   // Changes camera inspection system to show background, regardless of user preferences.
   const cameraSystem = scene.systems["hubs-systems"].cameraSystem;
@@ -39,5 +38,5 @@ scene.addEventListener("environment-scene-loaded", () => {
     console.log(`[Social VR] Barge - Current Phase: ${phase}`);
   };
 
-  disableFloatyPhysics()
-})
+  disableFloatyPhysics();
+}, { once: true })

@@ -197,8 +197,16 @@
             z: position.z + direction.z
           });
 
-          //this.el.object3D.position.set(this.el.object3D.position.add(direction));
-          //this.el.object3D.updateMatrixWorld();
+          // Child Movement
+          const children = document.querySelectorAll('.socialvr-barge-child');
+
+          children.forEach((child) => {
+              child.setAttribute("position", {
+                x: child.object3D.position.x + direction.x,
+                y: child.object3D.position.y + direction.y,
+                z: child.object3D.position.z + direction.z
+              });
+          });
 
           // Avatar Movement
           if (avposition.x >= bargeMinX && avposition.x <= bargeMaxX && avposition.z >= bargeMinZ && avposition.z <= bargeMaxZ) {
@@ -216,11 +224,11 @@
 
           floaties.forEach((floaty) => {
             if (floaty.object3D.position.x >= bargeMinX && floaty.object3D.position.x <= bargeMaxX && floaty.object3D.position.z >= bargeMinZ && floaty.object3D.position.z <= bargeMaxZ) {
-              const x = floaty.object3D.position.x;
-              const y = floaty.object3D.position.y;
-              const z = floaty.object3D.position.z;
-
-              floaty.object3D.position.set(x + direction.x, y - direction.y, z + direction.z);
+              floaty.setAttribute("position", {
+                x: floaty.object3D.position.x + direction.x,
+                y: floaty.object3D.position.y + direction.y,
+                z: floaty.object3D.position.z + direction.z
+              });
             }
           });
 
@@ -229,11 +237,11 @@
 
           interactables.forEach((interactable) => {
             if (interactable.object3D.position.x >= bargeMinX && interactable.object3D.position.x <= bargeMaxX && interactable.object3D.position.z >= bargeMinZ && interactable.object3D.position.z <= bargeMaxZ) {
-              const x = interactable.object3D.position.x;
-              const y = interactable.object3D.position.y;
-              const z = interactable.object3D.position.z;
-
-              interactable.object3D.position.set(x + direction.x, y - direction.y, z + direction.z);
+              interactable.setAttribute("position", {
+                x: interactable.object3D.position.x + direction.x,
+                y: interactable.object3D.position.y + direction.y,
+                z: interactable.object3D.position.z + direction.z
+              });
             }
           });
         } else {
@@ -375,46 +383,56 @@
   function LoadAndAttach(data, barge) {
     let gltf = data.components.find(el => el.name === "gltf-model");
     let transform = data.components.find(el => el.name === "transform");
+    data.components.find(el => el.name === "visible");
 
     if (gltf && transform) {
       let position = new window.APP.utils.THREE.Vector3(transform.props.position.x, transform.props.position.y, transform.props.position.z);
       let rotation = new window.APP.utils.THREE.Euler(transform.props.rotation.x, transform.props.rotation.y, transform.props.rotation.z, "XYZ");
       let scale = new window.APP.utils.THREE.Vector3(transform.props.scale.x, transform.props.scale.y, transform.props.scale.z);
 
-      data.components.find(el => el.name === "visible");
+      if (data.name === "barge-model") {
+        barge.object3D.position.copy(position);
+        barge.object3D.rotation.copy(rotation);
+        barge.object3D.scale.copy(new window.APP.utils.THREE.Vector3(1, 1, 1));
+        barge.object3D.matrixNeedsUpdate = true;
 
-      window.APP.utils.GLTFModelPlus
+        window.APP.utils.GLTFModelPlus
         .loadModel(gltf.props.src)
         .then((model) => {
           const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene, false);
 
-          if (data.name === "barge-model") {
-            barge.setObject3D("mesh", mesh);
-            barge.object3D.position.copy(position);
-            barge.object3D.rotation.copy(rotation);
-            barge.object3D.scale.copy(new window.APP.utils.THREE.Vector3(1, 1, 1));
-            barge.object3D.matrixNeedsUpdate = true;
-          } else {
-            const obj = document.createElement("a-entity");
-            obj.setObject3D("mesh", mesh);
-
-            const classes = data.name.split(" ");
-            classes.forEach((c) => {
-              obj.classList.add(c);
-            });
-
-            obj.object3D.position.copy(position);
-            obj.object3D.rotation.copy(rotation);
-            obj.object3D.scale.copy(scale);
-
-            document.querySelector("a-scene").appendChild(obj);
-            obj.object3D.updateMatrixWorld();
-            barge.object3D.attach(obj.object3D);
-          }
+          barge.setObject3D("mesh", mesh);
         })
         .catch((e) => {
           console.error(e);
         });
+      } else {
+        const obj = document.createElement("a-entity");
+
+        const classes = data.name.split(" ");
+        obj.classList.add("socialvr-barge-child");
+        classes.forEach((c) => {
+          obj.classList.add(c);
+        });
+
+        obj.object3D.position.copy(position);
+        obj.object3D.rotation.copy(rotation);
+        obj.object3D.scale.copy(scale);
+
+        document.querySelector("a-scene").appendChild(obj);
+        obj.object3D.updateMatrixWorld();
+
+        window.APP.utils.GLTFModelPlus
+        .loadModel(gltf.props.src)
+        .then((model) => {
+          const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene, false);
+
+          obj.setObject3D("mesh", mesh);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+      }
     }
   }
 
@@ -443,7 +461,7 @@
       })
       .then((data) => {
         for (var item in data.entities) {
-          // console.log(data.entities[item]);
+          console.log(data.entities[item]);
           LoadAndAttach(data.entities[item], barge);
         }
       })
@@ -469,7 +487,6 @@
 
   // toggle: true/false
   function TogglePhase1(toggle) {
-
     // TODO: add phase index parameter
 
     console.log("[Social VR] Barge - Phase Initialized");
@@ -488,13 +505,12 @@
   }
 
   const scene = document.querySelector("a-scene");
-
   scene.addEventListener("environment-scene-loaded", () => {
+    console.log("[Social VR] Barge - Create Barge");
+
     const [barge, bargeToolboxButton] = CreateBarge();
     scene.appendChild(barge);
     scene.appendChild(bargeToolboxButton);
-
-    console.log("[Social VR] Barge - Create Barge");
 
     // Changes camera inspection system to show background, regardless of user preferences.
     const cameraSystem = scene.systems["hubs-systems"].cameraSystem;
@@ -522,7 +538,7 @@
     };
 
     disableFloatyPhysics();
-  });
+  }, { once: true });
 
 })();
 //# sourceMappingURL=development.js.map

@@ -23,46 +23,56 @@ AFRAME.registerSystem("socialvr-barge", {
 function LoadAndAttach(data, barge) {
   let gltf = data.components.find(el => el.name === "gltf-model");
   let transform = data.components.find(el => el.name === "transform");
+  let visible = data.components.find(el => el.name === "visible");
 
   if (gltf && transform) {
     let position = new window.APP.utils.THREE.Vector3(transform.props.position.x, transform.props.position.y, transform.props.position.z);
     let rotation = new window.APP.utils.THREE.Euler(transform.props.rotation.x, transform.props.rotation.y, transform.props.rotation.z, "XYZ");
     let scale = new window.APP.utils.THREE.Vector3(transform.props.scale.x, transform.props.scale.y, transform.props.scale.z);
 
-    let visible = data.components.find(el => el.name === "visible");
+    if (data.name === "barge-model") {
+      barge.object3D.position.copy(position);
+      barge.object3D.rotation.copy(rotation);
+      barge.object3D.scale.copy(new window.APP.utils.THREE.Vector3(1, 1, 1));
+      barge.object3D.matrixNeedsUpdate = true;
 
-    window.APP.utils.GLTFModelPlus
+      window.APP.utils.GLTFModelPlus
       .loadModel(gltf.props.src)
       .then((model) => {
         const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene, false);
 
-        if (data.name === "barge-model") {
-          barge.setObject3D("mesh", mesh);
-          barge.object3D.position.copy(position);
-          barge.object3D.rotation.copy(rotation);
-          barge.object3D.scale.copy(new window.APP.utils.THREE.Vector3(1, 1, 1));
-          barge.object3D.matrixNeedsUpdate = true;
-        } else {
-          const obj = document.createElement("a-entity");
-          obj.setObject3D("mesh", mesh);
-
-          const classes = data.name.split(" ");
-          classes.forEach((c) => {
-            obj.classList.add(c);
-          });
-
-          obj.object3D.position.copy(position);
-          obj.object3D.rotation.copy(rotation);
-          obj.object3D.scale.copy(scale);
-
-          document.querySelector("a-scene").appendChild(obj);
-          obj.object3D.updateMatrixWorld();
-          barge.object3D.attach(obj.object3D);
-        }
+        barge.setObject3D("mesh", mesh);
       })
       .catch((e) => {
         console.error(e);
+      });
+    } else {
+      const obj = document.createElement("a-entity");
+
+      const classes = data.name.split(" ");
+      obj.classList.add("socialvr-barge-child");
+      classes.forEach((c) => {
+        obj.classList.add(c);
+      });
+
+      obj.object3D.position.copy(position);
+      obj.object3D.rotation.copy(rotation);
+      obj.object3D.scale.copy(scale);
+
+      document.querySelector("a-scene").appendChild(obj);
+      obj.object3D.updateMatrixWorld();
+
+      window.APP.utils.GLTFModelPlus
+      .loadModel(gltf.props.src)
+      .then((model) => {
+        const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene, false);
+
+        obj.setObject3D("mesh", mesh);
       })
+      .catch((e) => {
+        console.error(e);
+      });
+    }
   }
 }
 
@@ -91,7 +101,7 @@ export function CreateBarge() {
     })
     .then((data) => {
       for (var item in data.entities) {
-        // console.log(data.entities[item]);
+        console.log(data.entities[item]);
         LoadAndAttach(data.entities[item], barge);
       }
     })
@@ -117,7 +127,6 @@ export function CreateBarge() {
 
 // toggle: true/false
 function TogglePhase1(toggle) {
-
   // TODO: add phase index parameter
 
   console.log("[Social VR] Barge - Phase Initialized");
