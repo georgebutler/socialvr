@@ -33,7 +33,7 @@ function LoadAndAttach(data, barge) {
     if (data.name === "barge-model") {
       barge.object3D.position.copy(position);
       barge.object3D.rotation.copy(rotation);
-      barge.object3D.scale.copy(new window.APP.utils.THREE.Vector3(1, 1, 1));
+      barge.object3D.scale.copy(scale);
       barge.object3D.matrixNeedsUpdate = true;
 
       window.APP.utils.GLTFModelPlus
@@ -101,7 +101,7 @@ export function CreateBarge() {
     })
     .then((data) => {
       for (var item in data.entities) {
-        console.log(data.entities[item]);
+        // console.log(data.entities[item]);
         LoadAndAttach(data.entities[item], barge);
       }
     })

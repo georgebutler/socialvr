@@ -6,6 +6,28 @@ let lastKeyChange = 0;
 const width = 24;
 const depth = 24;
 
+function moveWithBox(parent, child, direction) {
+  const parentPosition = parent.object3D.position;
+  const childPosition = child.object3D.position;
+
+  const minX = parentPosition.x - width / 2;
+  const maxX = parentPosition.x + width / 2;
+  const minZ = parentPosition.z - depth / 2;
+  const maxZ = parentPosition.z + depth / 2;
+
+  if (childPosition.x >= minX && childPosition.x <= maxX && childPosition.z >= minZ && childPosition.z <= maxZ) {
+    child.setAttribute("position", {
+      x: childPosition.x + direction.x,
+      y: childPosition.y + direction.y,
+      z: childPosition.z + direction.z
+    });
+
+    return true;
+  }
+
+  return false;
+}
+
 AFRAME.registerComponent("socialvr-barge", {
   schema: {
     speed: { type: "number", default: 1 },
@@ -134,11 +156,21 @@ AFRAME.registerComponent("socialvr-barge", {
         const children = document.querySelectorAll('.socialvr-barge-child');
 
         children.forEach((child) => {
-            child.setAttribute("position", {
-              x: child.object3D.position.x + direction.x,
-              y: child.object3D.position.y + direction.y,
-              z: child.object3D.position.z + direction.z
-            });
+          moveWithBox(this.el, child, direction);
+        });
+
+        // Floaty Movement
+        const floaties = document.querySelectorAll('[floaty-object=""]');
+
+        floaties.forEach((floaty) => {
+          moveWithBox(this.el, floaty, direction);
+        });
+
+        // Interactable Movement
+        const interactables = document.querySelectorAll('[interactable=""]');
+
+        interactables.forEach((interactable) => {
+          moveWithBox(this.el, interactable, direction);
         });
 
         // Avatar Movement
@@ -152,31 +184,7 @@ AFRAME.registerComponent("socialvr-barge", {
           });
         }
 
-        // Floaty Movement
-        const floaties = document.querySelectorAll('[floaty-object=""]');
-
-        floaties.forEach((floaty) => {
-          if (floaty.object3D.position.x >= bargeMinX && floaty.object3D.position.x <= bargeMaxX && floaty.object3D.position.z >= bargeMinZ && floaty.object3D.position.z <= bargeMaxZ) {
-            floaty.setAttribute("position", {
-              x: floaty.object3D.position.x + direction.x,
-              y: floaty.object3D.position.y + direction.y,
-              z: floaty.object3D.position.z + direction.z
-            });
-          }
-        });
-
-        // Interactable Movement
-        const interactables = document.querySelectorAll('[interactable=""]');
-
-        interactables.forEach((interactable) => {
-          if (interactable.object3D.position.x >= bargeMinX && interactable.object3D.position.x <= bargeMaxX && interactable.object3D.position.z >= bargeMinZ && interactable.object3D.position.z <= bargeMaxZ) {
-            interactable.setAttribute("position", {
-              x: interactable.object3D.position.x + direction.x,
-              y: interactable.object3D.position.y + direction.y,
-              z: interactable.object3D.position.z + direction.z
-            });
-          }
-        });
+        characterController.fly = characterController.barge;
       } else {
         // Avatar floor height check
         if (avposition.x >= bargeMinX && avposition.x <= bargeMaxX && avposition.z >= bargeMinZ && avposition.z <= bargeMaxZ) {
@@ -193,8 +201,6 @@ AFRAME.registerComponent("socialvr-barge", {
         // console.log(this.data.targetKey);
       }
     }
-
-    characterController.fly = characterController.barge;
   },
 
   _startBarge(senderId, dataType, data, targetId) {
