@@ -83,7 +83,15 @@
     const maxZ = parentPosition.z + depth / 2;
 
     if (childPosition.x >= minX && childPosition.x <= maxX && childPosition.z >= minZ && childPosition.z <= maxZ) {
-      if (isAvatar) ; else {
+      if (isAvatar) {
+        child.setAttribute("position", {
+          x: childPosition.x + direction.x,
+          y: parent.y + window.APP.utils.getCurrentPlayerHeight() / 2,
+          z: childPosition.z + direction.z
+        });
+        //const pos = new window.APP.utils.THREE.Vector3(childPosition.x + direction.x, parent.y + window.APP.utils.getCurrentPlayerHeight() / 2, childPosition.z + direction.z);
+        //AFRAME.scenes[0].systems["hubs-systems"].characterController.teleportTo(pos);
+      } else {
         child.setAttribute("position", {
           x: childPosition.x + direction.x,
           y: childPosition.y + direction.y,
