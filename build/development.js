@@ -239,9 +239,7 @@
           // Avatar Movement
           const player = document.querySelectorAll("a-entity[player-info]");
 
-          if (player[0]) {
-            moveWithBox(this.el, player[0], direction, true);
-          }
+          if (player[0]) ;
         } else {
           // NaN check
           if (isNaN(lastKeyChange) || t >= lastKeyChange) {

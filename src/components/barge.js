@@ -176,7 +176,7 @@ AFRAME.registerComponent("socialvr-barge", {
         const player = document.querySelectorAll("a-entity[player-info]");
 
         if (player[0]) {
-          moveWithBox(this.el, player[0], direction, true);
+          // moveWithBox(this.el, player[0], direction, true);
         }
       } else {
         // NaN check
