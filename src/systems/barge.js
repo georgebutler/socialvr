@@ -101,7 +101,7 @@ export function CreateBarge() {
     })
     .then((data) => {
       for (var item in data.entities) {
-        // console.log(data.entities[item]);
+        console.log(data.entities[item]);
         LoadAndAttach(data.entities[item], barge);
       }
     })
