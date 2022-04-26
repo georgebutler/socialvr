@@ -4,27 +4,25 @@ let positions = [];
 let lastKeyChange = 0;
 let shouldAvatarBeInBargeMode = false;
 
-const width = 24;
-const depth = 24;
+const width = 30;
+const depth = 30;
 
 function moveWithBox(parent, child, direction, isAvatar) {
   const parentPosition = parent.object3D?.position;
   const childPosition = child.object3D?.position;
 
-  const minX = parentPosition.x - width / 2;
-  const maxX = parentPosition.x + width / 2;
-  const minZ = parentPosition.z - depth / 2;
-  const maxZ = parentPosition.z + depth / 2;
+  const minX = parentPosition.x - width;
+  const maxX = parentPosition.x + width;
+  const minZ = parentPosition.z - depth;
+  const maxZ = parentPosition.z + depth;
 
   if (childPosition.x >= minX && childPosition.x <= maxX && childPosition.z >= minZ && childPosition.z <= maxZ) {
     if (isAvatar) {
       child.setAttribute("position", {
         x: childPosition.x + direction.x,
-        y: parent.y + window.APP.utils.getCurrentPlayerHeight() / 2,
+        y: parentPosition.y + window.APP.utils.getCurrentPlayerHeight() / 2,
         z: childPosition.z + direction.z
       });
-      //const pos = new window.APP.utils.THREE.Vector3(childPosition.x + direction.x, parent.y + window.APP.utils.getCurrentPlayerHeight() / 2, childPosition.z + direction.z);
-      //AFRAME.scenes[0].systems["hubs-systems"].characterController.teleportTo(pos);
     } else {
       child.setAttribute("position", {
         x: childPosition.x + direction.x,
@@ -173,11 +171,7 @@ AFRAME.registerComponent("socialvr-barge", {
         });
 
         // Avatar Movement
-        const player = document.querySelectorAll("a-entity[player-info]");
-
-        if (player[0]) {
-          // moveWithBox(this.el, player[0], direction, true);
-        }
+        shouldAvatarBeInBargeMode = moveWithBox(this.el, window.APP.componentRegistry["player-info"][0].el, direction, true);
       } else {
         // NaN check
         if (isNaN(lastKeyChange) || t >= lastKeyChange) {
@@ -190,7 +184,7 @@ AFRAME.registerComponent("socialvr-barge", {
       }
     }
 
-    // this.el.sceneEl.systems["hubs-systems"].characterController.fly = shouldAvatarBeInBargeMode;
+    this.el.sceneEl.systems["hubs-systems"].characterController.fly = shouldAvatarBeInBargeMode;
   },
 
   _startBarge(senderId, dataType, data, targetId) {
