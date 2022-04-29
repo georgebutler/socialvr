@@ -368,57 +368,51 @@
   });
 
   function LoadAndAttach(data, barge) {
-    let gltf = data.components.find(el => el.name === "gltf-model");
     let transform = data.components.find(el => el.name === "transform");
-    data.components.find(el => el.name === "visible");
+    // let visible = data.components.find(el => el.name === "visible");
 
-    if (gltf && transform) {
+    if (transform) {
+      let gltf = data.components.find(el => el.name === "gltf-model");
+      let spawner = data.components.find(el => el.name === "spawner");
+
       let position = new window.APP.utils.THREE.Vector3(transform.props.position.x, transform.props.position.y, transform.props.position.z);
       let rotation = new window.APP.utils.THREE.Euler(transform.props.rotation.x, transform.props.rotation.y, transform.props.rotation.z, "XYZ");
       let scale = new window.APP.utils.THREE.Vector3(transform.props.scale.x, transform.props.scale.y, transform.props.scale.z);
 
-      if (data.name === "barge-model") {
-        barge.object3D.position.copy(position);
-        barge.object3D.rotation.copy(rotation);
-        barge.object3D.scale.copy(scale);
-        barge.object3D.matrixNeedsUpdate = true;
+      // GLTF
+      if (gltf) {
+        if (data.name === "barge-model") {
+          barge.object3D.position.copy(position);
+          barge.object3D.rotation.copy(rotation);
+          barge.object3D.scale.copy(scale);
+          barge.object3D.matrixNeedsUpdate = true;
+    
+          window.APP.utils.GLTFModelPlus
+          .loadModel(gltf.props.src)
+          .then((model) => {
+            const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene, false);
+    
+            barge.setObject3D("mesh", mesh);
+          })
+          .catch((e) => {
+            console.error(e);
+          });
+        } else {
+          const { entity } = window.APP.utils.addMedia(gltf.props.src, "#static-media");
+          entity.classList.add("socialvr-barge-child");
+          entity.object3D.position.copy(position);
+          entity.object3D.rotation.copy(rotation);
+          entity.object3D.scale.copy(scale);
+        }
+      }
 
-        window.APP.utils.GLTFModelPlus
-        .loadModel(gltf.props.src)
-        .then((model) => {
-          const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene, false);
-
-          barge.setObject3D("mesh", mesh);
-        })
-        .catch((e) => {
-          console.error(e);
-        });
-      } else {
-        const obj = document.createElement("a-entity");
-
-        const classes = data.name.split(" ");
-        obj.classList.add("socialvr-barge-child");
-        classes.forEach((c) => {
-          obj.classList.add(c);
-        });
-
-        obj.object3D.position.copy(position);
-        obj.object3D.rotation.copy(rotation);
-        obj.object3D.scale.copy(scale);
-
-        document.querySelector("a-scene").appendChild(obj);
-        obj.object3D.updateMatrixWorld();
-
-        window.APP.utils.GLTFModelPlus
-        .loadModel(gltf.props.src)
-        .then((model) => {
-          const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene, false);
-
-          obj.setObject3D("mesh", mesh);
-        })
-        .catch((e) => {
-          console.error(e);
-        });
+      // Spawners
+      if (spawner) {
+        const { entity } = window.APP.utils.addMedia(spawner.props.src, "#interactable-media");
+        entity.classList.add("socialvr-barge-child");
+        entity.object3D.position.copy(position);
+        entity.object3D.rotation.copy(rotation);
+        entity.object3D.scale.copy(scale);
       }
     }
   }
