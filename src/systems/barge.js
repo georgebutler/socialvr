@@ -43,29 +43,28 @@ function LoadAndAttach(data, barge) {
         window.APP.utils.GLTFModelPlus
         .loadModel(gltf.props.src)
         .then((model) => {
-          const mesh = window.APP.utils.threeUtils.cloneObject3D(model.scene, false);
-  
-          barge.setObject3D("mesh", mesh);
+          barge.setObject3D("mesh", window.APP.utils.threeUtils.cloneObject3D(model.scene, false));
         })
         .catch((e) => {
           console.error(e);
         });
       } else {
-        const { entity } = window.APP.utils.addMedia(gltf.props.src, "#static-media")
-        entity.classList.add("socialvr-barge-child");
+        const { entity } = window.APP.utils.addMedia(gltf.props.src, "#static-media");
+        entity.setAttribute("socialvr-barge-child", "");
         entity.object3D.position.copy(position);
         entity.object3D.rotation.copy(rotation);
         entity.object3D.scale.copy(scale);
+        entity.object3D.matrixNeedsUpdate = true;
       }
     }
 
     // Spawners
     if (spawner) {
-      const { entity } = window.APP.utils.addMedia(spawner.props.src, "#interactable-media")
-      entity.classList.add("socialvr-barge-child");
+      const { entity } = window.APP.utils.addMedia(spawner.props.src, "#interactable-media");
       entity.object3D.position.copy(position);
       entity.object3D.rotation.copy(rotation);
       entity.object3D.scale.copy(scale);
+      entity.object3D.matrixNeedsUpdate = true;
     }
   }
 }

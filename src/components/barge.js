@@ -150,7 +150,7 @@ AFRAME.registerComponent("socialvr-barge", {
         });
 
         // Child Movement
-        const children = document.querySelectorAll('.socialvr-barge-child');
+        const children = document.querySelectorAll('[socialvr-barge-child=""]');
 
         children.forEach((child) => {
           moveWithBox(this.el, child, direction, false);
