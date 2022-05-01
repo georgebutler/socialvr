@@ -28,8 +28,12 @@ AFRAME.registerComponent("socialvr-barge-button", {
     var el = this.el;
 
     // Geometry
-    this.geometry = new THREE.SphereGeometry(data.radius, 32, 16);
-    this.material = new THREE.MeshStandardMaterial({color: data.color});
+    this.geometry = new THREE.SphereGeometry(data.radius, 16, 8);
+    this.material = new THREE.MeshStandardMaterial({
+      color: data.color,
+      reflectivity: 1,
+      roughness: 0.5,
+    });
     this.mesh = new THREE.Mesh(this.geometry, this.material);
 
     el.setObject3D('mesh', this.mesh);
@@ -38,15 +42,18 @@ AFRAME.registerComponent("socialvr-barge-button", {
     el.setAttribute("socialvr-barge-child", "");
 
     // Text
-    const text = document.createElement("a-entity");
-
-    text.setAttribute("text", `value: ${this.data.text.toUpperCase()}; align: center;`);
-    text.setAttribute("rotation", "0 270 0");
-    text.setAttribute("position", `0 ${this.data.radius + 0.2} 0`);
-    el.appendChild(text);
+    this.text = document.createElement("a-entity");
+    this.text.setAttribute("text", `value: ${this.data.text}; align: center; side: double; width: 2;`);
+    this.text.setAttribute("rotation", "0 0 0");
+    this.text.setAttribute("position", `0 ${this.data.radius + 0.2} 0`);
+    el.appendChild(this.text);
     
     this.onClick = this.onClick.bind(this);
     this.el.object3D.addEventListener("interact", this.onClick);
+  },
+
+  tick: function (time, timeDelta) {
+    this.text.setAttribute("rotation", `0 ${time * 0.1} 0`);
   },
 
   remove: function() {
