@@ -112,15 +112,15 @@
     },
 
     init() {
+      const scene = document.querySelector("a-scene");
+
       this.direction = new window.APP.utils.THREE.Vector3();
 
       // Reset Button
       const buttonResetEl = document.createElement("a-sphere");
-      buttonResetEl.setAttribute("socialvr-barge-button", "reset");
+      buttonResetEl.setAttribute("socialvr-barge-button", "text: Reset; eventName: resetBargeEvent");
       buttonResetEl.setAttribute("radius", "0.15");
       buttonResetEl.setAttribute("material", "color: #3B56DC");
-      buttonResetEl.setAttribute("tags", "singleActionButton: true");
-      buttonResetEl.setAttribute("css-class", "interactable");
       buttonResetEl.setAttribute("position", {
         x: this.el.object3D.position.x + (2 - 0.2),
         y: this.el.object3D.position.y + 1,
@@ -129,11 +129,9 @@
 
       // Start Button
       const buttonGoEl = document.createElement("a-sphere");
-      buttonGoEl.setAttribute("socialvr-barge-button", "start");
+      buttonGoEl.setAttribute("socialvr-barge-button", "text: Go; eventName: startBargeEvent");
       buttonGoEl.setAttribute("radius", "0.15");
       buttonGoEl.setAttribute("material", "color: #32CD32");
-      buttonGoEl.setAttribute("tags", "singleActionButton: true");
-      buttonGoEl.setAttribute("css-class", "interactable");
       buttonGoEl.setAttribute("position", {
         x: this.el.object3D.position.x + (2 - 0.2),
         y: this.el.object3D.position.y + 1,
@@ -142,25 +140,23 @@
       
       // Stop Button
       const buttonStopEl = document.createElement("a-sphere");
-      buttonStopEl.setAttribute("socialvr-barge-button", "stop");
+      buttonStopEl.setAttribute("socialvr-barge-button", "text: Stop; eventName: stopBargeEvent");
       buttonStopEl.setAttribute("radius", "0.15");
       buttonStopEl.setAttribute("material", "color: #FF0000");
-      buttonStopEl.setAttribute("tags", "singleActionButton: true");
-      buttonStopEl.setAttribute("css-class", "interactable");
       buttonStopEl.setAttribute("position", {
         x: this.el.object3D.position.x + (2 - 0.2),
         y: this.el.object3D.position.y + 1,
         z: this.el.object3D.position.z - 1 // Left
       });
       
-      this.el.appendChild(buttonResetEl);
-      this.el.appendChild(buttonGoEl);
-      this.el.appendChild(buttonStopEl);
+      scene.appendChild(buttonResetEl);
+      scene.appendChild(buttonGoEl);
+      scene.appendChild(buttonStopEl);
 
       // Client
-      this.el.addEventListener("startBargeEvent", this.startBarge.bind(this));
-      this.el.addEventListener("stopBargeEvent", this.stopBarge.bind(this));
-      this.el.addEventListener("resetBargeEvent", this.resetBarge.bind(this));
+      scene.addEventListener("startBargeEvent", this.startBarge.bind(this));
+      scene.addEventListener("stopBargeEvent", this.stopBarge.bind(this));
+      scene.addEventListener("resetBargeEvent", this.resetBarge.bind(this));
 
       // Broadcast Event
       NAF.connection.subscribeToDataChannel("startBarge", this._startBarge.bind(this));
@@ -171,9 +167,11 @@
     },
 
     remove() {
-      this.el.removeEventListener("startBargeEvent", this.startBarge.bind(this));
-      this.el.removeEventListener("stopBargeEvent", this.stopBarge.bind(this));
-      this.el.removeEventListener("resetBargeEvent", this.resetBarge.bind(this));
+      const scene = document.querySelector("a-scene");
+
+      scene.removeEventListener("startBargeEvent", this.startBarge.bind(this));
+      scene.removeEventListener("stopBargeEvent", this.stopBarge.bind(this));
+      scene.removeEventListener("resetBargeEvent", this.resetBarge.bind(this));
 
       NAF.connection.unsubscribeToDataChannel("startBarge");
       NAF.connection.unsubscribeToDataChannel("stopBarge");
@@ -318,12 +316,26 @@
     dependencies: ["is-remote-hover-target", "hoverable-visuals"],
     
     // start, stop, reset
-    schema: {type: "string", default: "start"},
+    schema: {
+      text: {
+        type: "string", 
+        default: "start"
+      },
+      eventName: {
+        type: "string",
+        default: ""
+      }
+    },
 
     init: function() {
-      // button text
+      // Button
+      this.el.setAttribute("socialvr-barge-child", "");
+      this.el.setAttribute("tags", "singleActionButton: true");
+      this.el.setAttribute("css-class", "interactable");
+
+      // Text
       const textEl = document.createElement("a-entity");
-      textEl.setAttribute("text", `value: ${this.data.toUpperCase()}; align: center;`);
+      textEl.setAttribute("text", `value: ${this.data.text.toUpperCase()}; align: center;`);
       textEl.setAttribute("rotation", "0 270 0");
       textEl.setAttribute("position", "0 0.2 0");
       this.el.appendChild(textEl);
@@ -337,7 +349,10 @@
     },
 
     onClick: function() {
-      this.el.emit(`${this.data}BargeEvent`);
+      const scene = document.querySelector("a-scene");
+
+      scene.emit(this.data.eventName);
+      console.log(this.data.eventName);
       this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
         11,
         this.el.object3D
@@ -397,11 +412,24 @@
           });
         } else {
           const { entity } = window.APP.utils.addMedia(gltf.props.src, "#static-media");
+
           entity.setAttribute("socialvr-barge-child", "");
           entity.object3D.position.copy(position);
           entity.object3D.rotation.copy(rotation);
           entity.object3D.scale.copy(scale);
           entity.object3D.matrixNeedsUpdate = true;
+
+          // Phase Buttons
+          if (data.name === "startButton") {
+            const button = document.createElement("a-sphere");
+            const scene = document.querySelector("a-scene");
+
+            button.setAttribute("socialvr-barge-button", "text: Begin; eventName: startBargeEvent");
+            button.setAttribute("radius", "0.3");
+            button.setAttribute("material", "color: #FF0000");
+            button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 1, 0)));
+            scene.appendChild(button);
+          }
         }
       }
 

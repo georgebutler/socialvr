@@ -50,11 +50,24 @@ function LoadAndAttach(data, barge) {
         });
       } else {
         const { entity } = window.APP.utils.addMedia(gltf.props.src, "#static-media");
+
         entity.setAttribute("socialvr-barge-child", "");
         entity.object3D.position.copy(position);
         entity.object3D.rotation.copy(rotation);
         entity.object3D.scale.copy(scale);
         entity.object3D.matrixNeedsUpdate = true;
+
+        // Phase Buttons
+        if (data.name === "startButton") {
+          const button = document.createElement("a-sphere");
+          const scene = document.querySelector("a-scene");
+
+          button.setAttribute("socialvr-barge-button", "text: Begin; eventName: startBargeEvent");
+          button.setAttribute("radius", "0.3");
+          button.setAttribute("material", "color: #FF0000");
+          button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 1, 0)));
+          scene.appendChild(button);
+        }
       }
     }
 
