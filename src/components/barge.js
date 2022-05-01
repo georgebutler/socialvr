@@ -50,10 +50,8 @@ AFRAME.registerComponent("socialvr-barge", {
     this.direction = new window.APP.utils.THREE.Vector3();
 
     // Reset Button
-    const buttonResetEl = document.createElement("a-sphere");
-    buttonResetEl.setAttribute("socialvr-barge-button", "text: Reset; eventName: resetBargeEvent");
-    buttonResetEl.setAttribute("radius", "0.15");
-    buttonResetEl.setAttribute("material", "color: #3B56DC");
+    const buttonResetEl = document.createElement("a-entity");
+    buttonResetEl.setAttribute("socialvr-barge-button", "text: Reset; eventName: resetBargeEvent; radius: 0.15; color: #3B56DC");
     buttonResetEl.setAttribute("position", {
       x: this.el.object3D.position.x + (2 - 0.2),
       y: this.el.object3D.position.y + 1,
@@ -61,10 +59,8 @@ AFRAME.registerComponent("socialvr-barge", {
     });
 
     // Start Button
-    const buttonGoEl = document.createElement("a-sphere");
-    buttonGoEl.setAttribute("socialvr-barge-button", "text: Go; eventName: startBargeEvent");
-    buttonGoEl.setAttribute("radius", "0.15");
-    buttonGoEl.setAttribute("material", "color: #32CD32");
+    const buttonGoEl = document.createElement("a-entity");
+    buttonGoEl.setAttribute("socialvr-barge-button", "text: Go; eventName: startBargeEvent; radius: 0.15; color: #32CD32");
     buttonGoEl.setAttribute("position", {
       x: this.el.object3D.position.x + (2 - 0.2),
       y: this.el.object3D.position.y + 1,
@@ -72,10 +68,8 @@ AFRAME.registerComponent("socialvr-barge", {
     });
     
     // Stop Button
-    const buttonStopEl = document.createElement("a-sphere");
-    buttonStopEl.setAttribute("socialvr-barge-button", "text: Stop; eventName: stopBargeEvent");
-    buttonStopEl.setAttribute("radius", "0.15");
-    buttonStopEl.setAttribute("material", "color: #FF0000");
+    const buttonStopEl = document.createElement("a-entity");
+    buttonStopEl.setAttribute("socialvr-barge-button", "text: Stop; eventName: stopBargeEvent; radius: 0.15; color: #FF0000");
     buttonStopEl.setAttribute("position", {
       x: this.el.object3D.position.x + (2 - 0.2),
       y: this.el.object3D.position.y + 1,

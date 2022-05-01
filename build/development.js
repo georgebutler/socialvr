@@ -117,10 +117,8 @@
       this.direction = new window.APP.utils.THREE.Vector3();
 
       // Reset Button
-      const buttonResetEl = document.createElement("a-sphere");
-      buttonResetEl.setAttribute("socialvr-barge-button", "text: Reset; eventName: resetBargeEvent");
-      buttonResetEl.setAttribute("radius", "0.15");
-      buttonResetEl.setAttribute("material", "color: #3B56DC");
+      const buttonResetEl = document.createElement("a-entity");
+      buttonResetEl.setAttribute("socialvr-barge-button", "text: Reset; eventName: resetBargeEvent; radius: 0.15; color: #3B56DC");
       buttonResetEl.setAttribute("position", {
         x: this.el.object3D.position.x + (2 - 0.2),
         y: this.el.object3D.position.y + 1,
@@ -128,10 +126,8 @@
       });
 
       // Start Button
-      const buttonGoEl = document.createElement("a-sphere");
-      buttonGoEl.setAttribute("socialvr-barge-button", "text: Go; eventName: startBargeEvent");
-      buttonGoEl.setAttribute("radius", "0.15");
-      buttonGoEl.setAttribute("material", "color: #32CD32");
+      const buttonGoEl = document.createElement("a-entity");
+      buttonGoEl.setAttribute("socialvr-barge-button", "text: Go; eventName: startBargeEvent; radius: 0.15; color: #32CD32");
       buttonGoEl.setAttribute("position", {
         x: this.el.object3D.position.x + (2 - 0.2),
         y: this.el.object3D.position.y + 1,
@@ -139,10 +135,8 @@
       });
       
       // Stop Button
-      const buttonStopEl = document.createElement("a-sphere");
-      buttonStopEl.setAttribute("socialvr-barge-button", "text: Stop; eventName: stopBargeEvent");
-      buttonStopEl.setAttribute("radius", "0.15");
-      buttonStopEl.setAttribute("material", "color: #FF0000");
+      const buttonStopEl = document.createElement("a-entity");
+      buttonStopEl.setAttribute("socialvr-barge-button", "text: Stop; eventName: stopBargeEvent; radius: 0.15; color: #FF0000");
       buttonStopEl.setAttribute("position", {
         x: this.el.object3D.position.x + (2 - 0.2),
         y: this.el.object3D.position.y + 1,
@@ -324,21 +318,38 @@
       eventName: {
         type: "string",
         default: ""
+      },
+      radius: {
+        type: "number",
+        default: 0.2
+      },
+      color: {
+        type: "color",
+        default: "#FFF"
       }
     },
 
     init: function() {
-      // Button
-      this.el.setAttribute("socialvr-barge-child", "");
-      this.el.setAttribute("tags", "singleActionButton: true");
-      this.el.setAttribute("css-class", "interactable");
+      var data = this.data;
+      var el = this.el;
+
+      // Geometry
+      this.geometry = new THREE.SphereGeometry(data.radius, 32, 16);
+      this.material = new THREE.MeshStandardMaterial({color: data.color});
+      this.mesh = new THREE.Mesh(this.geometry, this.material);
+
+      el.setObject3D('mesh', this.mesh);
+      el.setAttribute("tags", "singleActionButton: true");
+      el.setAttribute("css-class", "interactable");
+      el.setAttribute("socialvr-barge-child", "");
 
       // Text
-      const textEl = document.createElement("a-entity");
-      textEl.setAttribute("text", `value: ${this.data.text.toUpperCase()}; align: center;`);
-      textEl.setAttribute("rotation", "0 270 0");
-      textEl.setAttribute("position", "0 0.2 0");
-      this.el.appendChild(textEl);
+      const text = document.createElement("a-entity");
+
+      text.setAttribute("text", `value: ${this.data.text.toUpperCase()}; align: center;`);
+      text.setAttribute("rotation", "0 270 0");
+      text.setAttribute("position", `0 ${this.data.radius + 0.2} 0`);
+      el.appendChild(text);
       
       this.onClick = this.onClick.bind(this);
       this.el.object3D.addEventListener("interact", this.onClick);
@@ -354,7 +365,7 @@
       scene.emit(this.data.eventName);
       console.log(this.data.eventName);
       this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
-        11,
+        10,
         this.el.object3D
       );
     }
@@ -421,12 +432,10 @@
 
           // Phase Buttons
           if (data.name === "startButton") {
-            const button = document.createElement("a-sphere");
+            const button = document.createElement("a-entity");
             const scene = document.querySelector("a-scene");
 
-            button.setAttribute("socialvr-barge-button", "text: Begin; eventName: startBargeEvent");
-            button.setAttribute("radius", "0.3");
-            button.setAttribute("material", "color: #FF0000");
+            button.setAttribute("socialvr-barge-button", "text: Begin; eventName: startBargeEvent; radius: 0.4; color: #C576F6");
             button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 1, 0)));
             scene.appendChild(button);
           }

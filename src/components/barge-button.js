@@ -12,21 +12,38 @@ AFRAME.registerComponent("socialvr-barge-button", {
     eventName: {
       type: "string",
       default: ""
+    },
+    radius: {
+      type: "number",
+      default: 0.2
+    },
+    color: {
+      type: "color",
+      default: "#FFF"
     }
   },
 
   init: function() {
-    // Button
-    this.el.setAttribute("socialvr-barge-child", "");
-    this.el.setAttribute("tags", "singleActionButton: true");
-    this.el.setAttribute("css-class", "interactable");
+    var data = this.data;
+    var el = this.el;
+
+    // Geometry
+    this.geometry = new THREE.SphereGeometry(data.radius, 32, 16);
+    this.material = new THREE.MeshStandardMaterial({color: data.color});
+    this.mesh = new THREE.Mesh(this.geometry, this.material);
+
+    el.setObject3D('mesh', this.mesh);
+    el.setAttribute("tags", "singleActionButton: true");
+    el.setAttribute("css-class", "interactable");
+    el.setAttribute("socialvr-barge-child", "");
 
     // Text
-    const textEl = document.createElement("a-entity");
-    textEl.setAttribute("text", `value: ${this.data.text.toUpperCase()}; align: center;`);
-    textEl.setAttribute("rotation", "0 270 0");
-    textEl.setAttribute("position", "0 0.2 0");
-    this.el.appendChild(textEl);
+    const text = document.createElement("a-entity");
+
+    text.setAttribute("text", `value: ${this.data.text.toUpperCase()}; align: center;`);
+    text.setAttribute("rotation", "0 270 0");
+    text.setAttribute("position", `0 ${this.data.radius + 0.2} 0`);
+    el.appendChild(text);
     
     this.onClick = this.onClick.bind(this);
     this.el.object3D.addEventListener("interact", this.onClick);
@@ -42,7 +59,7 @@ AFRAME.registerComponent("socialvr-barge-button", {
     scene.emit(this.data.eventName);
     console.log(this.data.eventName)
     this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
-      11,
+      10,
       this.el.object3D
     );
   }

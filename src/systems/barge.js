@@ -59,12 +59,10 @@ function LoadAndAttach(data, barge) {
 
         // Phase Buttons
         if (data.name === "startButton") {
-          const button = document.createElement("a-sphere");
+          const button = document.createElement("a-entity");
           const scene = document.querySelector("a-scene");
 
-          button.setAttribute("socialvr-barge-button", "text: Begin; eventName: startBargeEvent");
-          button.setAttribute("radius", "0.3");
-          button.setAttribute("material", "color: #FF0000");
+          button.setAttribute("socialvr-barge-button", "text: Begin; eventName: startBargeEvent; radius: 0.4; color: #C576F6");
           button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 1, 0)));
           scene.appendChild(button);
         }
