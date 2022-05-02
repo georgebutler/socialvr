@@ -31,7 +31,6 @@ AFRAME.registerComponent("socialvr-barge-button", {
     this.geometry = new THREE.SphereGeometry(data.radius, 16, 8);
     this.material = new THREE.MeshStandardMaterial({
       color: data.color,
-      reflectivity: 1,
       roughness: 0.5,
     });
     this.mesh = new THREE.Mesh(this.geometry, this.material);
@@ -66,7 +65,7 @@ AFRAME.registerComponent("socialvr-barge-button", {
     scene.emit(this.data.eventName);
     console.log(this.data.eventName)
     this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
-      10,
+      11,
       this.el.object3D
     );
   }

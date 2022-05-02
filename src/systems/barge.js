@@ -57,6 +57,13 @@ function LoadAndAttach(data, barge) {
         entity.object3D.scale.copy(scale);
         entity.object3D.matrixNeedsUpdate = true;
 
+        // Phase Index
+        let phaseIndex1 = data.name.search(/phase/i);
+
+        if (phaseIndex1 >= 0) {
+          let phase = data.name.slice(phaseIndex1).split(" ")[0]
+        }
+
         // Phase Buttons
         if (data.name === "startButton") {
           const button = document.createElement("a-entity");
@@ -105,7 +112,7 @@ export function CreateBarge() {
     })
     .then((data) => {
       for (var item in data.entities) {
-        console.log(data.entities[item]);
+        // console.log(data.entities[item]);
         LoadAndAttach(data.entities[item], barge);
       }
     })
@@ -114,13 +121,17 @@ export function CreateBarge() {
       TogglePhase1(false);
 
       // Client
-      barge.addEventListener("advancePhaseEvent", function () {
+      const scene = document.querySelector("a-scene");
+
+      scene.addEventListener("advancePhaseEvent", () => {
         TogglePhase1(true);
         NAF.connection.broadcastData("advancePhase", {});
       });
 
       // Broadcast Event
-      NAF.connection.subscribeToDataChannel("advancePhase", TogglePhase1(true));  // TODO: arrow function?
+      NAF.connection.subscribeToDataChannel("advancePhase", () => {
+        TogglePhase1(true);
+      });
     })
     .catch((e) => {
       console.error(e);
@@ -131,10 +142,6 @@ export function CreateBarge() {
 
 // toggle: true/false
 function TogglePhase1(toggle) {
-  // TODO: add phase index parameter
-
-  console.log("[Social VR] Barge - Phase Initialized");
-
   const phase1 = document.querySelectorAll(".phase1");
 
   if (phase1.length > 0) {

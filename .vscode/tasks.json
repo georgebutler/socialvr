@@ -4,9 +4,16 @@
 		{
 			"type": "npm",
 			"script": "dev",
-			"problemMatcher": [],
 			"label": "npm: dev",
-			"detail": "npm-run-all --parallel start watch"
+		},
+		{
+			"type": "shell",
+			"command": "ngrok http 3000",
+			"label": "ngrok: 3000",
+		},
+		{
+			"label": "Start Development Server",
+			"dependsOn": ["npm: dev", "ngrok: 3000"]
 		}
 	]
 }
