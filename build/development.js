@@ -117,6 +117,7 @@
       this.direction = new window.APP.utils.THREE.Vector3();
 
       // Reset Button
+      /** 
       const buttonResetEl = document.createElement("a-entity");
       buttonResetEl.setAttribute("socialvr-barge-button", "text: Reset; eventName: resetBargeEvent; radius: 0.15; color: #3B56DC");
       buttonResetEl.setAttribute("position", {
@@ -143,9 +144,11 @@
         z: this.el.object3D.position.z - 1 // Left
       });
       
+      
       scene.appendChild(buttonResetEl);
       scene.appendChild(buttonGoEl);
       scene.appendChild(buttonStopEl);
+      */
 
       // Client
       scene.addEventListener("startBargeEvent", this.startBarge.bind(this));
@@ -304,79 +307,6 @@
     }
   });
 
-  //import "./systems/sound-effects-system";
-
-  AFRAME.registerComponent("socialvr-barge-button", {
-    dependencies: ["is-remote-hover-target", "hoverable-visuals"],
-    
-    // start, stop, reset
-    schema: {
-      text: {
-        type: "string", 
-        default: "start"
-      },
-      eventName: {
-        type: "string",
-        default: ""
-      },
-      radius: {
-        type: "number",
-        default: 0.2
-      },
-      color: {
-        type: "color",
-        default: "#FFF"
-      }
-    },
-
-    init: function() {
-      var data = this.data;
-      var el = this.el;
-
-      // Geometry
-      this.geometry = new THREE.SphereGeometry(data.radius, 16, 8);
-      this.material = new THREE.MeshStandardMaterial({
-        color: data.color,
-        roughness: 0.5,
-      });
-      this.mesh = new THREE.Mesh(this.geometry, this.material);
-
-      el.setObject3D('mesh', this.mesh);
-      el.setAttribute("tags", "singleActionButton: true");
-      el.setAttribute("css-class", "interactable");
-      el.setAttribute("socialvr-barge-child", "");
-
-      // Text
-      this.text = document.createElement("a-entity");
-      this.text.setAttribute("text", `value: ${this.data.text}; align: center; side: double; width: 2;`);
-      this.text.setAttribute("rotation", "0 0 0");
-      this.text.setAttribute("position", `0 ${this.data.radius + 0.2} 0`);
-      el.appendChild(this.text);
-      
-      this.onClick = this.onClick.bind(this);
-      this.el.object3D.addEventListener("interact", this.onClick);
-    },
-
-    tick: function (time, timeDelta) {
-      this.text.setAttribute("rotation", `0 ${time * 0.1} 0`);
-    },
-
-    remove: function() {
-      this.el.object3D.removeEventListener("interact", this.onClick);
-    },
-
-    onClick: function() {
-      const scene = document.querySelector("a-scene");
-
-      scene.emit(this.data.eventName);
-      console.log(this.data.eventName);
-      this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
-        11,
-        this.el.object3D
-      );
-    }
-  });
-
   // responsible for barge creation and advancing phase
 
   AFRAME.registerSystem("socialvr-barge", {
@@ -384,6 +314,7 @@
       console.log("[Social VR] Barge System - Initialized");
 
       this.barge = null;
+      this.phase = 0;
     },
 
     register: function (el) {
@@ -440,7 +371,12 @@
           let phaseIndex1 = data.name.search(/phase/i);
 
           if (phaseIndex1 >= 0) {
-            data.name.slice(phaseIndex1).split(" ")[0];
+            let phase = data.name.slice(phaseIndex1).split(" ")[0].trim().toLowerCase();
+
+            if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
+              console.log(`Added ${data.name} to ${phase}.`);
+              entity.classList.add(`${phase}`);
+            }
           }
 
           // Phase Buttons
@@ -448,7 +384,7 @@
             const button = document.createElement("a-entity");
             const scene = document.querySelector("a-scene");
 
-            button.setAttribute("socialvr-barge-button", "text: Begin; eventName: startBargeEvent; radius: 0.4; color: #C576F6");
+            button.setAttribute("socialvr-barge-button", "text: Begin; radius: 0.4; color: #C576F6; phaseID: 1");
             button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 1, 0)));
             scene.appendChild(button);
           }
@@ -463,6 +399,46 @@
         entity.object3D.scale.copy(scale);
         entity.object3D.matrixNeedsUpdate = true;
       }
+    }
+  }
+
+  // toggle: true/false
+  function ChangePhase(senderId, dataType, data, targetId) {
+    console.log("\n\n");
+    console.log("Phase: " + data.index);
+    console.log("\n\n");
+
+    const phase1 = document.querySelectorAll(".phase1");
+    const phase2 = document.querySelectorAll(".phase2");
+    const phase3 = document.querySelectorAll(".phase3");
+
+    // Index 0: Initial phase, nothing visible.
+    if (data.index <= 0) {
+      phase1.forEach(el => {
+        el.setAttribute("visible", false);
+      });
+
+      phase2.forEach(el => {
+        el.setAttribute("visible", false);
+      });
+
+      phase3.forEach(el => {
+        el.setAttribute("visible", false);
+      });
+    }
+
+    if (data.index == 1) {
+      phase1.forEach(el => {
+        el.setAttribute("visible", true);
+      });
+
+      phase2.forEach(el => {
+        el.setAttribute("visible", false);
+      });
+
+      phase3.forEach(el => {
+        el.setAttribute("visible", false);
+      });
     }
   }
 
@@ -496,20 +472,12 @@
         }
       })
       .then(() => {
-        // hide phase 1 objects
-        TogglePhase1(false);
-
-        // Client
-        const scene = document.querySelector("a-scene");
-
-        scene.addEventListener("advancePhaseEvent", () => {
-          TogglePhase1(true);
-          NAF.connection.broadcastData("advancePhase", {});
-        });
-
         // Broadcast Event
-        NAF.connection.subscribeToDataChannel("advancePhase", () => {
-          TogglePhase1(true);
+        NAF.connection.subscribeToDataChannel("changePhase", ChangePhase);
+
+        ChangePhase(null, null, {index: 0});
+        NAF.connection.broadcastData("changePhase", {
+          index: 0
         });
       })
       .catch((e) => {
@@ -519,20 +487,92 @@
     return [barge, bargeToolboxButton];
   }
 
-  // toggle: true/false
-  function TogglePhase1(toggle) {
-    const phase1 = document.querySelectorAll(".phase1");
+  AFRAME.registerComponent("socialvr-barge-button", {
+    dependencies: ["is-remote-hover-target", "hoverable-visuals"],
+    
+    // start, stop, reset
+    schema: {
+      text: {
+        type: "string", 
+        default: "start"
+      },
+      eventName: {
+        type: "string",
+        default: ""
+      },
+      phaseID: {
+        type: "number",
+        default: -1
+      },
+      radius: {
+        type: "number",
+        default: 0.2
+      },
+      color: {
+        type: "color",
+        default: "#FFF"
+      }
+    },
 
-    if (phase1.length > 0) {
-      console.log("[Social VR] Barge - Phase 1 Found");
+    init: function() {
+      var data = this.data;
+      var el = this.el;
 
-      phase1.forEach(el => {
-        el.setAttribute("visible", toggle);
+      // Geometry
+      this.geometry = new THREE.SphereGeometry(data.radius, 16, 8);
+      this.material = new THREE.MeshStandardMaterial({
+        color: data.color,
+        roughness: 0.5,
       });
-    } else {
-      console.warn("[Social VR] Barge - Phase 1 Not Found");
+      this.mesh = new THREE.Mesh(this.geometry, this.material);
+
+      el.setObject3D('mesh', this.mesh);
+      el.setAttribute("tags", "singleActionButton: true");
+      el.setAttribute("css-class", "interactable");
+      el.setAttribute("socialvr-barge-child", "");
+
+      // Text
+      this.text = document.createElement("a-entity");
+      this.text.setAttribute("text", `value: ${this.data.text}; align: center; side: double; width: 2;`);
+      this.text.setAttribute("rotation", "0 0 0");
+      this.text.setAttribute("position", `0 ${this.data.radius + 0.2} 0`);
+      el.appendChild(this.text);
+      
+      this.onClick = this.onClick.bind(this);
+      this.el.object3D.addEventListener("interact", this.onClick);
+    },
+
+    tick: function (time, timeDelta) {
+      this.text.setAttribute("rotation", `0 ${time * 0.1} 0`);
+    },
+
+    remove: function() {
+      this.el.object3D.removeEventListener("interact", this.onClick);
+    },
+
+    onClick: function() {
+      const scene = document.querySelector("a-scene");
+
+      this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
+        11,
+        this.el.object3D
+      );
+
+      if (this.data.phaseID >= 0) {
+        // Phase Button
+        console.log("Clicked");
+        ChangePhase(null, null, {index: this.data.phaseID});
+        NAF.connection.broadcastData("changePhase", {
+          index: this.data.phaseID
+        });
+      } else {
+        // Generic Button
+        console.log("Why doesnt it work");
+        scene.emit(this.data.eventName);
+        // console.log(this.data.eventName);
+      }
     }
-  }
+  });
 
   const scene = document.querySelector("a-scene");
   scene.addEventListener("environment-scene-loaded", () => {
@@ -540,7 +580,7 @@
 
     const [barge, bargeToolboxButton] = CreateBarge();
     scene.appendChild(barge);
-    scene.appendChild(bargeToolboxButton);
+    // scene.appendChild(bargeToolboxButton);
 
     // Changes camera inspection system to show background, regardless of user preferences.
     const cameraSystem = scene.systems["hubs-systems"].cameraSystem;
@@ -558,14 +598,6 @@
     scene.addEventListener("object_spawned", (e) => {
       disableFloatyPhysics();
     });
-
-    // Phase testing commands
-    window.startPhaseTesting = function () {
-      let phase = 1;
-
-      barge.emit("advancePhaseEvent");
-      console.log(`[Social VR] Barge - Current Phase: ${phase}`);
-    };
 
     disableFloatyPhysics();
   }, { once: true });

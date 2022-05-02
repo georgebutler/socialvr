@@ -11,7 +11,7 @@ scene.addEventListener("environment-scene-loaded", () => {
 
   const [barge, bargeToolboxButton] = CreateBarge();
   scene.appendChild(barge);
-  scene.appendChild(bargeToolboxButton);
+  // scene.appendChild(bargeToolboxButton);
 
   // Changes camera inspection system to show background, regardless of user preferences.
   const cameraSystem = scene.systems["hubs-systems"].cameraSystem;
@@ -29,14 +29,6 @@ scene.addEventListener("environment-scene-loaded", () => {
   scene.addEventListener("object_spawned", (e) => {
     disableFloatyPhysics();
   });
-
-  // Phase testing commands
-  window.startPhaseTesting = function () {
-    let phase = 1;
-
-    barge.emit("advancePhaseEvent");
-    console.log(`[Social VR] Barge - Current Phase: ${phase}`);
-  };
 
   disableFloatyPhysics();
 }, { once: true })

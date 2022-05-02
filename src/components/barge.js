@@ -50,6 +50,7 @@ AFRAME.registerComponent("socialvr-barge", {
     this.direction = new window.APP.utils.THREE.Vector3();
 
     // Reset Button
+    /** 
     const buttonResetEl = document.createElement("a-entity");
     buttonResetEl.setAttribute("socialvr-barge-button", "text: Reset; eventName: resetBargeEvent; radius: 0.15; color: #3B56DC");
     buttonResetEl.setAttribute("position", {
@@ -76,9 +77,11 @@ AFRAME.registerComponent("socialvr-barge", {
       z: this.el.object3D.position.z - 1 // Left
     });
     
+    
     scene.appendChild(buttonResetEl);
     scene.appendChild(buttonGoEl);
     scene.appendChild(buttonStopEl);
+    */
 
     // Client
     scene.addEventListener("startBargeEvent", this.startBarge.bind(this));

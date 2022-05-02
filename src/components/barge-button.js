@@ -1,4 +1,4 @@
-//import "./systems/sound-effects-system";
+import { ChangePhase } from "../systems/barge";
 
 AFRAME.registerComponent("socialvr-barge-button", {
   dependencies: ["is-remote-hover-target", "hoverable-visuals"],
@@ -12,6 +12,10 @@ AFRAME.registerComponent("socialvr-barge-button", {
     eventName: {
       type: "string",
       default: ""
+    },
+    phaseID: {
+      type: "number",
+      default: -1
     },
     radius: {
       type: "number",
@@ -62,11 +66,23 @@ AFRAME.registerComponent("socialvr-barge-button", {
   onClick: function() {
     const scene = document.querySelector("a-scene");
 
-    scene.emit(this.data.eventName);
-    console.log(this.data.eventName)
     this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
       11,
       this.el.object3D
     );
+
+    if (this.data.phaseID >= 0) {
+      // Phase Button
+      console.log("Clicked");
+      ChangePhase(null, null, {index: this.data.phaseID});
+      NAF.connection.broadcastData("changePhase", {
+        index: this.data.phaseID
+      });
+    } else {
+      // Generic Button
+      console.log("Why doesnt it work");
+      scene.emit(this.data.eventName);
+      // console.log(this.data.eventName);
+    }
   }
 });

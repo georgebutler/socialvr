@@ -5,6 +5,7 @@ AFRAME.registerSystem("socialvr-barge", {
     console.log("[Social VR] Barge System - Initialized")
 
     this.barge = null;
+    this.phase = 0;
   },
 
   register: function (el) {
@@ -61,7 +62,12 @@ function LoadAndAttach(data, barge) {
         let phaseIndex1 = data.name.search(/phase/i);
 
         if (phaseIndex1 >= 0) {
-          let phase = data.name.slice(phaseIndex1).split(" ")[0]
+          let phase = data.name.slice(phaseIndex1).split(" ")[0].trim().toLowerCase();
+
+          if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
+            console.log(`Added ${data.name} to ${phase}.`);
+            entity.classList.add(`${phase}`);
+          }
         }
 
         // Phase Buttons
@@ -69,7 +75,7 @@ function LoadAndAttach(data, barge) {
           const button = document.createElement("a-entity");
           const scene = document.querySelector("a-scene");
 
-          button.setAttribute("socialvr-barge-button", "text: Begin; eventName: startBargeEvent; radius: 0.4; color: #C576F6");
+          button.setAttribute("socialvr-barge-button", "text: Begin; radius: 0.4; color: #C576F6; phaseID: 1");
           button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 1, 0)));
           scene.appendChild(button);
         }
@@ -84,6 +90,46 @@ function LoadAndAttach(data, barge) {
       entity.object3D.scale.copy(scale);
       entity.object3D.matrixNeedsUpdate = true;
     }
+  }
+}
+
+// toggle: true/false
+export function ChangePhase(senderId, dataType, data, targetId) {
+  console.log("\n\n");
+  console.log("Phase: " + data.index);
+  console.log("\n\n");
+
+  const phase1 = document.querySelectorAll(".phase1");
+  const phase2 = document.querySelectorAll(".phase2");
+  const phase3 = document.querySelectorAll(".phase3");
+
+  // Index 0: Initial phase, nothing visible.
+  if (data.index <= 0) {
+    phase1.forEach(el => {
+      el.setAttribute("visible", false);
+    });
+
+    phase2.forEach(el => {
+      el.setAttribute("visible", false);
+    });
+
+    phase3.forEach(el => {
+      el.setAttribute("visible", false);
+    });
+  }
+
+  if (data.index == 1) {
+    phase1.forEach(el => {
+      el.setAttribute("visible", true);
+    });
+
+    phase2.forEach(el => {
+      el.setAttribute("visible", false);
+    });
+
+    phase3.forEach(el => {
+      el.setAttribute("visible", false);
+    });
   }
 }
 
@@ -117,20 +163,12 @@ export function CreateBarge() {
       }
     })
     .then(() => {
-      // hide phase 1 objects
-      TogglePhase1(false);
-
-      // Client
-      const scene = document.querySelector("a-scene");
-
-      scene.addEventListener("advancePhaseEvent", () => {
-        TogglePhase1(true);
-        NAF.connection.broadcastData("advancePhase", {});
-      });
-
       // Broadcast Event
-      NAF.connection.subscribeToDataChannel("advancePhase", () => {
-        TogglePhase1(true);
+      NAF.connection.subscribeToDataChannel("changePhase", ChangePhase);
+
+      ChangePhase(null, null, {index: 0});
+      NAF.connection.broadcastData("changePhase", {
+        index: 0
       });
     })
     .catch((e) => {
@@ -138,19 +176,4 @@ export function CreateBarge() {
     });
 
   return [barge, bargeToolboxButton];
-}
-
-// toggle: true/false
-function TogglePhase1(toggle) {
-  const phase1 = document.querySelectorAll(".phase1");
-
-  if (phase1.length > 0) {
-    console.log("[Social VR] Barge - Phase 1 Found");
-
-    phase1.forEach(el => {
-      el.setAttribute("visible", toggle);
-    });
-  } else {
-    console.warn("[Social VR] Barge - Phase 1 Not Found");
-  }
 }

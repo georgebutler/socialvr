@@ -4,16 +4,20 @@
 		{
 			"type": "npm",
 			"script": "dev",
-			"label": "npm: dev",
+			"label": "npm: dev"
 		},
 		{
 			"type": "shell",
 			"command": "ngrok http 3000",
-			"label": "ngrok: 3000",
+			"label": "ngrok: 3000"
 		},
 		{
 			"label": "Start Development Server",
-			"dependsOn": ["npm: dev", "ngrok: 3000"]
+			"dependsOn": [
+				"npm: dev",
+				"ngrok: 3000"
+			],
+			"problemMatcher": []
 		}
 	]
 }
