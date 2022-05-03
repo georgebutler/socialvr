@@ -404,9 +404,7 @@
 
   // toggle: true/false
   function ChangePhase(senderId, dataType, data, targetId) {
-    console.log("\n\n");
-    console.log("Phase: " + data.index);
-    console.log("\n\n");
+    // console.log("Phase: " + data.index);
 
     const phase1 = document.querySelectorAll(".phase1");
     const phase2 = document.querySelectorAll(".phase2");
@@ -427,6 +425,7 @@
       });
     }
 
+    // Index 1: Phase 1 visible ONLY.
     if (data.index == 1) {
       phase1.forEach(el => {
         el.setAttribute("visible", true);
@@ -560,16 +559,13 @@
 
       if (this.data.phaseID >= 0) {
         // Phase Button
-        console.log("Clicked");
         ChangePhase(null, null, {index: this.data.phaseID});
         NAF.connection.broadcastData("changePhase", {
           index: this.data.phaseID
         });
       } else {
         // Generic Button
-        console.log("Why doesnt it work");
         scene.emit(this.data.eventName);
-        // console.log(this.data.eventName);
       }
     }
   });

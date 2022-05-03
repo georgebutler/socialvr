@@ -95,9 +95,7 @@ function LoadAndAttach(data, barge) {
 
 // toggle: true/false
 export function ChangePhase(senderId, dataType, data, targetId) {
-  console.log("\n\n");
-  console.log("Phase: " + data.index);
-  console.log("\n\n");
+  // console.log("Phase: " + data.index);
 
   const phase1 = document.querySelectorAll(".phase1");
   const phase2 = document.querySelectorAll(".phase2");
@@ -118,6 +116,7 @@ export function ChangePhase(senderId, dataType, data, targetId) {
     });
   }
 
+  // Index 1: Phase 1 visible ONLY.
   if (data.index == 1) {
     phase1.forEach(el => {
       el.setAttribute("visible", true);

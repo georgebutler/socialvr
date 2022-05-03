@@ -73,16 +73,13 @@ AFRAME.registerComponent("socialvr-barge-button", {
 
     if (this.data.phaseID >= 0) {
       // Phase Button
-      console.log("Clicked");
       ChangePhase(null, null, {index: this.data.phaseID});
       NAF.connection.broadcastData("changePhase", {
         index: this.data.phaseID
       });
     } else {
       // Generic Button
-      console.log("Why doesnt it work");
       scene.emit(this.data.eventName);
-      // console.log(this.data.eventName);
     }
   }
 });
