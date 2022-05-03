@@ -15,23 +15,26 @@ function moveWithBox(parent, child, direction, isAvatar) {
   const maxX = parentPosition.x + width;
   const minZ = parentPosition.z - depth;
   const maxZ = parentPosition.z + depth;
-
-  if (childPosition.x >= minX && childPosition.x <= maxX && childPosition.z >= minZ && childPosition.z <= maxZ) {
-    if (isAvatar) {
-      child.setAttribute("position", {
-        x: childPosition.x + direction.x,
-        y: parentPosition.y + window.APP.utils.getCurrentPlayerHeight() / 2,
-        z: childPosition.z + direction.z
-      });
-    } else {
-      child.setAttribute("position", {
-        x: childPosition.x + direction.x,
-        y: childPosition.y + direction.y,
-        z: childPosition.z + direction.z
-      });
+  
+  // Don't bring "removefrombarge" objects.
+  if (child.className.search(/removefrombarge/i) < 0) {
+    if (childPosition.x >= minX && childPosition.x <= maxX && childPosition.z >= minZ && childPosition.z <= maxZ) {
+      if (isAvatar) {
+        child.setAttribute("position", {
+          x: childPosition.x + direction.x,
+          y: parentPosition.y + window.APP.utils.getCurrentPlayerHeight() / 2,
+          z: childPosition.z + direction.z
+        });
+      } else {
+        child.setAttribute("position", {
+          x: childPosition.x + direction.x,
+          y: childPosition.y + direction.y,
+          z: childPosition.z + direction.z
+        });
+      }
+  
+      return true;
     }
-
-    return true;
   }
 
   return false;
@@ -176,7 +179,7 @@ AFRAME.registerComponent("socialvr-barge", {
       }
     }
 
-    this.el.sceneEl.systems["hubs-systems"].characterController.fly = shouldAvatarBeInBargeMode;
+    //this.el.sceneEl.systems["hubs-systems"].characterController.fly = shouldAvatarBeInBargeMode;
   },
 
   _startBarge(senderId, dataType, data, targetId) {

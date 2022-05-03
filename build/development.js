@@ -69,7 +69,6 @@
 
   let positions = [];
   let lastKeyChange = 0;
-  let shouldAvatarBeInBargeMode = false;
 
   const width = 30;
   const depth = 30;
@@ -82,23 +81,26 @@
     const maxX = parentPosition.x + width;
     const minZ = parentPosition.z - depth;
     const maxZ = parentPosition.z + depth;
-
-    if (childPosition.x >= minX && childPosition.x <= maxX && childPosition.z >= minZ && childPosition.z <= maxZ) {
-      if (isAvatar) {
-        child.setAttribute("position", {
-          x: childPosition.x + direction.x,
-          y: parentPosition.y + window.APP.utils.getCurrentPlayerHeight() / 2,
-          z: childPosition.z + direction.z
-        });
-      } else {
-        child.setAttribute("position", {
-          x: childPosition.x + direction.x,
-          y: childPosition.y + direction.y,
-          z: childPosition.z + direction.z
-        });
+    
+    // Don't bring "removefrombarge" objects.
+    if (child.className.search(/removefrombarge/i) < 0) {
+      if (childPosition.x >= minX && childPosition.x <= maxX && childPosition.z >= minZ && childPosition.z <= maxZ) {
+        if (isAvatar) {
+          child.setAttribute("position", {
+            x: childPosition.x + direction.x,
+            y: parentPosition.y + window.APP.utils.getCurrentPlayerHeight() / 2,
+            z: childPosition.z + direction.z
+          });
+        } else {
+          child.setAttribute("position", {
+            x: childPosition.x + direction.x,
+            y: childPosition.y + direction.y,
+            z: childPosition.z + direction.z
+          });
+        }
+    
+        return true;
       }
-
-      return true;
     }
 
     return false;
@@ -182,8 +184,6 @@
       } else {
         this.el.pause();
       }
-
-      shouldAvatarBeInBargeMode = false;
       const position = this.el.object3D.position;
 
       if (this.data.moving) {
@@ -230,7 +230,7 @@
           });
 
           // Avatar Movement
-          shouldAvatarBeInBargeMode = moveWithBox(this.el, window.APP.componentRegistry["player-info"][0].el, direction, true);
+          moveWithBox(this.el, window.APP.componentRegistry["player-info"][0].el, direction, true);
         } else {
           // NaN check
           if (isNaN(lastKeyChange) || t >= lastKeyChange) {
@@ -243,7 +243,7 @@
         }
       }
 
-      this.el.sceneEl.systems["hubs-systems"].characterController.fly = shouldAvatarBeInBargeMode;
+      //this.el.sceneEl.systems["hubs-systems"].characterController.fly = shouldAvatarBeInBargeMode;
     },
 
     _startBarge(senderId, dataType, data, targetId) {
@@ -285,7 +285,6 @@
 
       this.el.setAttribute("position", new window.APP.utils.THREE.Vector3(0, 0, 0));
       avatar.el.setAttribute("position", new window.APP.utils.THREE.Vector3(0, 0, 0));
-      shouldAvatarBeInBargeMode = false;
     },
 
     startBarge() {
@@ -334,6 +333,7 @@
     if (transform) {
       let gltf = data.components.find(el => el.name === "gltf-model");
       let spawner = data.components.find(el => el.name === "spawner");
+      let image = data.components.find(el => el.name === "image");
 
       let position = new window.APP.utils.THREE.Vector3(transform.props.position.x, transform.props.position.y, transform.props.position.z);
       let rotation = new window.APP.utils.THREE.Euler(transform.props.rotation.x, transform.props.rotation.y, transform.props.rotation.z, "XYZ");
@@ -392,12 +392,43 @@
       if (spawner) {
         // No duplicate network objects
         if (document.getElementById(spokeSerial) == null) {
-          const { entity } = window.APP.utils.addMedia(spawner.props.src, "#interactable-media");
+          const { entity } = window.APP.utils.addMedia(spawner.props.src, "#static-media");
 
           entity.id = spokeSerial;
           entity.object3D.position.copy(position);
           entity.object3D.rotation.copy(rotation);
           entity.object3D.scale.copy(scale);
+          entity.object3D.matrixNeedsUpdate = true;
+          entity.setAttribute("css-class", "interactable");
+    
+          // Phase Index
+          const phaseIndex = data.name.search(/phase/i);
+    
+          if (phaseIndex >= 0) {
+            const phase = data.name.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
+            console.warn(phase);
+            
+            if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
+              console.log(`Added ${data.name} to ${phase}.`);
+              //entity.classList.add(`${phase}`);
+            }
+          }
+        } else {
+          console.warn(spokeSerial);
+        }
+      }
+
+      // Images
+      if (image) {
+        // No duplicate network objects
+        if (document.getElementById(spokeSerial) == null) {
+          const { entity } = window.APP.utils.addMedia(image.props.src, "#interactable-media");
+
+          entity.id = spokeSerial;
+          entity.object3D.position.copy(position);
+          entity.object3D.rotation.copy(rotation);
+          entity.object3D.scale.copy(scale);
+          entity.object3D.localToWorld(position);
           entity.object3D.matrixNeedsUpdate = true;
     
           // Phase Index
@@ -411,7 +442,7 @@
               console.log(`Added ${data.name} to ${phase}.`);
               //entity.classList.add(`${phase}`);
             }
-          } 
+          }
         } else {
           console.warn(spokeSerial);
         }
@@ -471,7 +502,7 @@
       z: 3
     });
 
-    fetch("https://statuesque-rugelach-4185bd.netlify.app/assets/barge-master-for-export-5-3-22.spoke")
+    fetch("https://statuesque-rugelach-4185bd.netlify.app/assets/barge-master-for-export-5-3-2022_1647.spoke")
       .then(response => {
         return response.json();
       })

@@ -28,6 +28,7 @@ function LoadAndAttach(data, barge, spokeSerial) {
   if (transform) {
     let gltf = data.components.find(el => el.name === "gltf-model");
     let spawner = data.components.find(el => el.name === "spawner");
+    let image = data.components.find(el => el.name === "image");
 
     let position = new window.APP.utils.THREE.Vector3(transform.props.position.x, transform.props.position.y, transform.props.position.z);
     let rotation = new window.APP.utils.THREE.Euler(transform.props.rotation.x, transform.props.rotation.y, transform.props.rotation.z, "XYZ");
@@ -86,12 +87,43 @@ function LoadAndAttach(data, barge, spokeSerial) {
     if (spawner) {
       // No duplicate network objects
       if (document.getElementById(spokeSerial) == null) {
-        const { entity } = window.APP.utils.addMedia(spawner.props.src, "#interactable-media");
+        const { entity } = window.APP.utils.addMedia(spawner.props.src, "#static-media");
 
         entity.id = spokeSerial
         entity.object3D.position.copy(position);
         entity.object3D.rotation.copy(rotation);
         entity.object3D.scale.copy(scale);
+        entity.object3D.matrixNeedsUpdate = true;
+        entity.setAttribute("css-class", "interactable");
+  
+        // Phase Index
+        const phaseIndex = data.name.search(/phase/i);
+  
+        if (phaseIndex >= 0) {
+          const phase = data.name.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
+          console.warn(phase);
+          
+          if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
+            console.log(`Added ${data.name} to ${phase}.`);
+            //entity.classList.add(`${phase}`);
+          }
+        }
+      } else {
+        console.warn(spokeSerial);
+      }
+    }
+
+    // Images
+    if (image) {
+      // No duplicate network objects
+      if (document.getElementById(spokeSerial) == null) {
+        const { entity } = window.APP.utils.addMedia(image.props.src, "#interactable-media");
+
+        entity.id = spokeSerial
+        entity.object3D.position.copy(position);
+        entity.object3D.rotation.copy(rotation);
+        entity.object3D.scale.copy(scale);
+        entity.object3D.localToWorld(position);
         entity.object3D.matrixNeedsUpdate = true;
   
         // Phase Index
@@ -105,7 +137,7 @@ function LoadAndAttach(data, barge, spokeSerial) {
             console.log(`Added ${data.name} to ${phase}.`);
             //entity.classList.add(`${phase}`);
           }
-        } 
+        }
       } else {
         console.warn(spokeSerial);
       }
@@ -165,7 +197,7 @@ export function CreateBarge() {
     z: 3
   });
 
-  fetch("https://statuesque-rugelach-4185bd.netlify.app/assets/barge-master-for-export-5-3-22.spoke")
+  fetch("https://statuesque-rugelach-4185bd.netlify.app/assets/barge-master-for-export-5-3-2022_1647.spoke")
     .then(response => {
       return response.json();
     })
