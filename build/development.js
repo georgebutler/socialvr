@@ -327,19 +327,6 @@
     },
   });
 
-  function AddPhaseIndex(data, el) {
-    const phaseIndex = data.name.search(/phase/i);
-
-    if (phaseIndex >= 0) {
-      const phase = data.name.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
-
-      if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
-        console.log(`Added ${data.name} to ${phase}.`);
-        el.classList.add(`${phase}`);
-      }
-    }
-  }
-
   function LoadAndAttach(data, barge) {
     let transform = data.components.find(el => el.name === "transform");
     // let visible = data.components.find(el => el.name === "visible");
@@ -378,7 +365,16 @@
           entity.object3D.matrixNeedsUpdate = true;
 
           // Phase Index
-          AddPhaseIndex(data, entity);
+          const phaseIndex = data.name.search(/phase/i);
+
+          if (phaseIndex >= 0) {
+            const phase = data.name.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
+        
+            if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
+              console.log(`Added ${data.name} to ${phase}.`);
+              entity.classList.add(`${phase}`);
+            }
+          }
 
           // Phase Buttons
           if (data.name === "startButton") {
@@ -401,7 +397,16 @@
         entity.object3D.matrixNeedsUpdate = true;
 
         // Phase Index
-        AddPhaseIndex(data, entity);
+        const phaseIndex = data.name.search(/phase/i);
+
+        if (phaseIndex >= 0) {
+          const phase = data.name.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
+      
+          if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
+            console.log(`Added ${data.name} to ${phase}.`);
+            entity.classList.add(`${phase}`);
+          }
+        }
       }
     }
   }
