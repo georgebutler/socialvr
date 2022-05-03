@@ -21,7 +21,7 @@ AFRAME.registerSystem("socialvr-barge", {
   },
 });
 
-function LoadAndAttach(data, barge) {
+function LoadAndAttach(data, barge, spokeSerial) {
   let transform = data.components.find(el => el.name === "transform");
   // let visible = data.components.find(el => el.name === "visible");
 
@@ -50,8 +50,8 @@ function LoadAndAttach(data, barge) {
           console.error(e);
         });
       } else {
-        const { entity } = window.APP.utils.addMedia(gltf.props.src, "#static-media");
-
+        const { entity } = window.APP.utils.addMedia(gltf.props.src, "#static-media", 1, null, false, false, true, {}, false);
+        
         entity.setAttribute("socialvr-barge-child", "");
         entity.object3D.position.copy(position);
         entity.object3D.rotation.copy(rotation);
@@ -84,22 +84,30 @@ function LoadAndAttach(data, barge) {
 
     // Spawners
     if (spawner) {
-      const { entity } = window.APP.utils.addMedia(spawner.props.src, "#interactable-media");
-      entity.object3D.position.copy(position);
-      entity.object3D.rotation.copy(rotation);
-      entity.object3D.scale.copy(scale);
-      entity.object3D.matrixNeedsUpdate = true;
+      // No duplicate network objects
+      if (document.getElementById(spokeSerial) == null) {
+        const { entity } = window.APP.utils.addMedia(spawner.props.src, "#interactable-media");
 
-      // Phase Index
-      const phaseIndex = data.name.search(/phase/i);
-
-      if (phaseIndex >= 0) {
-        const phase = data.name.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
-    
-        if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
-          console.log(`Added ${data.name} to ${phase}.`);
-          entity.classList.add(`${phase}`);
-        }
+        entity.id = spokeSerial
+        entity.object3D.position.copy(position);
+        entity.object3D.rotation.copy(rotation);
+        entity.object3D.scale.copy(scale);
+        entity.object3D.matrixNeedsUpdate = true;
+  
+        // Phase Index
+        const phaseIndex = data.name.search(/phase/i);
+  
+        if (phaseIndex >= 0) {
+          const phase = data.name.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
+          console.warn(phase);
+          
+          if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
+            console.log(`Added ${data.name} to ${phase}.`);
+            entity.classList.add(`${phase}`);
+          }
+        } 
+      } else {
+        console.warn(spokeSerial);
       }
     }
   }
@@ -116,7 +124,7 @@ export function ChangePhase(senderId, dataType, data, targetId) {
   // Index 0: Initial phase, nothing visible.
   if (data.index <= 0) {
     phase1.forEach(el => {
-      el.setAttribute("visible", false);
+      // el.setAttribute("visible", false);
     });
 
     phase2.forEach(el => {
@@ -130,15 +138,9 @@ export function ChangePhase(senderId, dataType, data, targetId) {
 
   // Index 1: Phase 1 visible ONLY.
   if (data.index == 1) {
+    console.log("Phase 1 Started");
+    
     phase1.forEach(el => {
-      el.setAttribute("visible", true);
-    });
-
-    phase2.forEach(el => {
-      el.setAttribute("visible", false);
-    });
-
-    phase3.forEach(el => {
       el.setAttribute("visible", false);
     });
   }
@@ -168,9 +170,8 @@ export function CreateBarge() {
       return response.json();
     })
     .then((data) => {
-      for (const entity in data.entities) {
-        // console.log(data.entities[entity]);
-        LoadAndAttach(data.entities[entity], barge);
+      for (const [key, entity] of Object.entries(data.entities)) {
+        LoadAndAttach(entity, barge, encodeURIComponent(key));
       }
     })
     .then(() => {
