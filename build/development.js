@@ -372,7 +372,7 @@
         
             if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
               console.log(`Added ${data.name} to ${phase}`);
-              entity.classList.add(`${phase}`);
+              //entity.classList.add(`${phase}`);
             }
           }
 
@@ -409,7 +409,7 @@
             
             if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
               console.log(`Added ${data.name} to ${phase}.`);
-              entity.classList.add(`${phase}`);
+              //entity.classList.add(`${phase}`);
             }
           } 
         } else {
@@ -430,7 +430,7 @@
     // Index 0: Initial phase, nothing visible.
     if (data.index <= 0) {
       phase1.forEach(el => {
-        // el.setAttribute("visible", false);
+        el.setAttribute("visible", false);
       });
 
       phase2.forEach(el => {
