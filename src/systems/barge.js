@@ -65,7 +65,7 @@ function LoadAndAttach(data, barge) {
           const phase = data.name.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
       
           if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
-            console.log(`Added ${data.name} to ${phase}.`);
+            console.log(`Added ${data.name} to ${phase}`);
             entity.classList.add(`${phase}`);
           }
         }
@@ -163,14 +163,14 @@ export function CreateBarge() {
     z: 3
   });
 
-  fetch("https://statuesque-rugelach-4185bd.netlify.app/assets/barge-master-for-export-5-2-22.spoke")
+  fetch("https://statuesque-rugelach-4185bd.netlify.app/assets/barge-master-for-export-5-3-22.spoke")
     .then(response => {
       return response.json();
     })
     .then((data) => {
-      for (var item in data.entities) {
-        // console.log(data.entities[item]);
-        LoadAndAttach(data.entities[item], barge);
+      for (const entity in data.entities) {
+        // console.log(data.entities[entity]);
+        LoadAndAttach(data.entities[entity], barge);
       }
     })
     .then(() => {

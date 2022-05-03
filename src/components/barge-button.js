@@ -80,7 +80,7 @@ AFRAME.registerComponent("socialvr-barge-button", {
 
       // Phase 1 - Go
       if (this.data.phaseID === 1) {
-
+        scene.emit("startBargeEvent");
       }
     } else {
       // Generic Button
