@@ -21,6 +21,19 @@ AFRAME.registerSystem("socialvr-barge", {
   },
 });
 
+function AddPhaseIndex(data, el) {
+  const phaseIndex = data.name.search(/phase/i);
+
+  if (phaseIndex >= 0) {
+    const phase = data.name.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
+
+    if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
+      console.log(`Added ${data.name} to ${phase}.`);
+      el.classList.add(`${phase}`);
+    }
+  }
+}
+
 function LoadAndAttach(data, barge) {
   let transform = data.components.find(el => el.name === "transform");
   // let visible = data.components.find(el => el.name === "visible");
@@ -59,16 +72,7 @@ function LoadAndAttach(data, barge) {
         entity.object3D.matrixNeedsUpdate = true;
 
         // Phase Index
-        let phaseIndex1 = data.name.search(/phase/i);
-
-        if (phaseIndex1 >= 0) {
-          let phase = data.name.slice(phaseIndex1).split(" ")[0].trim().toLowerCase();
-
-          if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
-            console.log(`Added ${data.name} to ${phase}.`);
-            entity.classList.add(`${phase}`);
-          }
-        }
+        AddPhaseIndex(data, entity);
 
         // Phase Buttons
         if (data.name === "startButton") {
@@ -89,6 +93,9 @@ function LoadAndAttach(data, barge) {
       entity.object3D.rotation.copy(rotation);
       entity.object3D.scale.copy(scale);
       entity.object3D.matrixNeedsUpdate = true;
+
+      // Phase Index
+      AddPhaseIndex(data, entity);
     }
   }
 }

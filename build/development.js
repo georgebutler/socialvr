@@ -117,7 +117,6 @@
       this.direction = new window.APP.utils.THREE.Vector3();
 
       // Reset Button
-      /** 
       const buttonResetEl = document.createElement("a-entity");
       buttonResetEl.setAttribute("socialvr-barge-button", "text: Reset; eventName: resetBargeEvent; radius: 0.15; color: #3B56DC");
       buttonResetEl.setAttribute("position", {
@@ -144,11 +143,9 @@
         z: this.el.object3D.position.z - 1 // Left
       });
       
-      
       scene.appendChild(buttonResetEl);
       scene.appendChild(buttonGoEl);
       scene.appendChild(buttonStopEl);
-      */
 
       // Client
       scene.addEventListener("startBargeEvent", this.startBarge.bind(this));
@@ -330,6 +327,19 @@
     },
   });
 
+  function AddPhaseIndex(data, el) {
+    const phaseIndex = data.name.search(/phase/i);
+
+    if (phaseIndex >= 0) {
+      const phase = data.name.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
+
+      if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
+        console.log(`Added ${data.name} to ${phase}.`);
+        el.classList.add(`${phase}`);
+      }
+    }
+  }
+
   function LoadAndAttach(data, barge) {
     let transform = data.components.find(el => el.name === "transform");
     // let visible = data.components.find(el => el.name === "visible");
@@ -368,16 +378,7 @@
           entity.object3D.matrixNeedsUpdate = true;
 
           // Phase Index
-          let phaseIndex1 = data.name.search(/phase/i);
-
-          if (phaseIndex1 >= 0) {
-            let phase = data.name.slice(phaseIndex1).split(" ")[0].trim().toLowerCase();
-
-            if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
-              console.log(`Added ${data.name} to ${phase}.`);
-              entity.classList.add(`${phase}`);
-            }
-          }
+          AddPhaseIndex(data, entity);
 
           // Phase Buttons
           if (data.name === "startButton") {
@@ -398,6 +399,9 @@
         entity.object3D.rotation.copy(rotation);
         entity.object3D.scale.copy(scale);
         entity.object3D.matrixNeedsUpdate = true;
+
+        // Phase Index
+        AddPhaseIndex(data, entity);
       }
     }
   }
@@ -563,6 +567,9 @@
         NAF.connection.broadcastData("changePhase", {
           index: this.data.phaseID
         });
+
+        // Phase 1 - Go
+        if (this.data.phaseID === 1) ;
       } else {
         // Generic Button
         scene.emit(this.data.eventName);
