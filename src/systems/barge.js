@@ -87,14 +87,21 @@ function LoadAndAttach(data, barge, spokeSerial) {
     if (spawner) {
       // No duplicate network objects
       if (document.getElementById(spokeSerial) == null) {
-        const { entity } = window.APP.utils.addMedia(spawner.props.src, "#static-media");
+        const { entity } = window.APP.utils.addMedia(spawner.props.src, "#static-media", 1, null, false, false, true, {}, false);
 
         entity.id = spokeSerial
         entity.object3D.position.copy(position);
         entity.object3D.rotation.copy(rotation);
         entity.object3D.scale.copy(scale);
         entity.object3D.matrixNeedsUpdate = true;
-        entity.setAttribute("css-class", "interactable");
+
+        entity.classList.add("interactable");
+        entity.setAttribute("is-remote-hover-target", "");
+        entity.setAttribute("hoverable-visuals", "");
+        entity.setAttribute("floaty-object", "modifyGravityOnRelease: true; autoLockOnLoad: true; autoLockOnRelease: true;");
+        entity.setAttribute("set-unowned-body-kinematic", "");
+        entity.setAttribute("body-helper", "type: dynamic; mass: 1; collisionFilterGroup: 1; collisionFilterMask: 15;");
+        entity.setAttribute("tags", "isHandCollisionTarget: true; isHoldable: true; offersHandConstraint: true; offersRemoteConstraint: true; inspectable: true;");
   
         // Phase Index
         const phaseIndex = data.name.search(/phase/i);
@@ -117,14 +124,14 @@ function LoadAndAttach(data, barge, spokeSerial) {
     if (image) {
       // No duplicate network objects
       if (document.getElementById(spokeSerial) == null) {
-        const { entity } = window.APP.utils.addMedia(image.props.src, "#interactable-media");
+        const { entity } = window.APP.utils.addMedia(image.props.src, "#static-media", 1, null, false, false, true, {}, false);
 
         entity.id = spokeSerial
         entity.object3D.position.copy(position);
         entity.object3D.rotation.copy(rotation);
         entity.object3D.scale.copy(scale);
-        entity.object3D.localToWorld(position);
         entity.object3D.matrixNeedsUpdate = true;
+        entity.classList.add("interactable");
   
         // Phase Index
         const phaseIndex = data.name.search(/phase/i);

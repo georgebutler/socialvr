@@ -41,8 +41,8 @@ AFRAME.registerComponent("socialvr-barge-button", {
 
     el.setObject3D('mesh', this.mesh);
     el.setAttribute("tags", "singleActionButton: true");
-    el.setAttribute("css-class", "interactable");
     el.setAttribute("socialvr-barge-child", "");
+    el.classList.add("interactable");
 
     // Text
     this.text = document.createElement("a-entity");
@@ -81,6 +81,17 @@ AFRAME.registerComponent("socialvr-barge-button", {
       // Phase 1 - Go
       if (this.data.phaseID === 1) {
         scene.emit("startBargeEvent");
+
+        this.el.classList.remove("interactable");
+        this.el.removeAttribute("animation__spawner-cooldown");
+        this.el.setAttribute("animation__spawner-cooldown", {
+          property: "scale",
+          delay: 0,
+          dur: 350,
+          from: { x: 1, y: 1, z: 1 },
+          to: { x: 0.001, y: 0.001, z: 0.001 },
+          easing: "easeInElastic"
+        });
       }
     } else {
       // Generic Button

@@ -88,7 +88,7 @@
         if (isAvatar) {
           child.setAttribute("position", {
             x: childPosition.x + direction.x,
-            y: parentPosition.y + window.APP.utils.getCurrentPlayerHeight() / 2,
+            y: parentPosition.y + window.APP.utils.getCurrentPlayerHeight() / 2.7,
             z: childPosition.z + direction.z
           });
         } else {
@@ -145,9 +145,9 @@
         z: this.el.object3D.position.z - 1 // Left
       });
       
-      scene.appendChild(buttonResetEl);
-      scene.appendChild(buttonGoEl);
-      scene.appendChild(buttonStopEl);
+      //scene.appendChild(buttonResetEl);
+      //scene.appendChild(buttonGoEl);
+      //scene.appendChild(buttonStopEl);
 
       // Client
       scene.addEventListener("startBargeEvent", this.startBarge.bind(this));
@@ -392,14 +392,21 @@
       if (spawner) {
         // No duplicate network objects
         if (document.getElementById(spokeSerial) == null) {
-          const { entity } = window.APP.utils.addMedia(spawner.props.src, "#static-media");
+          const { entity } = window.APP.utils.addMedia(spawner.props.src, "#static-media", 1, null, false, false, true, {}, false);
 
           entity.id = spokeSerial;
           entity.object3D.position.copy(position);
           entity.object3D.rotation.copy(rotation);
           entity.object3D.scale.copy(scale);
           entity.object3D.matrixNeedsUpdate = true;
-          entity.setAttribute("css-class", "interactable");
+
+          entity.classList.add("interactable");
+          entity.setAttribute("is-remote-hover-target", "");
+          entity.setAttribute("hoverable-visuals", "");
+          entity.setAttribute("floaty-object", "modifyGravityOnRelease: true; autoLockOnLoad: true; autoLockOnRelease: true;");
+          entity.setAttribute("set-unowned-body-kinematic", "");
+          entity.setAttribute("body-helper", "type: dynamic; mass: 1; collisionFilterGroup: 1; collisionFilterMask: 15;");
+          entity.setAttribute("tags", "isHandCollisionTarget: true; isHoldable: true; offersHandConstraint: true; offersRemoteConstraint: true; inspectable: true;");
     
           // Phase Index
           const phaseIndex = data.name.search(/phase/i);
@@ -422,14 +429,14 @@
       if (image) {
         // No duplicate network objects
         if (document.getElementById(spokeSerial) == null) {
-          const { entity } = window.APP.utils.addMedia(image.props.src, "#interactable-media");
+          const { entity } = window.APP.utils.addMedia(image.props.src, "#static-media", 1, null, false, false, true, {}, false);
 
           entity.id = spokeSerial;
           entity.object3D.position.copy(position);
           entity.object3D.rotation.copy(rotation);
           entity.object3D.scale.copy(scale);
-          entity.object3D.localToWorld(position);
           entity.object3D.matrixNeedsUpdate = true;
+          entity.classList.add("interactable");
     
           // Phase Index
           const phaseIndex = data.name.search(/phase/i);
@@ -568,8 +575,8 @@
 
       el.setObject3D('mesh', this.mesh);
       el.setAttribute("tags", "singleActionButton: true");
-      el.setAttribute("css-class", "interactable");
       el.setAttribute("socialvr-barge-child", "");
+      el.classList.add("interactable");
 
       // Text
       this.text = document.createElement("a-entity");
@@ -608,6 +615,17 @@
         // Phase 1 - Go
         if (this.data.phaseID === 1) {
           scene.emit("startBargeEvent");
+
+          this.el.classList.remove("interactable");
+          this.el.removeAttribute("animation__spawner-cooldown");
+          this.el.setAttribute("animation__spawner-cooldown", {
+            property: "scale",
+            delay: 0,
+            dur: 350,
+            from: { x: 1, y: 1, z: 1 },
+            to: { x: 0.001, y: 0.001, z: 0.001 },
+            easing: "easeInElastic"
+          });
         }
       } else {
         // Generic Button
@@ -633,7 +651,7 @@
       const floaties = document.querySelectorAll('[floaty-object=""]');
 
       floaties.forEach((floaty) => {
-        floaty.setAttribute("floaty-object", { reduceAngularFloat: true, releaseGravity: -1 });
+        floaty.setAttribute("floaty-object", { reduceAngularFloat: true, releaseGravity: 0, gravitySpeedLimit: 0 });
       });
     }
 

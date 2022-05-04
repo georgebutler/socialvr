@@ -22,7 +22,7 @@ function moveWithBox(parent, child, direction, isAvatar) {
       if (isAvatar) {
         child.setAttribute("position", {
           x: childPosition.x + direction.x,
-          y: parentPosition.y + window.APP.utils.getCurrentPlayerHeight() / 2,
+          y: parentPosition.y + window.APP.utils.getCurrentPlayerHeight() / 2.7,
           z: childPosition.z + direction.z
         });
       } else {
@@ -79,9 +79,9 @@ AFRAME.registerComponent("socialvr-barge", {
       z: this.el.object3D.position.z - 1 // Left
     });
     
-    scene.appendChild(buttonResetEl);
-    scene.appendChild(buttonGoEl);
-    scene.appendChild(buttonStopEl);
+    //scene.appendChild(buttonResetEl);
+    //scene.appendChild(buttonGoEl);
+    //scene.appendChild(buttonStopEl);
 
     // Client
     scene.addEventListener("startBargeEvent", this.startBarge.bind(this));

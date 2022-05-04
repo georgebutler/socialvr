@@ -22,7 +22,7 @@ scene.addEventListener("environment-scene-loaded", () => {
     const floaties = document.querySelectorAll('[floaty-object=""]');
 
     floaties.forEach((floaty) => {
-      floaty.setAttribute("floaty-object", { reduceAngularFloat: true, releaseGravity: -1 });
+      floaty.setAttribute("floaty-object", { reduceAngularFloat: true, releaseGravity: 0, gravitySpeedLimit: 0 });
     });
   }
 
