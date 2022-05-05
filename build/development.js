@@ -372,7 +372,7 @@
         
             if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
               console.log(`Added ${data.name} to ${phase}`);
-              //entity.classList.add(`${phase}`);
+              entity.classList.add(`${phase}`);
             }
           }
 
@@ -382,6 +382,22 @@
             const scene = document.querySelector("a-scene");
 
             button.setAttribute("socialvr-barge-button", "text: Begin; radius: 0.4; color: #C576F6; phaseID: 1");
+            button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 1, 0)));
+            scene.appendChild(button);
+          } else if (data.name === "phase1Com phase1pleteButton") {
+            const button = document.createElement("a-entity");
+            const scene = document.querySelector("a-scene");
+
+            button.classList.add("phase1");
+            button.setAttribute("socialvr-barge-button", "text: Done; radius: 0.4; color: #C576F6; phaseID: 2");
+            button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 1, 0)));
+            scene.appendChild(button);
+          } else if (data.name === "phase2CompleteButton phase2") {
+            const button = document.createElement("a-entity");
+            const scene = document.querySelector("a-scene");
+
+            button.classList.add("phase2");
+            button.setAttribute("socialvr-barge-button", "text: Done; radius: 0.4; color: #C576F6; phaseID: 3");
             button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 1, 0)));
             scene.appendChild(button);
           }
@@ -413,11 +429,10 @@
     
           if (phaseIndex >= 0) {
             const phase = data.name.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
-            console.warn(phase);
             
             if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
               console.log(`Added ${data.name} to ${phase}.`);
-              //entity.classList.add(`${phase}`);
+              entity.classList.add(`${phase}`);
             }
           }
         } else {
@@ -443,11 +458,10 @@
     
           if (phaseIndex >= 0) {
             const phase = data.name.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
-            console.warn(phase);
             
             if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
               console.log(`Added ${data.name} to ${phase}.`);
-              //entity.classList.add(`${phase}`);
+              entity.classList.add(`${phase}`);
             }
           }
         } else {
@@ -459,8 +473,6 @@
 
   // toggle: true/false
   function ChangePhase(senderId, dataType, data, targetId) {
-    // console.log("Phase: " + data.index);
-
     const phase1 = document.querySelectorAll(".phase1");
     const phase2 = document.querySelectorAll(".phase2");
     const phase3 = document.querySelectorAll(".phase3");
@@ -468,26 +480,65 @@
     // Index 0: Initial phase, nothing visible.
     if (data.index <= 0) {
       phase1.forEach(el => {
-        el.setAttribute("visible", false);
+        el.object3D.visible = false;
       });
 
       phase2.forEach(el => {
-        el.setAttribute("visible", false);
+        el.object3D.visible = false;
       });
 
       phase3.forEach(el => {
-        el.setAttribute("visible", false);
+        el.object3D.visible = false;
       });
     }
 
-    // Index 1: Phase 1 visible ONLY.
+    // Phase 1
     if (data.index == 1) {
       console.log("Phase 1 Started");
       
       phase1.forEach(el => {
-        el.setAttribute("visible", false);
+        el.object3D.visible = true;
       });
     }
+
+    // Phase 2
+    else if (data.index == 2) {
+      console.log("Phase 2 Started");
+
+      phase2.forEach(el => {
+        el.object3D.visible = true;
+      });
+    }
+
+    // Phase 3
+    else if (data.index == 3) {
+      console.log("Phase 3 Started");
+
+      phase3.forEach(el => {
+        el.object3D.visible = true;
+      });
+    }
+
+    const bargeButtons = document.querySelectorAll('[socialvr-barge-button=""]');
+
+    bargeButtons.forEach((button) => {
+      const d = button.components["socialvr-barge-button"].data;
+
+      if (d) {
+        if (d.phaseID <= data.index) {
+          button.classList.remove("interactable");
+          button.removeAttribute("animation__spawner-cooldown");
+          button.setAttribute("animation__spawner-cooldown", {
+            property: "scale",
+            delay: 0,
+            dur: 350,
+            from: { x: 1, y: 1, z: 1 },
+            to: { x: 0.001, y: 0.001, z: 0.001 },
+            easing: "easeInElastic"
+          });
+        }
+      }
+    });
   }
 
   function CreateBarge() {
@@ -615,17 +666,6 @@
         // Phase 1 - Go
         if (this.data.phaseID === 1) {
           scene.emit("startBargeEvent");
-
-          this.el.classList.remove("interactable");
-          this.el.removeAttribute("animation__spawner-cooldown");
-          this.el.setAttribute("animation__spawner-cooldown", {
-            property: "scale",
-            delay: 0,
-            dur: 350,
-            from: { x: 1, y: 1, z: 1 },
-            to: { x: 0.001, y: 0.001, z: 0.001 },
-            easing: "easeInElastic"
-          });
         }
       } else {
         // Generic Button
