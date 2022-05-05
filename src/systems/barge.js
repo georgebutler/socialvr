@@ -221,6 +221,7 @@ export function ChangePhase(senderId, dataType, data, targetId) {
 
     if (d) {
       if (d.phaseID <= data.index) {
+        el.object3D.visible = true;
         button.classList.remove("interactable");
         button.removeAttribute("animation__spawner-cooldown");
         button.setAttribute("animation__spawner-cooldown", {
