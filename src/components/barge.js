@@ -178,8 +178,6 @@ AFRAME.registerComponent("socialvr-barge", {
         // console.log(this.data.targetKey);
       }
     }
-
-    //this.el.sceneEl.systems["hubs-systems"].characterController.fly = shouldAvatarBeInBargeMode;
   },
 
   _startBarge(senderId, dataType, data, targetId) {
@@ -207,6 +205,7 @@ AFRAME.registerComponent("socialvr-barge", {
 
     console.log(positions);
     this.data.moving = true;
+    this.el.sceneEl.systems["hubs-systems"].characterController.fly = true;
   },
 
   // eslint-disable-next-line no-unused-vars
