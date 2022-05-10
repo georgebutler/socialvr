@@ -350,6 +350,7 @@
           .loadModel(gltf.props.src)
           .then((model) => {
             barge.setObject3D("mesh", window.APP.utils.threeUtils.cloneObject3D(model.scene, false));
+            barge.setAttribute("matrix-auto-update", "");
           })
           .catch((e) => {
             console.error(e);
@@ -358,10 +359,12 @@
           const { entity } = window.APP.utils.addMedia(gltf.props.src, "#static-media", 1, null, false, false, true, {}, false);
           
           entity.setAttribute("socialvr-barge-child", "");
+          entity.setAttribute("set-unowned-body-kinematic", "");
+          entity.setAttribute("body-helper", "type: dynamic; mass: 1; collisionFilterGroup: 1; collisionFilterMask: 15;");
+          entity.setAttribute("matrix-auto-update", "");
           entity.object3D.position.copy(position);
           entity.object3D.rotation.copy(rotation);
           entity.object3D.scale.copy(scale);
-          entity.object3D.matrixNeedsUpdate = true;
 
           // Phase Index
           const phaseIndex = data.name.search(/phase/i);
@@ -380,24 +383,24 @@
             const button = document.createElement("a-entity");
             const scene = document.querySelector("a-scene");
 
-            button.setAttribute("socialvr-barge-button", "text: Begin; radius: 0.4; color: #C576F6; phaseID: 1");
-            button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 1, 0)));
+            button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.3; color: #C576F6; phaseID: 1");
+            button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0)));
             scene.appendChild(button);
           } else if (data.name === "phase1Com phase1pleteButton") {
             const button = document.createElement("a-entity");
             const scene = document.querySelector("a-scene");
 
             button.classList.add("phase1");
-            button.setAttribute("socialvr-barge-button", "text: Done; radius: 0.4; color: #C576F6; phaseID: 2");
-            button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 1, 0)));
+            button.setAttribute("socialvr-barge-button", "text: Done; radius: 0.3; color: #C576F6; phaseID: 2");
+            button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0)));
             scene.appendChild(button);
           } else if (data.name === "phase2CompleteButton phase2") {
             const button = document.createElement("a-entity");
             const scene = document.querySelector("a-scene");
 
             button.classList.add("phase2");
-            button.setAttribute("socialvr-barge-button", "text: Done; radius: 0.4; color: #C576F6; phaseID: 3");
-            button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 1, 0)));
+            button.setAttribute("socialvr-barge-button", "text: Done; radius: 0.3; color: #C576F6; phaseID: 3");
+            button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0)));
             scene.appendChild(button);
           }
         }
@@ -421,7 +424,9 @@
           entity.setAttribute("floaty-object", "modifyGravityOnRelease: true; autoLockOnLoad: true; autoLockOnRelease: true;");
           entity.setAttribute("set-unowned-body-kinematic", "");
           entity.setAttribute("body-helper", "type: dynamic; mass: 1; collisionFilterGroup: 1; collisionFilterMask: 15;");
+          entity.setAttribute("matrix-auto-update", "");
           entity.setAttribute("tags", "isHandCollisionTarget: true; isHoldable: true; offersHandConstraint: true; offersRemoteConstraint: true; inspectable: true;");
+          // entity.setAttribute("networked", "template: #interactable-media");
     
           // Phase Index
           const phaseIndex = data.name.search(/phase/i);
@@ -429,9 +434,11 @@
           if (phaseIndex >= 0) {
             const phase = data.name.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
             
-            if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
+            if (phase === "phase1" || phase === "phase2" || phase === "phase3" || phase === "phase4") {
               console.log(`Added ${data.name} to ${phase}.`);
               entity.classList.add(`${phase}`);
+            } else {
+              console.warn(`Unknown phase: "${phase}"`);
             }
           }
         } else {
@@ -631,17 +638,15 @@
 
       // Text
       this.text = document.createElement("a-entity");
-      this.text.setAttribute("text", `value: ${this.data.text}; align: center; side: double; width: 2;`);
-      this.text.setAttribute("rotation", "0 0 0");
       this.text.setAttribute("position", `0 ${this.data.radius + 0.2} 0`);
+      this.text.setAttribute("text", `value: ${this.data.text}; align: center; side: double; width: 4;`);
+      this.text.setAttribute("geometry", `primitive: plane; height: auto; width: 0.5;`);
+      this.text.setAttribute("material", "color: #807e7e;");
+      this.text.setAttribute("billboard", "onlyY: true;");
       el.appendChild(this.text);
       
       this.onClick = this.onClick.bind(this);
       this.el.object3D.addEventListener("interact", this.onClick);
-    },
-
-    tick: function (time, timeDelta) {
-      this.text.setAttribute("rotation", `0 ${time * 0.1} 0`);
     },
 
     remove: function() {

@@ -46,17 +46,15 @@ AFRAME.registerComponent("socialvr-barge-button", {
 
     // Text
     this.text = document.createElement("a-entity");
-    this.text.setAttribute("text", `value: ${this.data.text}; align: center; side: double; width: 2;`);
-    this.text.setAttribute("rotation", "0 0 0");
     this.text.setAttribute("position", `0 ${this.data.radius + 0.2} 0`);
+    this.text.setAttribute("text", `value: ${this.data.text}; align: center; side: double; width: 4;`);
+    this.text.setAttribute("geometry", `primitive: plane; height: auto; width: 0.5;`);
+    this.text.setAttribute("material", "color: #807e7e;");
+    this.text.setAttribute("billboard", "onlyY: true;");
     el.appendChild(this.text);
     
     this.onClick = this.onClick.bind(this);
     this.el.object3D.addEventListener("interact", this.onClick);
-  },
-
-  tick: function (time, timeDelta) {
-    this.text.setAttribute("rotation", `0 ${time * 0.1} 0`);
   },
 
   remove: function() {
