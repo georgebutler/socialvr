@@ -1,6 +1,47 @@
 (function () {
   'use strict';
 
+  AFRAME.registerComponent("socialvr-emoji-target", {
+    dependencies: ["is-remote-hover-target"],
+
+    init: function() {
+      console.log("[Social VR] Emoji Target - Initialized");
+
+      this.el.setAttribute("tags", "singleActionButton: true");
+      this.el.setAttribute("css-class", "interactable");
+      this.el.object3D.addEventListener("interact", this.onClick.bind(this));
+
+      // window.APP.hubChannel.presence.onJoin((clientId) => {
+      //   console.log("[SocialVR] Player Joined");
+      // })
+    },
+    
+    remove: function() {
+      this.el.object3D.removeEventListener("interact", this.onClick.bind(this));
+    },
+
+    tick: function() {
+      // TODO: more efficient way to do this
+      window.APP.componentRegistry["player-info"].forEach(player => {
+        player.el.setAttribute("socialvr-emoji-target", "");
+      });
+    },
+
+    onClick: function() {
+      const head = window.APP.componentRegistry["player-info"][0].el.querySelector("#avatar-pov-node");  
+
+      let x = -1.5;
+      window.APP.utils.emojis.forEach(({ model, particleEmitterConfig }) => {
+        const emoji = window.APP.utils.addMedia(model, "#static-media", null, null, false, false, false, {}, false, head).entity;
+        emoji.object3D.scale.copy(new THREE.Vector3(0.5, 0.5, 0.5));
+        emoji.object3D.position.copy(new THREE.Vector3(x, -1, -1.5));
+        x += 0.5;
+
+        emoji.setAttribute("socialvr-emoji-button", { model: model, particleEmitterConfig: particleEmitterConfig, target: this.el });
+      });
+    }
+  });
+
   AFRAME.registerComponent("hubs-emoji", {
     schema: {
       emitDecayTime: { default: 1.5 },
@@ -88,7 +129,11 @@
     }
   });
 
-  function sendEmoji({ model, particleEmitterConfig }, target) {
+  function sendEmoji(model, particleEmitterConfig, target) {
+    console.log(model);
+    console.log(particleEmitterConfig);
+    console.log(target);
+
     const { entity } = window.APP.utils.addMedia(model, "#interactable-emoji");
     entity.setAttribute("offset-relative-to", {
       target: "#avatar-pov-node",
@@ -100,37 +145,35 @@
     });
   }
 
-  AFRAME.registerComponent("socialvr-emoji-target", {
-    dependencies: ["is-remote-hover-target"],
-
-    init: function() {
-      console.log("[Social VR] Emoji Target - Initialized");
-
-      this.el.setAttribute("tags", "singleActionButton: true");
-      this.el.setAttribute("css-class", "interactable");
-
-      this.el.object3D.addEventListener("interact", this.onClick.bind(this));
-
-      // window.APP.hubChannel.presence.onJoin((clientId) => {
-      //   console.log("[SocialVR] Player Joined");
-      // })
-    },
+  AFRAME.registerComponent("socialvr-emoji-button", {
+      dependencies: ["is-remote-hover-target"],
     
-    remove: function() {
-      this.el.object3D.removeEventListener("interact", this.onClick.bind(this));
-    },
+      schema: {
+        model: { default: null },
+        particleEmitterConfig: {
+          default: null,
+          parse: v => (typeof v === "object" ? v : JSON.parse(v)),
+          stringify: JSON.stringify
+        },
+        target: { default: null }
+      },
 
-    tick: function() {
-      // TODO: more efficient way to do this
-      window.APP.componentRegistry["player-info"].forEach(player => {
-        player.el.setAttribute("socialvr-emoji-target", "");
-      });
-    },
-
-    onClick: function() {
-      sendEmoji(window.APP.utils.emojis[0], this.el);
-    }
-  });
+      init: function() {
+        console.log("[Social VR] Emoji Target - Initialized");
+    
+        this.el.setAttribute("tags", "singleActionButton: true");
+        this.el.setAttribute("css-class", "interactable");
+        this.el.object3D.addEventListener("interact", this.onClick.bind(this));
+      },
+      
+      remove: function() {
+        this.el.object3D.removeEventListener("interact", this.onClick.bind(this));
+      },
+    
+      onClick: function() {
+        sendEmoji(this.data.model, this.data.particleEmitterConfig, this.data.target);
+      }
+    });
 
   // import "./components/toolbox-button";
 

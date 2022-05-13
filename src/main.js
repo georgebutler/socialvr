@@ -34,6 +34,7 @@
 // scene.appendChild(speechToolboxButton);
 
 import "./components/emoji-target";
+import "./components/emoji-button";
 import "./hubs/emoji";
 
 const scene = document.querySelector("a-scene");
