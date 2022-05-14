@@ -30,15 +30,33 @@
     onClick: function() {
       const head = window.APP.componentRegistry["player-info"][0].el.querySelector("#avatar-pov-node");  
 
-      let x = -1.5;
-      window.APP.utils.emojis.forEach(({ model, particleEmitterConfig }) => {
-        const emoji = window.APP.utils.addMedia(model, "#static-media", null, null, false, false, false, {}, false, head).entity;
-        emoji.object3D.scale.copy(new THREE.Vector3(0.5, 0.5, 0.5));
-        emoji.object3D.position.copy(new THREE.Vector3(x, -1, -1.5));
-        x += 0.5;
-
-        emoji.setAttribute("socialvr-emoji-button", { model: model, particleEmitterConfig: particleEmitterConfig, target: this.el });
+      // TODO: this is bugged
+      // skip if emoji buttons already present
+      let headHasEmojis = false;
+      Array.from(head.children).forEach(child => {
+        if (child.getAttribute("socialvr-emoji-button") != null) {
+          headHasEmojis = true;
+        }
       });
+
+      if (!headHasEmojis) {
+        console.log("YOOOOOOOOOOOOOOOOOOOOOOO");
+
+        let x = -1.5;
+        window.APP.utils.emojis.forEach(({ model, particleEmitterConfig }) => {
+          const emoji = window.APP.utils.addMedia(model, "#static-media", null, null, false, false, false, {}, false, head).entity;
+          emoji.object3D.scale.copy(new THREE.Vector3(0.5, 0.5, 0.5));
+          emoji.object3D.position.copy(new THREE.Vector3(x, -0.5, -1.5));
+          x += 0.5;
+
+          emoji.setAttribute("socialvr-emoji-button", { model: model, particleEmitterConfig: particleEmitterConfig, target: this.el });
+        });
+
+        const cancelButton = document.createElement("a-entity");
+        cancelButton.setAttribute("socialvr-emoji-cancel-button", "");
+        head.appendChild(cancelButton);
+        cancelButton.object3D.position.copy(new THREE.Vector3(0, -0.8, -1.5));
+      }
     }
   });
 
@@ -130,10 +148,6 @@
   });
 
   function sendEmoji(model, particleEmitterConfig, target) {
-    console.log(model);
-    console.log(particleEmitterConfig);
-    console.log(target);
-
     const { entity } = window.APP.utils.addMedia(model, "#interactable-emoji");
     entity.setAttribute("offset-relative-to", {
       target: "#avatar-pov-node",
@@ -146,34 +160,84 @@
   }
 
   AFRAME.registerComponent("socialvr-emoji-button", {
-      dependencies: ["is-remote-hover-target"],
-    
-      schema: {
-        model: { default: null },
-        particleEmitterConfig: {
-          default: null,
-          parse: v => (typeof v === "object" ? v : JSON.parse(v)),
-          stringify: JSON.stringify
-        },
-        target: { default: null }
-      },
+    dependencies: ["is-remote-hover-target"],
 
-      init: function() {
-        console.log("[Social VR] Emoji Target - Initialized");
-    
-        this.el.setAttribute("tags", "singleActionButton: true");
-        this.el.setAttribute("css-class", "interactable");
-        this.el.object3D.addEventListener("interact", this.onClick.bind(this));
+    schema: {
+      model: { default: null },
+      particleEmitterConfig: {
+        default: null,
+        parse: v => (typeof v === "object" ? v : JSON.parse(v)),
+        stringify: JSON.stringify
       },
-      
-      remove: function() {
-        this.el.object3D.removeEventListener("interact", this.onClick.bind(this));
-      },
+      target: { default: null }
+    },
+
+    init: function() {
+      //console.log("[Social VR] Emoji Button Component - Initialized");
+
+      this.el.setAttribute("tags", "singleActionButton: true");
+      this.el.setAttribute("css-class", "interactable");
+      this.el.object3D.addEventListener("interact", this.onClick.bind(this));
     
-      onClick: function() {
-        sendEmoji(this.data.model, this.data.particleEmitterConfig, this.data.target);
+      this.system.register(this.el);
+    },
+    
+    remove: function() {
+      this.el.object3D.removeEventListener("interact", this.onClick.bind(this));
+    },
+
+    onClick: function() {
+      sendEmoji(this.data.model, this.data.particleEmitterConfig, this.data.target);
+    }
+  });
+
+  AFRAME.registerComponent("socialvr-emoji-cancel-button", {
+    dependencies: ["is-remote-hover-target"],
+
+    init: function() {
+      console.log("[Social VR] Emoji Cancel Button Component - Initialized");
+
+      this.el.setAttribute("geometry", "primitive:plane; height:0.1; width:0.3");
+      const text = document.createElement("a-entity");
+      text.setAttribute("text", "value:CANCEL; align:center; color:black");
+      this.el.appendChild(text);
+      text.object3D.position.copy(new THREE.Vector3(0, 0.05, 0.1));
+
+      this.el.setAttribute("tags", "singleActionButton: true");
+      this.el.setAttribute("css-class", "interactable");
+      this.el.object3D.addEventListener("interact", this.onClick.bind(this));
+    },
+
+    remove: function() {
+      this.el.object3D.removeEventListener("interact", this.onClick.bind(this));
+    },
+
+    onClick: function() {
+      this.el.sceneEl.systems["socialvr-emoji-button"].unregister();
+
+      this.el.parentEl.removeChild(this.el);
+    }
+  });
+
+  AFRAME.registerSystem("socialvr-emoji-button", {
+    init: function() {
+      console.log("[Social VR] Emoji Button System - Initialized");
+      this.emojiButtons = [];
+    },
+
+    // register single emoji button
+    register: function(emojiButton) {
+      this.emojiButtons.push(emojiButton);
+    },
+
+    // unregister all emoji buttons
+    unregister: function() {
+      while (this.emojiButtons.length > 0) {
+        this.emojiButtons[0].parentEl.removeChild(this.emojiButtons[0]);
+        this.emojiButtons.shift();
       }
-    });
+    }
+  });
 
   // import "./components/toolbox-button";
 

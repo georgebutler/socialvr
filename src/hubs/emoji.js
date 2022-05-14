@@ -86,10 +86,6 @@ AFRAME.registerComponent("hubs-emoji", {
 });
 
 export function sendEmoji(model, particleEmitterConfig, target) {
-  console.log(model);
-  console.log(particleEmitterConfig);
-  console.log(target);
-
   const { entity } = window.APP.utils.addMedia(model, "#interactable-emoji");
   entity.setAttribute("offset-relative-to", {
     target: "#avatar-pov-node",

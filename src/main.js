@@ -35,6 +35,8 @@
 
 import "./components/emoji-target";
 import "./components/emoji-button";
+import "./components/emoji-cancel-button";
+import "./systems/emoji-button";
 import "./hubs/emoji";
 
 const scene = document.querySelector("a-scene");
