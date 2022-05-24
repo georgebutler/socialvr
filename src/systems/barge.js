@@ -68,7 +68,7 @@ function LoadAndAttach(data, barge, spokeSerial) {
         if (phaseIndex >= 0) {
           const phase = data.name.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
       
-          if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
+          if (phase === "phase1" || phase === "phase2" || phase === "phase3" || phase === "phase4") {
             console.log(`Added ${data.name} to ${phase}`);
             entity.classList.add(`${phase}`);
           }
@@ -76,28 +76,36 @@ function LoadAndAttach(data, barge, spokeSerial) {
 
         // Phase Buttons
         if (data.name === "startButton") {
-          const button = document.createElement("a-entity");
-          const scene = document.querySelector("a-scene");
+            const button = document.createElement("a-entity");
+            const scene = document.querySelector("a-scene");
 
-          button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.3; color: #C576F6; phaseID: 1");
-          button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0)));
-          scene.appendChild(button);
-        } else if (data.name === "phase1Com phase1pleteButton") {
-          const button = document.createElement("a-entity");
-          const scene = document.querySelector("a-scene");
+            button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.3; color: #C576F6; phaseID: 1");
+            button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0)));
+            scene.appendChild(button);
+        } else if (data.name === "phase1CompleteButton phase1") {
+            const button = document.createElement("a-entity");
+            const scene = document.querySelector("a-scene");
 
-          button.classList.add("phase1");
-          button.setAttribute("socialvr-barge-button", "text: Done; radius: 0.3; color: #C576F6; phaseID: 2");
-          button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0)));
-          scene.appendChild(button);
+            button.classList.add("phase1");
+            button.setAttribute("socialvr-barge-button", "text: Done; radius: 0.3; color: #C576F6; phaseID: 2");
+            button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0)));
+            scene.appendChild(button);
         } else if (data.name === "phase2CompleteButton phase2") {
-          const button = document.createElement("a-entity");
-          const scene = document.querySelector("a-scene");
+            const button = document.createElement("a-entity");
+            const scene = document.querySelector("a-scene");
 
-          button.classList.add("phase2");
-          button.setAttribute("socialvr-barge-button", "text: Done; radius: 0.3; color: #C576F6; phaseID: 3");
-          button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0)));
-          scene.appendChild(button);
+            button.classList.add("phase2");
+            button.setAttribute("socialvr-barge-button", "text: Done; radius: 0.3; color: #C576F6; phaseID: 3");
+            button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0)));
+            scene.appendChild(button);
+        } else if (data.name === "phase3CompleteButton phase3") {
+            const button = document.createElement("a-entity");
+            const scene = document.querySelector("a-scene");
+
+            button.classList.add("phase3");
+            button.setAttribute("socialvr-barge-button", "text: Done; radius: 0.3; color: #C576F6; phaseID: 4");
+            button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0)));
+            scene.appendChild(button);
         }
       }
     }
@@ -161,7 +169,7 @@ function LoadAndAttach(data, barge, spokeSerial) {
         if (phaseIndex >= 0) {
           const phase = data.name.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
           
-          if (phase === "phase1" || phase === "phase2" || phase === "phase3") {
+          if (phase === "phase1" || phase === "phase2" || phase === "phase3" || phase === "phase4") {
             console.log(`Added ${data.name} to ${phase}.`);
             entity.classList.add(`${phase}`);
           }
@@ -178,6 +186,7 @@ export function ChangePhase(senderId, dataType, data, targetId) {
   const phase1 = document.querySelectorAll(".phase1");
   const phase2 = document.querySelectorAll(".phase2");
   const phase3 = document.querySelectorAll(".phase3");
+  const phase4 = document.querySelectorAll(".phase4");
 
   // Index 0: Initial phase, nothing visible.
   if (data.index <= 0) {
@@ -192,10 +201,14 @@ export function ChangePhase(senderId, dataType, data, targetId) {
     phase3.forEach(el => {
       el.object3D.visible = false;
     });
+
+    phase4.forEach(el => {
+      el.object3D.visible = false;
+    });
   }
 
   // Phase 1
-  if (data.index == 1) {
+  else if (data.index == 1) {
     console.log("Phase 1 Started");
     
     phase1.forEach(el => {
@@ -217,6 +230,15 @@ export function ChangePhase(senderId, dataType, data, targetId) {
     console.log("Phase 3 Started");
 
     phase3.forEach(el => {
+      el.object3D.visible = true;
+    });
+  }
+
+  // Phase 4
+  else if (data.index == 4) {
+    console.log("Phase 4 Started");
+
+    phase4.forEach(el => {
       el.object3D.visible = true;
     });
   }
