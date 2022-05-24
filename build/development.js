@@ -345,7 +345,7 @@
           barge.object3D.rotation.copy(rotation);
           barge.object3D.scale.copy(scale);
           barge.object3D.matrixNeedsUpdate = true;
-    
+
           window.APP.utils.GLTFModelPlus
           .loadModel(gltf.props.src)
           .then((model) => {
@@ -355,7 +355,16 @@
           .catch((e) => {
             console.error(e);
           });
-        } else {
+        }
+        else if (data.name === "clock-placeholder") {
+          const clock = document.createElement("a-entity");
+          const scene = document.querySelector("a-scene");
+
+          clock.setAttribute("socialvr-barge-clock", "");
+          clock.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 2, 0)));
+          scene.appendChild(clock);
+        }
+        else {
           const { entity } = window.APP.utils.addMedia(gltf.props.src, "#static-media", 1, null, false, false, true, {}, false);
           
           entity.setAttribute("socialvr-barge-child", "");
@@ -589,7 +598,7 @@
       z: 3
     });
 
-    fetch("https://statuesque-rugelach-4185bd.netlify.app/assets/barge-master-for-export-5-24-22_1022.spoke")
+    fetch("https://statuesque-rugelach-4185bd.netlify.app/assets/barge-master-for-export-5-2-22.spoke")
       .then(response => {
         return response.json();
       })
@@ -698,6 +707,29 @@
         // Generic Button
         scene.emit(this.data.eventName);
       }
+    }
+  });
+
+  AFRAME.registerComponent("socialvr-barge-clock", {
+    init: function() {
+      this.el.setAttribute("socialvr-barge-child", "");
+
+      this.text = document.createElement("a-entity");
+      this.text.setAttribute("position", `0 0 0`);
+      this.text.setAttribute("text", `value: ; align: center; width: 4;`);
+      this.text.setAttribute("geometry", `primitive: plane; height: auto; width: 1;`);
+      this.text.setAttribute("material", "color: #807e7e;");
+      this.text.setAttribute("animation", "property: rotation; to: 0 -360 0; easing: linear; loop: true; dur: 100000;");
+      this.el.appendChild(this.text);
+    },
+
+    tick: function() {
+      let time = new Date();
+      let hours = time.getHours( ) % 12;
+      let ampm = time.getHours() >= 12 ? "PM" : "AM";
+
+      hours = hours ? hours : 12;
+      this.text.setAttribute("text", `value: ${hours}:${time.getMinutes()} ${ampm}; align: center; width: 4;`);
     }
   });
 

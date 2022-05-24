@@ -41,7 +41,7 @@ function LoadAndAttach(data, barge, spokeSerial) {
         barge.object3D.rotation.copy(rotation);
         barge.object3D.scale.copy(scale);
         barge.object3D.matrixNeedsUpdate = true;
-  
+
         window.APP.utils.GLTFModelPlus
         .loadModel(gltf.props.src)
         .then((model) => {
@@ -51,7 +51,16 @@ function LoadAndAttach(data, barge, spokeSerial) {
         .catch((e) => {
           console.error(e);
         });
-      } else {
+      }
+      else if (data.name === "clock-placeholder") {
+        const clock = document.createElement("a-entity");
+        const scene = document.querySelector("a-scene");
+
+        clock.setAttribute("socialvr-barge-clock", "");
+        clock.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 2, 0)));
+        scene.appendChild(clock);
+      }
+      else {
         const { entity } = window.APP.utils.addMedia(gltf.props.src, "#static-media", 1, null, false, false, true, {}, false);
         
         entity.setAttribute("socialvr-barge-child", "");
@@ -285,7 +294,7 @@ export function CreateBarge() {
     z: 3
   });
 
-  fetch("https://statuesque-rugelach-4185bd.netlify.app/assets/barge-master-for-export-5-24-22_1022.spoke")
+  fetch("https://statuesque-rugelach-4185bd.netlify.app/assets/barge-master-for-export-5-2-22.spoke")
     .then(response => {
       return response.json();
     })

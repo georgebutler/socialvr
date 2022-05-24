@@ -1,6 +1,7 @@
 import "./components/toolbox-button";
 import "./components/barge";
 import "./components/barge-button";
+import "./components/barge-clock";
 
 import "./systems/barge";
 import { CreateBarge } from "./systems/barge";
