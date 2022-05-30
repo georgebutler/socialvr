@@ -63,6 +63,9 @@
     }
   });
 
+  const SPEED = 0.005;  // units per frame
+  const ARC = 2;        // higher = more parabolic
+
   AFRAME.registerComponent("hubs-emoji", {
     schema: {
       emitDecayTime: { default: 1.5 },
@@ -82,6 +85,20 @@
 
       // prevent auto remove
       this.el.removeAttribute("owned-object-cleanup-timeout");
+
+      this.targetInitPos = this.data.target.object3D.position.clone();
+
+      let emojiPos = this.el.object3D.position;
+      let targetPos = this.data.target.object3D.position.clone();
+      targetPos.y += 2;
+
+      let pt1 = new THREE.Vector3().lerpVectors(emojiPos, targetPos, 0.33);
+      pt1.y += ARC;
+      let pt2 = new THREE.Vector3().lerpVectors(emojiPos, targetPos, 0.66);
+      pt2.y += ARC;
+      this.curve = new THREE.CubicBezierCurve3(emojiPos, pt1, pt2, targetPos);
+
+      this.timeElapsed = 0;
     },
 
     play() {
@@ -105,18 +122,25 @@
       }
     },
 
-    tick() {
+    tick(t, dt) {
       // send emoji start
-      let emojiPos = this.el.object3D.position.clone();
-      let targetPos = this.data.target.object3D.position.clone();
-      targetPos.y += 1;
+      let totalTime = this.curve.getLength() / SPEED;
+      let progress = this.timeElapsed / totalTime;
 
-      if (emojiPos.distanceTo(targetPos) <= 0.1) {
+      if (progress >= 1) {
         this.el.setAttribute("owned-object-cleanup-timeout", "ttl", 2);
+
+        let targetPos = this.data.target.object3D.position.clone();
+        targetPos.y += 2;
+        this.el.object3D.position.copy(targetPos);
       } else {
-        let direction = targetPos.sub(emojiPos).normalize();
-        this.el.object3D.position.copy(emojiPos.add(direction.multiplyScalar(0.1)));
+        this.el.object3D.position.copy(this.curve.getPointAt(progress));
+
+        let targetMovement = this.data.target.object3D.position.clone().sub(this.targetInitPos);
+        this.el.object3D.position.add(targetMovement);
       }
+
+      this.timeElapsed += dt;
       // send emoji end
 
       const isMine = this.el.components.networked.initialized && this.el.components.networked.isMine();
