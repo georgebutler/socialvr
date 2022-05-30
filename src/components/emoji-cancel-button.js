@@ -21,7 +21,5 @@ AFRAME.registerComponent("socialvr-emoji-cancel-button", {
 
   onClick: function() {
     this.el.sceneEl.systems["socialvr-emoji-button"].unregister();
-
-    this.el.parentEl.removeChild(this.el);
   }
 });

@@ -92,7 +92,9 @@ export function sendEmoji(model, particleEmitterConfig, target) {
     offset: { x: 0, y: 0, z: -1.5 }
   });
   entity.addEventListener("model-loaded", () => {
-    entity.querySelector(".particle-emitter").setAttribute("particle-emitter", particleEmitterConfig);
+    let particleEmitter = entity.querySelector(".particle-emitter");
+    particleEmitter.setAttribute("particle-emitter", particleEmitterConfig);
+
     entity.setAttribute("hubs-emoji", { particleEmitterConfig: particleEmitterConfig, target: target });
   });
 }

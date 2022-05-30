@@ -14,13 +14,13 @@ AFRAME.registerComponent("socialvr-emoji-button", {
   },
 
   init: function() {
-    //console.log("[Social VR] Emoji Button Component - Initialized");
+    console.log("[Social VR] Emoji Button Component - Initialized");
 
     this.el.setAttribute("tags", "singleActionButton: true");
     this.el.setAttribute("css-class", "interactable");
     this.el.object3D.addEventListener("interact", this.onClick.bind(this));
   
-    this.system.register(this.el);
+    this.system.registerEmoji(this.el);
   },
   
   remove: function() {
@@ -29,5 +29,7 @@ AFRAME.registerComponent("socialvr-emoji-button", {
 
   onClick: function() {
     sendEmoji(this.data.model, this.data.particleEmitterConfig, this.data.target);
+  
+    this.el.sceneEl.systems["socialvr-emoji-button"].unregister();
   }
 });

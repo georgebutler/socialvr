@@ -28,10 +28,8 @@
     },
 
     onClick: function() {
-      const head = window.APP.componentRegistry["player-info"][0].el.querySelector("#avatar-pov-node");  
+      const head = window.APP.componentRegistry["player-info"][0].el.querySelector("#avatar-pov-node");
 
-      // TODO: this is bugged
-      // skip if emoji buttons already present
       let headHasEmojis = false;
       Array.from(head.children).forEach(child => {
         if (child.getAttribute("socialvr-emoji-button") != null) {
@@ -40,14 +38,17 @@
       });
 
       if (!headHasEmojis) {
-        console.log("YOOOOOOOOOOOOOOOOOOOOOOO");
-
         let x = -1.5;
         window.APP.utils.emojis.forEach(({ model, particleEmitterConfig }) => {
           const emoji = window.APP.utils.addMedia(model, "#static-media", null, null, false, false, false, {}, false, head).entity;
           emoji.object3D.scale.copy(new THREE.Vector3(0.5, 0.5, 0.5));
           emoji.object3D.position.copy(new THREE.Vector3(x, -0.5, -1.5));
           x += 0.5;
+
+          particleEmitterConfig.startVelocity.y = -1;
+          particleEmitterConfig.endVelocity.y = -0.25;
+          particleEmitterConfig.lifetime = 10;
+          particleEmitterConfig.particleCount = 20;
 
           emoji.setAttribute("socialvr-emoji-button", { model: model, particleEmitterConfig: particleEmitterConfig, target: this.el });
         });
@@ -56,6 +57,8 @@
         cancelButton.setAttribute("socialvr-emoji-cancel-button", "");
         head.appendChild(cancelButton);
         cancelButton.object3D.position.copy(new THREE.Vector3(0, -0.8, -1.5));
+
+        this.el.sceneEl.systems["socialvr-emoji-button"].registerCancel(cancelButton);
       }
     }
   });
@@ -154,7 +157,9 @@
       offset: { x: 0, y: 0, z: -1.5 }
     });
     entity.addEventListener("model-loaded", () => {
-      entity.querySelector(".particle-emitter").setAttribute("particle-emitter", particleEmitterConfig);
+      let particleEmitter = entity.querySelector(".particle-emitter");
+      particleEmitter.setAttribute("particle-emitter", particleEmitterConfig);
+
       entity.setAttribute("hubs-emoji", { particleEmitterConfig: particleEmitterConfig, target: target });
     });
   }
@@ -173,13 +178,13 @@
     },
 
     init: function() {
-      //console.log("[Social VR] Emoji Button Component - Initialized");
+      console.log("[Social VR] Emoji Button Component - Initialized");
 
       this.el.setAttribute("tags", "singleActionButton: true");
       this.el.setAttribute("css-class", "interactable");
       this.el.object3D.addEventListener("interact", this.onClick.bind(this));
     
-      this.system.register(this.el);
+      this.system.registerEmoji(this.el);
     },
     
     remove: function() {
@@ -188,6 +193,8 @@
 
     onClick: function() {
       sendEmoji(this.data.model, this.data.particleEmitterConfig, this.data.target);
+    
+      this.el.sceneEl.systems["socialvr-emoji-button"].unregister();
     }
   });
 
@@ -214,8 +221,6 @@
 
     onClick: function() {
       this.el.sceneEl.systems["socialvr-emoji-button"].unregister();
-
-      this.el.parentEl.removeChild(this.el);
     }
   });
 
@@ -223,11 +228,16 @@
     init: function() {
       console.log("[Social VR] Emoji Button System - Initialized");
       this.emojiButtons = [];
+      this.cancelButton = null;
     },
 
     // register single emoji button
-    register: function(emojiButton) {
+    registerEmoji: function(emojiButton) {
       this.emojiButtons.push(emojiButton);
+    },
+
+    registerCancel: function(cancelButton) {
+      this.cancelButton = cancelButton;
     },
 
     // unregister all emoji buttons
@@ -236,6 +246,9 @@
         this.emojiButtons[0].parentEl.removeChild(this.emojiButtons[0]);
         this.emojiButtons.shift();
       }
+
+      this.cancelButton.parentEl.removeChild(this.cancelButton);
+      this.cancelButton = null;
     }
   });
 

@@ -1,12 +1,19 @@
+import { isThisSecond } from "date-fns";
+
 AFRAME.registerSystem("socialvr-emoji-button", {
   init: function() {
     console.log("[Social VR] Emoji Button System - Initialized");
     this.emojiButtons = [];
+    this.cancelButton = null;
   },
 
   // register single emoji button
-  register: function(emojiButton) {
+  registerEmoji: function(emojiButton) {
     this.emojiButtons.push(emojiButton);
+  },
+
+  registerCancel: function(cancelButton) {
+    this.cancelButton = cancelButton;
   },
 
   // unregister all emoji buttons
@@ -15,5 +22,8 @@ AFRAME.registerSystem("socialvr-emoji-button", {
       this.emojiButtons[0].parentEl.removeChild(this.emojiButtons[0]);
       this.emojiButtons.shift();
     }
+
+    this.cancelButton.parentEl.removeChild(this.cancelButton);
+    this.cancelButton = null;
   }
 });
