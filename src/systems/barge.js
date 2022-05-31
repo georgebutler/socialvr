@@ -125,36 +125,36 @@ function LoadAndAttach(data, barge, spokeSerial) {
       //const num = players.length;
 
       //if (num == 1) {
-        const { entity } = window.APP.utils.addMedia(spawner.props.src, "#interactable-media", 1, null, false, false, true, {}, false);
+      const { entity } = window.APP.utils.addMedia(spawner.props.src, "#interactable-media", 1, null, false, false, true, {}, false);
 
-        entity.object3D.position.copy(position);
-        entity.object3D.rotation.copy(rotation);
-        entity.object3D.scale.copy(scale);
-        entity.object3D.matrixNeedsUpdate = true;
+      entity.object3D.position.copy(position);
+      entity.object3D.rotation.copy(rotation);
+      entity.object3D.scale.copy(scale);
+      entity.object3D.matrixNeedsUpdate = true;
 
-        entity.classList.add("interactable");
-        entity.setAttribute("is-remote-hover-target", "");
-        entity.setAttribute("hoverable-visuals", "");
-        entity.setAttribute("floaty-object", "modifyGravityOnRelease: true; autoLockOnLoad: true; autoLockOnRelease: true;");
-        entity.setAttribute("set-unowned-body-kinematic", "");
-        entity.setAttribute("body-helper", "type: dynamic; mass: 1; collisionFilterGroup: 1; collisionFilterMask: 15;");
-        entity.setAttribute("matrix-auto-update", "");
-        entity.setAttribute("tags", "isHandCollisionTarget: true; isHoldable: true; offersHandConstraint: true; offersRemoteConstraint: true; inspectable: true;");
-        entity.setAttribute("networked", "template: #interactable-media");
+      entity.classList.add("interactable");
+      entity.setAttribute("is-remote-hover-target", "");
+      entity.setAttribute("hoverable-visuals", "");
+      entity.setAttribute("floaty-object", "modifyGravityOnRelease: true; autoLockOnLoad: true; autoLockOnRelease: true;");
+      entity.setAttribute("set-unowned-body-kinematic", "");
+      entity.setAttribute("body-helper", "type: dynamic; mass: 1; collisionFilterGroup: 1; collisionFilterMask: 15;");
+      entity.setAttribute("matrix-auto-update", "");
+      entity.setAttribute("tags", "isHandCollisionTarget: true; isHoldable: true; offersHandConstraint: true; offersRemoteConstraint: true; inspectable: true;");
+      entity.setAttribute("networked", "template: #interactable-media");
 
-        // Phase Index
-        const phaseIndex = data.name.search(/phase/i);
+      // Phase Index
+      const phaseIndex = data.name.search(/phase/i);
 
-        if (phaseIndex >= 0) {
-          const phase = data.name.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
+      if (phaseIndex >= 0) {
+        const phase = data.name.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
 
-          if (phase === "phase1" || phase === "phase2" || phase === "phase3" || phase === "phase4") {
-            console.log(`Added ${data.name} to ${phase}.`);
-            entity.classList.add(`${phase}`);
-          } else {
-            console.warn(`Unknown phase: "${phase}"`);
-          }
+        if (phase === "phase1" || phase === "phase2" || phase === "phase3" || phase === "phase4") {
+          console.log(`Added ${data.name} to ${phase}.`);
+          entity.classList.add(`${phase}`);
+        } else {
+          console.warn(`Unknown phase: "${phase}"`);
         }
+      }
       //}
     }
 
