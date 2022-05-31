@@ -6,7 +6,6 @@
 // import "./systems/barge";
 // import { CreateBarge } from "./systems/barge";
 import "./systems/world-mover";
-import { InitWorldMover } from "./systems/world-mover";
 
 const scene = document.querySelector("a-scene");
 scene.addEventListener("environment-scene-loaded", () => {
@@ -34,5 +33,9 @@ scene.addEventListener("environment-scene-loaded", () => {
   // });
 
   // disableFloatyPhysics();
-  InitWorldMover();
+
+  const worldmover = document.createElement("a-entity");
+
+  worldmover.setAttribute("socialvr-world-mover", "");
+  scene.appendChild(worldmover);
 }, { once: true })
