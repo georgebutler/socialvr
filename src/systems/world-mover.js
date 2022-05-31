@@ -1,3 +1,11 @@
+// https://github.com/georgebutler/hubs/blob/master/src/utils/media-utils.js#L143
+
+AFRAME.registerSystem("socialvr-world-mover", {
+    tick: function (delta) {
+
+    }
+});
+
 function CreateWorldObject(data) {
     let transform = data.components.find(el => el.name === "transform");
 
@@ -9,11 +17,14 @@ function CreateWorldObject(data) {
         let scale = new window.APP.utils.THREE.Vector3(transform.props.scale.x, transform.props.scale.y, transform.props.scale.z);
 
         if (gltf) {
-            const { entity } = window.APP.utils.addMedia(gltf.props.src, "#static-media", 1, null, false, false, true, {}, false);
+            const { entity } = window.APP.utils.addMedia(gltf.props.src, "#static-media", null, null, false, false, true, {}, false, null, null);
 
             entity.object3D.position.copy(position);
             entity.object3D.rotation.copy(rotation);
             entity.object3D.scale.copy(scale);
+            entity.object3D.matrixNeedsUpdate = true;
+
+            MovingWorldObjects.push(entity);
         }
     }
 }
