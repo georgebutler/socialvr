@@ -43,14 +43,14 @@ function LoadAndAttach(data, barge, spokeSerial) {
         barge.object3D.matrixNeedsUpdate = true;
 
         window.APP.utils.GLTFModelPlus
-        .loadModel(gltf.props.src)
-        .then((model) => {
-          barge.setObject3D("mesh", window.APP.utils.threeUtils.cloneObject3D(model.scene, false));
-          barge.setAttribute("matrix-auto-update", "");
-        })
-        .catch((e) => {
-          console.error(e);
-        });
+          .loadModel(gltf.props.src)
+          .then((model) => {
+            barge.setObject3D("mesh", window.APP.utils.threeUtils.cloneObject3D(model.scene, false));
+            barge.setAttribute("matrix-auto-update", "");
+          })
+          .catch((e) => {
+            console.error(e);
+          });
       }
       else if (data.name === "clock-placeholder") {
         const clock = document.createElement("a-entity");
@@ -62,7 +62,7 @@ function LoadAndAttach(data, barge, spokeSerial) {
       }
       else {
         const { entity } = window.APP.utils.addMedia(gltf.props.src, "#static-media", 1, null, false, false, true, {}, false);
-        
+
         entity.setAttribute("socialvr-barge-child", "");
         entity.setAttribute("set-unowned-body-kinematic", "");
         entity.setAttribute("body-helper", "type: dynamic; mass: 1; collisionFilterGroup: 1; collisionFilterMask: 15;");
@@ -76,7 +76,7 @@ function LoadAndAttach(data, barge, spokeSerial) {
 
         if (phaseIndex >= 0) {
           const phase = data.name.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
-      
+
           if (phase === "phase1" || phase === "phase2" || phase === "phase3" || phase === "phase4") {
             console.log(`Added ${data.name} to ${phase}`);
             entity.classList.add(`${phase}`);
@@ -85,68 +85,69 @@ function LoadAndAttach(data, barge, spokeSerial) {
 
         // Phase Buttons
         if (data.name === "startButton") {
-            const button = document.createElement("a-entity");
-            const scene = document.querySelector("a-scene");
+          const button = document.createElement("a-entity");
+          const scene = document.querySelector("a-scene");
 
-            button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.3; color: #C576F6; phaseID: 1");
-            button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0)));
-            scene.appendChild(button);
+          button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.3; color: #C576F6; phaseID: 1");
+          button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0)));
+          scene.appendChild(button);
         } else if (data.name === "phase1CompleteButton phase1") {
-            const button = document.createElement("a-entity");
-            const scene = document.querySelector("a-scene");
+          const button = document.createElement("a-entity");
+          const scene = document.querySelector("a-scene");
 
-            button.classList.add("phase1");
-            button.setAttribute("socialvr-barge-button", "text: Done; radius: 0.3; color: #C576F6; phaseID: 2");
-            button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0)));
-            scene.appendChild(button);
+          button.classList.add("phase1");
+          button.setAttribute("socialvr-barge-button", "text: Done; radius: 0.3; color: #C576F6; phaseID: 2");
+          button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0)));
+          scene.appendChild(button);
         } else if (data.name === "phase2CompleteButton phase2") {
-            const button = document.createElement("a-entity");
-            const scene = document.querySelector("a-scene");
+          const button = document.createElement("a-entity");
+          const scene = document.querySelector("a-scene");
 
-            button.classList.add("phase2");
-            button.setAttribute("socialvr-barge-button", "text: Done; radius: 0.3; color: #C576F6; phaseID: 3");
-            button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0)));
-            scene.appendChild(button);
+          button.classList.add("phase2");
+          button.setAttribute("socialvr-barge-button", "text: Done; radius: 0.3; color: #C576F6; phaseID: 3");
+          button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0)));
+          scene.appendChild(button);
         } else if (data.name === "phase3CompleteButton phase3") {
-            const button = document.createElement("a-entity");
-            const scene = document.querySelector("a-scene");
+          const button = document.createElement("a-entity");
+          const scene = document.querySelector("a-scene");
 
-            button.classList.add("phase3");
-            button.setAttribute("socialvr-barge-button", "text: Done; radius: 0.3; color: #C576F6; phaseID: 4");
-            button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0)));
-            scene.appendChild(button);
+          button.classList.add("phase3");
+          button.setAttribute("socialvr-barge-button", "text: Done; radius: 0.3; color: #C576F6; phaseID: 4");
+          button.setAttribute("position", position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0)));
+          scene.appendChild(button);
         }
       }
     }
 
     // Spawners
     if (spawner) {
-      // No duplicate network objects
-      if (document.getElementById(spokeSerial) == null) {
-        const { entity } = window.APP.utils.addMedia(spawner.props.src, "#static-media", 1, null, false, false, true, {}, false);
+      const players = document.querySelectorAll("a-entity[player-info]");
+      const num = players.length;
 
-        entity.id = spokeSerial
+      if (num == 1) {
+        const { entity } = window.APP.utils.addMedia(spawner.props.src, "#interactable-media", 1, null, false, false, true, {}, true);
+
         entity.object3D.position.copy(position);
         entity.object3D.rotation.copy(rotation);
         entity.object3D.scale.copy(scale);
         entity.object3D.matrixNeedsUpdate = true;
 
-        entity.classList.add("interactable");
-        entity.setAttribute("is-remote-hover-target", "");
-        entity.setAttribute("hoverable-visuals", "");
-        entity.setAttribute("floaty-object", "modifyGravityOnRelease: true; autoLockOnLoad: true; autoLockOnRelease: true;");
-        entity.setAttribute("set-unowned-body-kinematic", "");
-        entity.setAttribute("body-helper", "type: dynamic; mass: 1; collisionFilterGroup: 1; collisionFilterMask: 15;");
-        entity.setAttribute("matrix-auto-update", "");
-        entity.setAttribute("tags", "isHandCollisionTarget: true; isHoldable: true; offersHandConstraint: true; offersRemoteConstraint: true; inspectable: true;");
-        // entity.setAttribute("networked", "template: #interactable-media");
-  
+        // entity.classList.add("interactable");
+        // entity.setAttribute("is-remote-hover-target", "");
+        // entity.setAttribute("hoverable-visuals", "");
+        // entity.setAttribute("floaty-object", "modifyGravityOnRelease: true; autoLockOnLoad: true; autoLockOnRelease: true;");
+        // entity.setAttribute("set-unowned-body-kinematic", "");
+        // entity.setAttribute("body-helper", "type: dynamic; mass: 1; collisionFilterGroup: 1; collisionFilterMask: 15;");
+        // entity.setAttribute("matrix-auto-update", "");
+        // entity.setAttribute("tags", "isHandCollisionTarget: true; isHoldable: true; offersHandConstraint: true; offersRemoteConstraint: true; inspectable: true;");
+        //entity.setAttribute("networked", "template: #interactable-media");
+
         // Phase Index
         const phaseIndex = data.name.search(/phase/i);
-  
+
         if (phaseIndex >= 0) {
           const phase = data.name.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
-          
+
           if (phase === "phase1" || phase === "phase2" || phase === "phase3" || phase === "phase4") {
             console.log(`Added ${data.name} to ${phase}.`);
             entity.classList.add(`${phase}`);
@@ -154,37 +155,29 @@ function LoadAndAttach(data, barge, spokeSerial) {
             console.warn(`Unknown phase: "${phase}"`);
           }
         }
-      } else {
-        console.warn(spokeSerial);
       }
     }
 
     // Images
     if (image) {
-      // No duplicate network objects
-      if (document.getElementById(spokeSerial) == null) {
-        const { entity } = window.APP.utils.addMedia(image.props.src, "#static-media", 1, null, false, false, true, {}, false);
+      const { entity } = window.APP.utils.addMedia(image.props.src, "#static-media", 1, null, false, false, true, {}, false);
 
-        entity.id = spokeSerial
-        entity.object3D.position.copy(position);
-        entity.object3D.rotation.copy(rotation);
-        entity.object3D.scale.copy(scale);
-        entity.object3D.matrixNeedsUpdate = true;
-        entity.classList.add("interactable");
-  
-        // Phase Index
-        const phaseIndex = data.name.search(/phase/i);
-  
-        if (phaseIndex >= 0) {
-          const phase = data.name.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
-          
-          if (phase === "phase1" || phase === "phase2" || phase === "phase3" || phase === "phase4") {
-            console.log(`Added ${data.name} to ${phase}.`);
-            entity.classList.add(`${phase}`);
-          }
+      entity.object3D.position.copy(position);
+      entity.object3D.rotation.copy(rotation);
+      entity.object3D.scale.copy(scale);
+      entity.object3D.matrixNeedsUpdate = true;
+      entity.classList.add("interactable");
+
+      // Phase Index
+      const phaseIndex = data.name.search(/phase/i);
+
+      if (phaseIndex >= 0) {
+        const phase = data.name.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
+
+        if (phase === "phase1" || phase === "phase2" || phase === "phase3" || phase === "phase4") {
+          console.log(`Added ${data.name} to ${phase}.`);
+          entity.classList.add(`${phase}`);
         }
-      } else {
-        console.warn(spokeSerial);
       }
     }
   }
@@ -219,7 +212,7 @@ export function ChangePhase(senderId, dataType, data, targetId) {
   // Phase 1
   else if (data.index == 1) {
     console.log("Phase 1 Started");
-    
+
     phase1.forEach(el => {
       el.object3D.visible = true;
     });
@@ -307,7 +300,7 @@ export function CreateBarge() {
       // Broadcast Event
       NAF.connection.subscribeToDataChannel("changePhase", ChangePhase);
 
-      ChangePhase(null, null, {index: 0});
+      ChangePhase(null, null, { index: 0 });
       NAF.connection.broadcastData("changePhase", {
         index: 0
       });
