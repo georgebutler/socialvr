@@ -425,26 +425,26 @@
 
       // Spawners
       if (spawner) {
-        const players = document.querySelectorAll("a-entity[player-info]");
-        const num = players.length;
+        //const players = document.querySelectorAll("a-entity[player-info]");
+        //const num = players.length;
 
-        if (num == 1) {
-          const { entity } = window.APP.utils.addMedia(spawner.props.src, "#interactable-media", 1, null, false, false, true, {}, true);
+        //if (num == 1) {
+          const { entity } = window.APP.utils.addMedia(spawner.props.src, "#interactable-media", 1, null, false, false, true, {}, false);
 
           entity.object3D.position.copy(position);
           entity.object3D.rotation.copy(rotation);
           entity.object3D.scale.copy(scale);
           entity.object3D.matrixNeedsUpdate = true;
 
-          // entity.classList.add("interactable");
-          // entity.setAttribute("is-remote-hover-target", "");
-          // entity.setAttribute("hoverable-visuals", "");
-          // entity.setAttribute("floaty-object", "modifyGravityOnRelease: true; autoLockOnLoad: true; autoLockOnRelease: true;");
-          // entity.setAttribute("set-unowned-body-kinematic", "");
-          // entity.setAttribute("body-helper", "type: dynamic; mass: 1; collisionFilterGroup: 1; collisionFilterMask: 15;");
-          // entity.setAttribute("matrix-auto-update", "");
-          // entity.setAttribute("tags", "isHandCollisionTarget: true; isHoldable: true; offersHandConstraint: true; offersRemoteConstraint: true; inspectable: true;");
-          //entity.setAttribute("networked", "template: #interactable-media");
+          entity.classList.add("interactable");
+          entity.setAttribute("is-remote-hover-target", "");
+          entity.setAttribute("hoverable-visuals", "");
+          entity.setAttribute("floaty-object", "modifyGravityOnRelease: true; autoLockOnLoad: true; autoLockOnRelease: true;");
+          entity.setAttribute("set-unowned-body-kinematic", "");
+          entity.setAttribute("body-helper", "type: dynamic; mass: 1; collisionFilterGroup: 1; collisionFilterMask: 15;");
+          entity.setAttribute("matrix-auto-update", "");
+          entity.setAttribute("tags", "isHandCollisionTarget: true; isHoldable: true; offersHandConstraint: true; offersRemoteConstraint: true; inspectable: true;");
+          entity.setAttribute("networked", "template: #interactable-media");
 
           // Phase Index
           const phaseIndex = data.name.search(/phase/i);
@@ -459,7 +459,7 @@
               console.warn(`Unknown phase: "${phase}"`);
             }
           }
-        }
+        //}
       }
 
       // Images
