@@ -2,10 +2,10 @@
 // import "./components/barge";
 // import "./components/barge-button";
 // import "./components/barge-clock";
+import "./components/world-mover";
 
 // import "./systems/barge";
 // import { CreateBarge } from "./systems/barge";
-import "./systems/world-mover";
 
 const scene = document.querySelector("a-scene");
 scene.addEventListener("environment-scene-loaded", () => {
@@ -34,8 +34,17 @@ scene.addEventListener("environment-scene-loaded", () => {
 
   // disableFloatyPhysics();
 
-  const worldmover = document.createElement("a-entity");
+  const worldMover = document.createElement("a-entity");
+  worldMover.setAttribute("socialvr-world-mover", "");
+  scene.appendChild(worldMover);
 
-  worldmover.setAttribute("socialvr-world-mover", "");
-  scene.appendChild(worldmover);
+  window.APP.utils.GLTFModelPlus
+    .loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world.glb")
+    .then((model) => {
+      worldMover.setObject3D("mesh", window.APP.utils.threeUtils.cloneObject3D(model.scene, true));
+      worldMover.setAttribute("matrix-auto-update", "");
+    })
+    .catch((e) => {
+      console.error(e);
+    });
 }, { once: true })
