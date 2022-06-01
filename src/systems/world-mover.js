@@ -20,15 +20,25 @@ AFRAME.registerSystem("socialvr-world-mover", {
                         let scale = new window.APP.utils.THREE.Vector3(transform.props.scale.x, transform.props.scale.y, transform.props.scale.z);
 
                         if (gltf) {
-                            const { entity } = window.APP.utils.addMedia(gltf.props.src, "#static-media", null, null, false, false, true, {}, false, null, null);
+                            const entity = document.createElement("a-entity");
 
-                            entity.object3D.position.copy(position);
-                            entity.object3D.rotation.copy(rotation);
-                            entity.object3D.scale.copy(scale);
-                            entity.object3D.matrixNeedsUpdate = true;
+                            window.APP.utils.GLTFModelPlus
+                                .loadModel(gltf.props.src)
+                                .then((model) => {
+                                    const scene = document.querySelector("a-scene");
 
-                            console.log("Quandale Dingle")
-                            this.world.push(entity);
+                                    entity.setObject3D("mesh", window.APP.utils.threeUtils.cloneObject3D(model.scene, false));
+                                    entity.object3D.position.copy(position);
+                                    entity.object3D.rotation.copy(rotation);
+                                    entity.object3D.scale.copy(scale);
+                                    entity.object3D.matrixNeedsUpdate = true;
+
+                                    scene.appendChild(entity);
+                                    this.world.push(entity);
+                                })
+                                .catch((e) => {
+                                    console.error(e);
+                                });
                         }
                     }
                 }
