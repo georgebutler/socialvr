@@ -7,18 +7,20 @@ AFRAME.registerComponent("socialvr-emoji-target", {
     this.el.setAttribute("tags", "singleActionButton: true");
     this.el.setAttribute("css-class", "interactable");
     this.el.object3D.addEventListener("interact", this.onClick.bind(this));
+  },
 
-    // window.APP.hubChannel.presence.onJoin((clientId) => {
-    //   console.log("[SocialVR] Player Joined");
-    // })
+  tick: function() {
+    // TODO: dont do this in tick, do it as players join instead
+    window.APP.componentRegistry["player-info"].forEach(player => {
+      player.el.setAttribute("socialvr-emoji-target", "");
+    });
   },
   
   remove: function() {
     this.el.object3D.removeEventListener("interact", this.onClick.bind(this));
   },
 
-  tick: function() {
-    // TODO: more efficient way to do this
+  setComponentForAll: function() {
     window.APP.componentRegistry["player-info"].forEach(player => {
       player.el.setAttribute("socialvr-emoji-target", "");
     });

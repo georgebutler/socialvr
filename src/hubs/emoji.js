@@ -1,8 +1,7 @@
-import { isThisSecond } from "date-fns";
-
 const SPEED = 0.005;      // units per frame
 const ARC = 2;            // higher = more parabolic
 const AUDIO_THRESH = 10;  // distance to target to play audio cue
+const SOUND = 15;         // sound effect choice
 
 AFRAME.registerComponent("hubs-emoji", {
   schema: {
@@ -25,20 +24,23 @@ AFRAME.registerComponent("hubs-emoji", {
     this.el.removeAttribute("owned-object-cleanup-timeout");
 
     this.targetInitPos = this.data.target.object3D.position.clone();
+    this.targetInitPos.y += 2;
 
     let emojiPos = this.el.object3D.position;
-    let targetPos = this.data.target.object3D.position.clone();
-    targetPos.y += 2;
-
-    let pt1 = new THREE.Vector3().lerpVectors(emojiPos, targetPos, 0.33);
+    let pt1 = new THREE.Vector3().lerpVectors(emojiPos, this.targetInitPos, 0.33);
     pt1.y += ARC;
-    let pt2 = new THREE.Vector3().lerpVectors(emojiPos, targetPos, 0.66);
+    let pt2 = new THREE.Vector3().lerpVectors(emojiPos, this.targetInitPos, 0.66);
     pt2.y += ARC;
-    this.curve = new THREE.CubicBezierCurve3(emojiPos, pt1, pt2, targetPos);
-
+    this.curve = new THREE.CubicBezierCurve3(emojiPos, pt1, pt2, this.targetInitPos);
     this.timeElapsed = 0;
+
     this.soundPlayed = false;
-    this.audio = null;
+    this.audio = this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
+      15,
+      this.el.object3D,
+      true
+    );
+    this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.stopPositionalAudio(this.audio);
   },
 
   play() {
@@ -64,30 +66,23 @@ AFRAME.registerComponent("hubs-emoji", {
 
     let emojiPos = this.el.object3D.position;
     let targetPos = this.data.target.object3D.position.clone();
+    targetPos.y += 2;
 
     // audio cue
     let dist = emojiPos.distanceTo(targetPos);
     if (!this.soundPlayed && dist < AUDIO_THRESH) {
-      this.audio = this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
-        15,
-        this.el.object3D,
-        true
-      );
-      
+      NAF.connection.broadcastData("playSound", { sound: SOUND, emojiID: this.el.id, targetID: this.data.target.id });
       this.soundPlayed = true;
     }
 
     // movement
     if (progress >= 1) {
       // reached target
-      targetPos.y += 2;
       emojiPos.copy(targetPos);
 
       this.el.setAttribute("owned-object-cleanup-timeout", "ttl", 2);
 
-      if (this.audio != null) {
-        this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.stopPositionalAudio(this.audio);
-      }
+      NAF.connection.broadcastData("stopSound", { emojiID: this.el.id, targetID: this.data.target.id });
     } else {
       // en route to target
       emojiPos.copy(this.curve.getPointAt(progress));

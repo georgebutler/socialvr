@@ -33,6 +33,7 @@
 // scene.appendChild(speechVisEl);
 // scene.appendChild(speechToolboxButton);
 
+import "./components/emoji-audio";
 import "./components/emoji-target";
 import "./components/emoji-button";
 import "./components/emoji-cancel-button";
@@ -40,6 +41,10 @@ import "./systems/emoji-button";
 import "./hubs/emoji";
 
 const scene = document.querySelector("a-scene");
+
+const emojiAudio = document.createElement("a-entity");
+emojiAudio.setAttribute("socialvr-emoji-audio", "");
+scene.appendChild(emojiAudio);
 
 const dummy = document.createElement("a-box");
 dummy.setAttribute("socialvr-emoji-target", "");
