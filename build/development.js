@@ -16,9 +16,11 @@
       // prevent auto remove
       this.el.removeAttribute("owned-object-cleanup-timeout");
 
+      // initial position of target
       this.targetInitPos = this.data.target.object3D.position.clone();
       this.targetInitPos.y += 2;
 
+      // parabolic path
       let emojiPos = this.el.object3D.position;
       let pt1 = new THREE.Vector3().lerpVectors(emojiPos, this.targetInitPos, 0.33);
       pt1.y += ARC;
@@ -27,23 +29,14 @@
       this.curve = new THREE.CubicBezierCurve3(emojiPos, pt1, pt2, this.targetInitPos);
       this.timeElapsed = 0;
 
+      // audio cue
       this.soundPlayed = false;
       this.audio = this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
-        15,
+        SOUND,
         this.el.object3D,
         true
       );
       this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.stopPositionalAudio(this.audio);
-    },
-
-    play() {
-      const mediaLoader = this.el.components["media-loader"];
-      if (window.APP.utils.emojis.find(emoji => emoji.model !== mediaLoader.data.src) === -1) {
-        this.el.parentNode.removeChild(this.el);
-        return;
-      }
-
-      this.particleEmitter = this.el.querySelector(".particle-emitter");
     },
 
     tick(t, dt) {
@@ -55,9 +48,11 @@
       targetPos.y += 2;
 
       // audio cue
+      const targetName = this.data.target.getAttribute("socialvr-emoji-target").name;
+      console.log(targetName);
       let dist = emojiPos.distanceTo(targetPos);
       if (!this.soundPlayed && dist < AUDIO_THRESH) {
-        NAF.connection.broadcastData("playSound", { sound: SOUND, emojiID: this.el.id, targetID: this.data.target.id });
+        NAF.connection.broadcastData("playSound", { sound: SOUND, emojiID: this.el.id, targetName: targetName });
         this.soundPlayed = true;
       }
 
@@ -68,7 +63,7 @@
 
         this.el.setAttribute("owned-object-cleanup-timeout", "ttl", DURATION);
 
-        NAF.connection.broadcastData("stopSound", { emojiID: this.el.id, targetID: this.data.target.id });
+        NAF.connection.broadcastData("stopSound", { emojiID: this.el.id, targetName: targetName });
       } else {
         // en route to target
         emojiPos.copy(this.curve.getPointAt(progress));
@@ -91,12 +86,16 @@
       let particleEmitter = emoji.querySelector(".particle-emitter");
       particleEmitter.setAttribute("particle-emitter", particleEmitterConfig);
 
-      emoji.setAttribute("socialvr-emoji", { target: target });
+      emoji.setAttribute("socialvr-emoji", "target", target );
     });
   }
 
   AFRAME.registerComponent("socialvr-emoji-target", {
     dependencies: ["is-remote-hover-target"],
+
+    schema: {
+      name: { default: "" }
+    },
 
     init: function() {
       console.log("[Social VR] Emoji Target - Initialized");
@@ -108,10 +107,14 @@
       let hoverVisModel = window.APP.utils.emojis[0].model;
       this.hoverVis = window.APP.utils.addMedia(hoverVisModel, "#static-media", null, null, false, false, false, {}, false, this.el).entity;
       this.hoverVis.object3D.position.y += 2;
-      this.hoverVis.object3D.scale.copy(new THREE.Vector3(0.25, 0.25, 0.25));
+      this.hoverVis.object3D.scale.copy(new THREE.Vector3(0.5, 0.5, 0.5));
       this.hoverVis.object3D.visible = false;
 
-      this.head = window.APP.componentRegistry["player-info"][0].el.querySelector("#avatar-pov-node");
+      this.head = window.APP.componentRegistry["player-info"][0].el.querySelector("#avatar-pov-node"); 
+
+      // TODO: determine if player in VR or on Desktop
+      this.VR = true;
+      this.hudAnchor = (this.VR) ? window.APP.componentRegistry["player-info"][0].el.querySelector(".model") : this.head;
     
       this.el.addEventListener("hover", this.onHover.bind(this));
       this.el.addEventListener("unhover", this.onUnhover.bind(this));
@@ -125,19 +128,8 @@
     },
 
     tick: function() {
-      // TODO: dont do this in tick, do it as players join instead
-      window.APP.componentRegistry["player-info"].forEach(player => {
-        player.el.setAttribute("socialvr-emoji-target", "");
-      });
-
       // update hover state visual to face this player
       this.hoverVis.object3D.lookAt(this.head.object3D.getWorldPosition(new THREE.Vector3()));
-    },
-
-    setComponentForAll: function() {
-      window.APP.componentRegistry["player-info"].forEach(player => {
-        player.el.setAttribute("socialvr-emoji-target", "");
-      });
     },
 
     onHover: function() {
@@ -149,33 +141,33 @@
     },
 
     onClick: function() {
-      let headHasEmojis = false;
-      Array.from(this.head.children).forEach(child => {
-        if (child.getAttribute("socialvr-emoji-button") != null) {
-          headHasEmojis = true;
-        }
-      });
+      if (!this.hudAnchor.querySelector(".socialvr-emoji-button")) {
+        const hudScale = (this.VR) ? 0.2 : 0.5;
+        const hudX = (this.VR) ? -0.6 : -1.5;
+        const hudY = (this.VR) ? 1.4 : -0.5;
+        const hudZ = (this.VR) ? -1 : -1.5;
+        const hudSpacing = (this.VR) ? 0.2 : 0.5;
 
-      if (!headHasEmojis) {
-        let x = -1.5;
+        let x = hudX;
         window.APP.utils.emojis.forEach(({ model, particleEmitterConfig }) => {
-          const emoji = window.APP.utils.addMedia(model, "#static-media", null, null, false, false, false, {}, false, this.head).entity;
-          emoji.object3D.scale.copy(new THREE.Vector3(0.5, 0.5, 0.5));
-          emoji.object3D.position.copy(new THREE.Vector3(x, -0.5, -1.5));
-          x += 0.5;
+          const emoji = window.APP.utils.addMedia(model, "#static-media", null, null, false, false, false, {}, false, this.hudAnchor).entity;
+
+          emoji.object3D.scale.copy(new THREE.Vector3(hudScale, hudScale, hudScale));
+          emoji.object3D.position.copy(new THREE.Vector3(x, hudY, hudZ));
+          x += hudSpacing;
 
           particleEmitterConfig.startVelocity.y = 0;
           particleEmitterConfig.endVelocity.y = -2;
           particleEmitterConfig.particleCount = 20;
 
           emoji.setAttribute("socialvr-emoji-button", { model: model, particleEmitterConfig: particleEmitterConfig, target: this.el });
+          emoji.className = "socialvr-emoji-button";
         });
 
         const cancelButton = document.createElement("a-entity");
         cancelButton.setAttribute("socialvr-emoji-cancel-button", "");
-        this.head.appendChild(cancelButton);
-        cancelButton.object3D.position.copy(new THREE.Vector3(0, -0.8, -1.5));
-
+        this.hudAnchor.appendChild(cancelButton);
+        cancelButton.object3D.position.copy(new THREE.Vector3(0, hudY - 0.3, hudZ));
         this.el.sceneEl.systems["socialvr-emoji-button"].registerCancel(cancelButton);
       }
     }
@@ -221,11 +213,8 @@
     init: function() {
       console.log("[Social VR] Emoji Cancel Button Component - Initialized");
 
-      this.el.setAttribute("geometry", "primitive:plane; height:0.1; width:0.3");
-      const text = document.createElement("a-entity");
-      text.setAttribute("text", "value:CANCEL; align:center; color:black");
-      this.el.appendChild(text);
-      text.object3D.position.copy(new THREE.Vector3(0, 0.05, 0.1));
+      this.el.setAttribute("geometry", "primitive:plane; height:0.1; width:0.2");
+      this.el.setAttribute("text", "value:CANCEL; align:center; color:black; height:0.2; width:0.6");
 
       this.el.setAttribute("tags", "singleActionButton: true");
       this.el.setAttribute("css-class", "interactable");
@@ -244,12 +233,17 @@
   AFRAME.registerComponent("socialvr-emoji-audio", {
     init: function() {
       console.log("[Social VR] Emoji Manager Component - Initialized");
+    
+      this.emojiAudio = {};
 
       NAF.connection.subscribeToDataChannel("playSound", this.playSound.bind(this));
       NAF.connection.subscribeToDataChannel("stopSound", this.stopSound.bind(this));
-    
-      this.emojiAudio = {};
-  },
+    },
+
+    tick: function() {
+      // have to do this here cus displayName only applies once in room
+      this.name = window.APP.componentRegistry["player-info"][0].displayName;    
+    },
     
     remove: function() {
       NAF.connection.unsubscribeToDataChannel("playSound");
@@ -259,8 +253,10 @@
     playSound: function(senderId, dataType, data, targetId) {
       let emoji = document.getElementById(data.emojiID);
 
-      //if (data.targetID == this player id) {
-      {
+      console.log(data.targetName);
+      console.log(this.name);
+
+      if (data.targetName == this.name) {
         let audio = this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
           data.sound,
           emoji.object3D,
@@ -272,8 +268,7 @@
     },
 
     stopSound: function(senderId, dataType, data, targetId) {
-      //if (data.targetID == this player id) {
-      {
+      if (data.targetName == this.name) {
         let audio = this.emojiAudio[data.emojiID];
 
         this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.stopPositionalAudio(audio);
@@ -287,6 +282,12 @@
     },
 
     tick: function() {
+      // TODO: dont do this in tick, do it as players join instead
+      window.APP.componentRegistry["player-info"].forEach(player => {
+        player.el.setAttribute("socialvr-emoji-target", "name", player.displayName);
+      });
+
+      // hover state visual
       let currHoverEl = this.el.systems.interaction.state.rightRemote.hovered;
 
       if (currHoverEl && currHoverEl.getAttribute("socialvr-emoji-target")) {

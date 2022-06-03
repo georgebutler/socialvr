@@ -13,9 +13,11 @@ AFRAME.registerComponent("socialvr-emoji", {
     // prevent auto remove
     this.el.removeAttribute("owned-object-cleanup-timeout");
 
+    // initial position of target
     this.targetInitPos = this.data.target.object3D.position.clone();
     this.targetInitPos.y += 2;
 
+    // parabolic path
     let emojiPos = this.el.object3D.position;
     let pt1 = new THREE.Vector3().lerpVectors(emojiPos, this.targetInitPos, 0.33);
     pt1.y += ARC;
@@ -24,23 +26,14 @@ AFRAME.registerComponent("socialvr-emoji", {
     this.curve = new THREE.CubicBezierCurve3(emojiPos, pt1, pt2, this.targetInitPos);
     this.timeElapsed = 0;
 
+    // audio cue
     this.soundPlayed = false;
     this.audio = this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
-      15,
+      SOUND,
       this.el.object3D,
       true
     );
     this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.stopPositionalAudio(this.audio);
-  },
-
-  play() {
-    const mediaLoader = this.el.components["media-loader"];
-    if (window.APP.utils.emojis.find(emoji => emoji.model !== mediaLoader.data.src) === -1) {
-      this.el.parentNode.removeChild(this.el);
-      return;
-    }
-
-    this.particleEmitter = this.el.querySelector(".particle-emitter");
   },
 
   tick(t, dt) {
@@ -52,9 +45,11 @@ AFRAME.registerComponent("socialvr-emoji", {
     targetPos.y += 2;
 
     // audio cue
+    const targetName = this.data.target.getAttribute("socialvr-emoji-target").name;
+    console.log(targetName);
     let dist = emojiPos.distanceTo(targetPos);
     if (!this.soundPlayed && dist < AUDIO_THRESH) {
-      NAF.connection.broadcastData("playSound", { sound: SOUND, emojiID: this.el.id, targetID: this.data.target.id });
+      NAF.connection.broadcastData("playSound", { sound: SOUND, emojiID: this.el.id, targetName: targetName });
       this.soundPlayed = true;
     }
 
@@ -65,7 +60,7 @@ AFRAME.registerComponent("socialvr-emoji", {
 
       this.el.setAttribute("owned-object-cleanup-timeout", "ttl", DURATION);
 
-      NAF.connection.broadcastData("stopSound", { emojiID: this.el.id, targetID: this.data.target.id });
+      NAF.connection.broadcastData("stopSound", { emojiID: this.el.id, targetName: targetName });
     } else {
       // en route to target
       emojiPos.copy(this.curve.getPointAt(progress));
@@ -88,6 +83,6 @@ export function sendEmoji(model, particleEmitterConfig, target) {
     let particleEmitter = emoji.querySelector(".particle-emitter");
     particleEmitter.setAttribute("particle-emitter", particleEmitterConfig);
 
-    emoji.setAttribute("socialvr-emoji", { target: target });
+    emoji.setAttribute("socialvr-emoji", "target", target );
   });
 }

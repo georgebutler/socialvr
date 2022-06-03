@@ -1,6 +1,10 @@
 AFRAME.registerComponent("socialvr-emoji-target", {
   dependencies: ["is-remote-hover-target"],
 
+  schema: {
+    name: { default: "" }
+  },
+
   init: function() {
     console.log("[Social VR] Emoji Target - Initialized");
 
@@ -11,10 +15,14 @@ AFRAME.registerComponent("socialvr-emoji-target", {
     let hoverVisModel = window.APP.utils.emojis[0].model;
     this.hoverVis = window.APP.utils.addMedia(hoverVisModel, "#static-media", null, null, false, false, false, {}, false, this.el).entity;
     this.hoverVis.object3D.position.y += 2;
-    this.hoverVis.object3D.scale.copy(new THREE.Vector3(0.25, 0.25, 0.25));
+    this.hoverVis.object3D.scale.copy(new THREE.Vector3(0.5, 0.5, 0.5));
     this.hoverVis.object3D.visible = false;
 
-    this.head = window.APP.componentRegistry["player-info"][0].el.querySelector("#avatar-pov-node");
+    this.head = window.APP.componentRegistry["player-info"][0].el.querySelector("#avatar-pov-node"); 
+
+    // TODO: determine if player in VR or on Desktop
+    this.VR = true;
+    this.hudAnchor = (this.VR) ? window.APP.componentRegistry["player-info"][0].el.querySelector(".model") : this.head;
   
     this.el.addEventListener("hover", this.onHover.bind(this));
     this.el.addEventListener("unhover", this.onUnhover.bind(this));
@@ -28,19 +36,8 @@ AFRAME.registerComponent("socialvr-emoji-target", {
   },
 
   tick: function() {
-    // TODO: dont do this in tick, do it as players join instead
-    window.APP.componentRegistry["player-info"].forEach(player => {
-      player.el.setAttribute("socialvr-emoji-target", "");
-    });
-
     // update hover state visual to face this player
     this.hoverVis.object3D.lookAt(this.head.object3D.getWorldPosition(new THREE.Vector3()));
-  },
-
-  setComponentForAll: function() {
-    window.APP.componentRegistry["player-info"].forEach(player => {
-      player.el.setAttribute("socialvr-emoji-target", "");
-    });
   },
 
   onHover: function() {
@@ -52,33 +49,33 @@ AFRAME.registerComponent("socialvr-emoji-target", {
   },
 
   onClick: function() {
-    let headHasEmojis = false;
-    Array.from(this.head.children).forEach(child => {
-      if (child.getAttribute("socialvr-emoji-button") != null) {
-        headHasEmojis = true;
-      }
-    });
+    if (!this.hudAnchor.querySelector(".socialvr-emoji-button")) {
+      const hudScale = (this.VR) ? 0.2 : 0.5;
+      const hudX = (this.VR) ? -0.6 : -1.5;
+      const hudY = (this.VR) ? 1.4 : -0.5;
+      const hudZ = (this.VR) ? -1 : -1.5;
+      const hudSpacing = (this.VR) ? 0.2 : 0.5;
 
-    if (!headHasEmojis) {
-      let x = -1.5;
+      let x = hudX;
       window.APP.utils.emojis.forEach(({ model, particleEmitterConfig }) => {
-        const emoji = window.APP.utils.addMedia(model, "#static-media", null, null, false, false, false, {}, false, this.head).entity;
-        emoji.object3D.scale.copy(new THREE.Vector3(0.5, 0.5, 0.5));
-        emoji.object3D.position.copy(new THREE.Vector3(x, -0.5, -1.5));
-        x += 0.5;
+        const emoji = window.APP.utils.addMedia(model, "#static-media", null, null, false, false, false, {}, false, this.hudAnchor).entity;
+
+        emoji.object3D.scale.copy(new THREE.Vector3(hudScale, hudScale, hudScale));
+        emoji.object3D.position.copy(new THREE.Vector3(x, hudY, hudZ));
+        x += hudSpacing;
 
         particleEmitterConfig.startVelocity.y = 0;
         particleEmitterConfig.endVelocity.y = -2;
         particleEmitterConfig.particleCount = 20;
 
         emoji.setAttribute("socialvr-emoji-button", { model: model, particleEmitterConfig: particleEmitterConfig, target: this.el });
+        emoji.className = "socialvr-emoji-button";
       });
 
       const cancelButton = document.createElement("a-entity");
       cancelButton.setAttribute("socialvr-emoji-cancel-button", "");
-      this.head.appendChild(cancelButton);
-      cancelButton.object3D.position.copy(new THREE.Vector3(0, -0.8, -1.5));
-
+      this.hudAnchor.appendChild(cancelButton);
+      cancelButton.object3D.position.copy(new THREE.Vector3(0, hudY - 0.3, hudZ));
       this.el.sceneEl.systems["socialvr-emoji-button"].registerCancel(cancelButton);
     }
   }

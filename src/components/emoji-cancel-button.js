@@ -4,11 +4,8 @@ AFRAME.registerComponent("socialvr-emoji-cancel-button", {
   init: function() {
     console.log("[Social VR] Emoji Cancel Button Component - Initialized");
 
-    this.el.setAttribute("geometry", "primitive:plane; height:0.1; width:0.3");
-    const text = document.createElement("a-entity");
-    text.setAttribute("text", "value:CANCEL; align:center; color:black");
-    this.el.appendChild(text);
-    text.object3D.position.copy(new THREE.Vector3(0, 0.05, 0.1));
+    this.el.setAttribute("geometry", "primitive:plane; height:0.1; width:0.2");
+    this.el.setAttribute("text", "value:CANCEL; align:center; color:black; height:0.2; width:0.6");
 
     this.el.setAttribute("tags", "singleActionButton: true");
     this.el.setAttribute("css-class", "interactable");

@@ -1,12 +1,17 @@
 AFRAME.registerComponent("socialvr-emoji-audio", {
   init: function() {
     console.log("[Social VR] Emoji Manager Component - Initialized");
+  
+    this.emojiAudio = {};
 
     NAF.connection.subscribeToDataChannel("playSound", this.playSound.bind(this));
     NAF.connection.subscribeToDataChannel("stopSound", this.stopSound.bind(this));
-  
-    this.emojiAudio = {};
-},
+  },
+
+  tick: function() {
+    // have to do this here cus displayName only applies once in room
+    this.name = window.APP.componentRegistry["player-info"][0].displayName;    
+  },
   
   remove: function() {
     NAF.connection.unsubscribeToDataChannel("playSound");
@@ -16,8 +21,10 @@ AFRAME.registerComponent("socialvr-emoji-audio", {
   playSound: function(senderId, dataType, data, targetId) {
     let emoji = document.getElementById(data.emojiID);
 
-    //if (data.targetID == this player id) {
-    if (true) {
+    console.log(data.targetName);
+    console.log(this.name);
+
+    if (data.targetName == this.name) {
       let audio = this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
         data.sound,
         emoji.object3D,
@@ -29,8 +36,7 @@ AFRAME.registerComponent("socialvr-emoji-audio", {
   },
 
   stopSound: function(senderId, dataType, data, targetId) {
-    //if (data.targetID == this player id) {
-    if (true) {
+    if (data.targetName == this.name) {
       let audio = this.emojiAudio[data.emojiID];
 
       this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.stopPositionalAudio(audio);
