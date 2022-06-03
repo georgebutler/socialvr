@@ -1,11 +1,28 @@
 AFRAME.registerSystem("socialvr-emoji-target", {
   init: function() {
-    // TODO: determine if player in VR or on Desktop
-    this.VR = true;
+    this.VR = false;
     this.head = window.APP.componentRegistry["player-info"][0].el.querySelector("#avatar-pov-node"); 
-    this.hudAnchor = (this.VR) ? window.APP.componentRegistry["player-info"][0].el.querySelector(".model") : this.head;
+    this.hudAnchor = this.head;
     
     this.hoverEl = null;
+
+    this.el.addEventListener("enter-vr", this.enterVR.bind(this));
+    this.el.addEventListener("exit-vr", this.exitVR.bind(this));
+  },
+
+  remove: function() {
+    this.el.removeEventListener("enter-vr", this.enterVR.bind(this));
+    this.el.removeEventListener("exit-vr", this.exitVR.bind(this));
+  },
+
+  enterVR: function() {
+    this.VR = true;
+    this.hudAnchor = window.APP.componentRegistry["player-info"][0].el.querySelector(".model");
+  },
+
+  exitVR: function() {
+    this.VR = false;
+    this.hudAnchor = this.head;
   },
 
   tick: function() {
