@@ -1,113 +1,5 @@
-(function () {
+var development = (function (exports) {
   'use strict';
-
-  // responsible for barge creation and advancing phase
-
-  AFRAME.registerSystem("socialvr-barge", {
-    init: function () {
-      console.log("[Social VR] Barge System - Initialized");
-
-      this.barge = null;
-      this.phase = 0;
-    },
-
-    register: function (el) {
-      if (this.barge != null) {
-        this.el.removeChild(this.barge);
-      }
-
-      this.barge = el;
-    },
-
-    unregister: function () {
-      this.barge = null;
-    },
-  });
-
-  // toggle: true/false
-  function ChangePhase(senderId, dataType, data, targetId) {
-    const phase1 = document.querySelectorAll(".phase1");
-    const phase2 = document.querySelectorAll(".phase2");
-    const phase3 = document.querySelectorAll(".phase3");
-    const phase4 = document.querySelectorAll(".phase4");
-
-    // Index 0: Initial phase, nothing visible.
-    if (data.index <= 0) {
-      phase1.forEach(el => {
-        el.object3D.visible = false;
-      });
-
-      phase2.forEach(el => {
-        el.object3D.visible = false;
-      });
-
-      phase3.forEach(el => {
-        el.object3D.visible = false;
-      });
-
-      phase4.forEach(el => {
-        el.object3D.visible = false;
-      });
-    }
-
-    // Phase 1
-    else if (data.index == 1) {
-      console.log("Phase 1 Started");
-
-      phase1.forEach(el => {
-        el.object3D.visible = true;
-      });
-    }
-
-    // Phase 2
-    else if (data.index == 2) {
-      console.log("Phase 2 Started");
-
-      phase2.forEach(el => {
-        el.object3D.visible = true;
-      });
-    }
-
-    // Phase 3
-    else if (data.index == 3) {
-      console.log("Phase 3 Started");
-
-      phase3.forEach(el => {
-        el.object3D.visible = true;
-      });
-    }
-
-    // Phase 4
-    else if (data.index == 4) {
-      console.log("Phase 4 Started");
-
-      phase4.forEach(el => {
-        el.object3D.visible = true;
-      });
-    }
-
-    const bargeButtons = document.querySelectorAll('[socialvr-barge-button=""]');
-
-    bargeButtons.forEach((button) => {
-      const d = button.components["socialvr-barge-button"].data;
-
-      if (d) {
-        if (d.phaseID <= data.index) {
-          button.object3D.visible = true;
-          button.classList.remove("interactable");
-          button.removeAttribute("animation__spawner-cooldown");
-          button.setAttribute("animation__spawner-cooldown", {
-            property: "scale",
-            delay: 0,
-            dur: 350,
-            from: { x: 1, y: 1, z: 1 },
-            to: { x: 0.001, y: 0.001, z: 0.001 },
-            easing: "easeInElastic"
-          });
-        }
-      }
-    });
-  }
 
   AFRAME.registerComponent("socialvr-barge-button", {
     dependencies: ["is-remote-hover-target", "hoverable-visuals"],
@@ -137,21 +29,18 @@
     },
 
     init: function() {
-      var data = this.data;
-      var el = this.el;
-
       // Geometry
-      this.geometry = new THREE.SphereGeometry(data.radius, 16, 8);
+      this.geometry = new THREE.SphereGeometry(this.data.radius, 16, 8);
       this.material = new THREE.MeshStandardMaterial({
-        color: data.color,
+        color: this.data.color,
         roughness: 0.5,
       });
       this.mesh = new THREE.Mesh(this.geometry, this.material);
 
-      el.setObject3D('mesh', this.mesh);
-      el.setAttribute("tags", "singleActionButton: true");
-      el.setAttribute("socialvr-barge-child", "");
-      el.classList.add("interactable");
+      this.el.setObject3D('mesh', this.mesh);
+      this.el.setAttribute("tags", "singleActionButton: true");
+      this.el.setAttribute("socialvr-barge-child", "");
+      this.el.classList.add("interactable");
 
       // Text
       this.text = document.createElement("a-entity");
@@ -160,7 +49,7 @@
       this.text.setAttribute("geometry", `primitive: plane; height: auto; width: 0.75;`);
       this.text.setAttribute("material", "color: #807e7e;");
       this.text.setAttribute("billboard", "onlyY: true;");
-      el.appendChild(this.text);
+      this.el.appendChild(this.text);
       
       this.onClick = this.onClick.bind(this);
       this.el.object3D.addEventListener("interact", this.onClick);
@@ -173,21 +62,18 @@
     onClick: function() {
       const scene = document.querySelector("a-scene");
 
-      this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
-        11,
-        this.el.object3D
-      );
+      scene.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(11,this.el.object3D);
 
       if (this.data.phaseID >= 0) {
         // Phase Button
         ChangePhase(null, null, {index: this.data.phaseID});
-        NAF.connection.broadcastData("changePhase", {
+        NAF.connection.broadcastData("ChangePhase", {
           index: this.data.phaseID
         });
 
         // Phase 1 - Go
         if (this.data.phaseID === 1) {
-          scene.emit("startBargeEvent");
+          scene.emit("startMovingWorld");
         }
       } else {
         // Generic Button
@@ -256,9 +142,89 @@
 
   const scene = document.querySelector("a-scene");
 
-  scene.addEventListener("environment-scene-loaded", () => {
-    // Phases
+  function ChangePhase(senderId, dataType, data, targetId) {
+    const phase1 = document.querySelectorAll(".phase1");
+    const phase2 = document.querySelectorAll(".phase2");
+    const phase3 = document.querySelectorAll(".phase3");
+    const phase4 = document.querySelectorAll(".phase4");
 
+    // Index 0: Initial phase, nothing visible.
+    if (data.index <= 0) {
+      phase1.forEach(el => {
+        el.object3D.visible = false;
+      });
+
+      phase2.forEach(el => {
+        el.object3D.visible = false;
+      });
+
+      phase3.forEach(el => {
+        el.object3D.visible = false;
+      });
+
+      phase4.forEach(el => {
+        el.object3D.visible = false;
+      });
+    }
+
+    // Phase 1
+    else if (data.index == 1) {
+      console.log("Phase 1 Started");
+
+      phase1.forEach(el => {
+        el.object3D.visible = true;
+      });
+    }
+
+    // Phase 2
+    else if (data.index == 2) {
+      console.log("Phase 2 Started");
+
+      phase2.forEach(el => {
+        el.object3D.visible = true;
+      });
+    }
+
+    // Phase 3
+    else if (data.index == 3) {
+      console.log("Phase 3 Started");
+
+      phase3.forEach(el => {
+        el.object3D.visible = true;
+      });
+    }
+
+    // Phase 4
+    else if (data.index == 4) {
+      console.log("Phase 4 Started");
+
+      phase4.forEach(el => {
+        el.object3D.visible = true;
+      });
+    }
+
+    document.querySelectorAll('[socialvr-barge-button=""]').forEach((button) => {
+      const d = button.components["socialvr-barge-button"].data;
+
+      if (d) {
+        if (d.phaseID <= data.index) {
+          button.object3D.visible = true;
+          button.classList.remove("interactable");
+          button.removeAttribute("animation__spawner-cooldown");
+          button.setAttribute("animation__spawner-cooldown", {
+            property: "scale",
+            delay: 0,
+            dur: 350,
+            from: { x: 1, y: 1, z: 1 },
+            to: { x: 0.001, y: 0.001, z: 0.001 },
+            easing: "easeInElastic"
+          });
+        }
+      }
+    });
+  }
+
+  scene.addEventListener("environment-scene-loaded", () => {
     // Button - Phase 1
     let button = document.createElement("a-entity");
     let position = document.querySelector(".startButton").object3D.position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0));
@@ -300,7 +266,7 @@
     scene.appendChild(worldMover);
 
     window.APP.utils.GLTFModelPlus
-      .loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world.glb")
+      .loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-2.glb")
       .then((model) => {
         worldMover.setObject3D("mesh", window.APP.utils.threeUtils.cloneObject3D(model.scene, true));
         worldMover.setAttribute("matrix-auto-update", "");
@@ -308,7 +274,35 @@
       .catch((e) => {
         console.error(e);
       });
+
+    // Phases
+    /*   for (let i = 0; i < scene.children.length; i++) {
+        const child = scene.children[i];
+        const phaseIndex = child.classList.search(/phase/i);
+    
+        if (phaseIndex >= 0) {
+          const phase = child.classList.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
+    
+          if (phase === "phase1" || phase === "phase2" || phase === "phase3" || phase === "phase4") {
+            console.log(`Added ${child} to ${phase}.`);
+            child.classList.add(`${phase}`);
+          }
+        }
+      } */
+
+    NAF.connection.subscribeToDataChannel("ChangePhase", ChangePhase);
+
+    ChangePhase(null, null, { index: 0 });
+    NAF.connection.broadcastData("ChangePhase", {
+      index: 0
+    });
   }, { once: true });
 
-})();
+  exports.ChangePhase = ChangePhase;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
+
+  return exports;
+
+})({});
 //# sourceMappingURL=development.js.map

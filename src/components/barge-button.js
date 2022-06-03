@@ -1,4 +1,4 @@
-import { ChangePhase } from "../systems/barge";
+import { ChangePhase } from "../main";
 
 AFRAME.registerComponent("socialvr-barge-button", {
   dependencies: ["is-remote-hover-target", "hoverable-visuals"],
@@ -28,21 +28,18 @@ AFRAME.registerComponent("socialvr-barge-button", {
   },
 
   init: function() {
-    var data = this.data;
-    var el = this.el;
-
     // Geometry
-    this.geometry = new THREE.SphereGeometry(data.radius, 16, 8);
+    this.geometry = new THREE.SphereGeometry(this.data.radius, 16, 8);
     this.material = new THREE.MeshStandardMaterial({
-      color: data.color,
+      color: this.data.color,
       roughness: 0.5,
     });
     this.mesh = new THREE.Mesh(this.geometry, this.material);
 
-    el.setObject3D('mesh', this.mesh);
-    el.setAttribute("tags", "singleActionButton: true");
-    el.setAttribute("socialvr-barge-child", "");
-    el.classList.add("interactable");
+    this.el.setObject3D('mesh', this.mesh);
+    this.el.setAttribute("tags", "singleActionButton: true");
+    this.el.setAttribute("socialvr-barge-child", "");
+    this.el.classList.add("interactable");
 
     // Text
     this.text = document.createElement("a-entity");
@@ -51,7 +48,7 @@ AFRAME.registerComponent("socialvr-barge-button", {
     this.text.setAttribute("geometry", `primitive: plane; height: auto; width: 0.75;`);
     this.text.setAttribute("material", "color: #807e7e;");
     this.text.setAttribute("billboard", "onlyY: true;");
-    el.appendChild(this.text);
+    this.el.appendChild(this.text);
     
     this.onClick = this.onClick.bind(this);
     this.el.object3D.addEventListener("interact", this.onClick);
@@ -64,21 +61,18 @@ AFRAME.registerComponent("socialvr-barge-button", {
   onClick: function() {
     const scene = document.querySelector("a-scene");
 
-    this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
-      11,
-      this.el.object3D
-    );
+    scene.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(11,this.el.object3D);
 
     if (this.data.phaseID >= 0) {
       // Phase Button
       ChangePhase(null, null, {index: this.data.phaseID});
-      NAF.connection.broadcastData("changePhase", {
+      NAF.connection.broadcastData("ChangePhase", {
         index: this.data.phaseID
       });
 
       // Phase 1 - Go
       if (this.data.phaseID === 1) {
-        scene.emit("startBargeEvent");
+        scene.emit("startMovingWorld");
       }
     } else {
       // Generic Button
