@@ -37,6 +37,7 @@ import "./components/emoji-audio";
 import "./components/emoji-target";
 import "./components/emoji-button";
 import "./components/emoji-cancel-button";
+import "./systems/emoji-target";
 import "./systems/emoji-button";
 import "./hubs/emoji";
 

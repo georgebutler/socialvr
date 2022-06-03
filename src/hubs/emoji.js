@@ -126,15 +126,15 @@ AFRAME.registerComponent("hubs-emoji", {
 });
 
 export function sendEmoji(model, particleEmitterConfig, target) {
-  const { entity } = window.APP.utils.addMedia(model, "#interactable-emoji");
-  entity.setAttribute("offset-relative-to", {
+  const emoji = window.APP.utils.addMedia(model, "#interactable-emoji").entity;
+  emoji.setAttribute("offset-relative-to", {
     target: "#avatar-pov-node",
     offset: { x: 0, y: 0, z: -1.5 }
   });
-  entity.addEventListener("model-loaded", () => {
-    let particleEmitter = entity.querySelector(".particle-emitter");
+  emoji.addEventListener("model-loaded", () => {
+    let particleEmitter = emoji.querySelector(".particle-emitter");
     particleEmitter.setAttribute("particle-emitter", particleEmitterConfig);
 
-    entity.setAttribute("hubs-emoji", { particleEmitterConfig: particleEmitterConfig, target: target });
+    emoji.setAttribute("hubs-emoji", { particleEmitterConfig: particleEmitterConfig, target: target });
   });
 }

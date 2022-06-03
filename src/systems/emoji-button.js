@@ -1,5 +1,3 @@
-import { isThisSecond } from "date-fns";
-
 AFRAME.registerSystem("socialvr-emoji-button", {
   init: function() {
     console.log("[Social VR] Emoji Button System - Initialized");
