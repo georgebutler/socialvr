@@ -1,45 +1,99 @@
 (function () {
   'use strict';
 
-  AFRAME.registerComponent("socialvr-emoji-audio", {
-    init: function() {
-      console.log("[Social VR] Emoji Manager Component - Initialized");
+  const SPEED = 0.005;      // units per frame
+  const ARC = 2;            // higher = more parabolic
+  const AUDIO_THRESH = 10;  // distance to target to play audio cue
+  const SOUND = 15;         // sound effect choice
+  const DURATION = 3;       // duration over target before disappearing
 
-      NAF.connection.subscribeToDataChannel("playSound", this.playSound.bind(this));
-      NAF.connection.subscribeToDataChannel("stopSound", this.stopSound.bind(this));
-    
-      this.emojiAudio = {};
-  },
-    
-    remove: function() {
-      NAF.connection.unsubscribeToDataChannel("playSound");
-      NAF.connection.unsubscribeToDataChannel("stopSound");
+  AFRAME.registerComponent("socialvr-emoji", {
+    schema: {
+      target: { default: null }
     },
 
-    playSound: function(senderId, dataType, data, targetId) {
-      let emoji = document.getElementById(data.emojiID);
+    init() {
+      // prevent auto remove
+      this.el.removeAttribute("owned-object-cleanup-timeout");
 
-      //if (data.targetID == this player id) {
-      {
-        let audio = this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
-          data.sound,
-          emoji.object3D,
-          true
-        );
+      this.targetInitPos = this.data.target.object3D.position.clone();
+      this.targetInitPos.y += 2;
 
-        this.emojiAudio[data.emojiID] = audio;
+      let emojiPos = this.el.object3D.position;
+      let pt1 = new THREE.Vector3().lerpVectors(emojiPos, this.targetInitPos, 0.33);
+      pt1.y += ARC;
+      let pt2 = new THREE.Vector3().lerpVectors(emojiPos, this.targetInitPos, 0.66);
+      pt2.y += ARC;
+      this.curve = new THREE.CubicBezierCurve3(emojiPos, pt1, pt2, this.targetInitPos);
+      this.timeElapsed = 0;
+
+      this.soundPlayed = false;
+      this.audio = this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
+        15,
+        this.el.object3D,
+        true
+      );
+      this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.stopPositionalAudio(this.audio);
+    },
+
+    play() {
+      const mediaLoader = this.el.components["media-loader"];
+      if (window.APP.utils.emojis.find(emoji => emoji.model !== mediaLoader.data.src) === -1) {
+        this.el.parentNode.removeChild(this.el);
+        return;
       }
+
+      this.particleEmitter = this.el.querySelector(".particle-emitter");
     },
 
-    stopSound: function(senderId, dataType, data, targetId) {
-      //if (data.targetID == this player id) {
-      {
-        let audio = this.emojiAudio[data.emojiID];
+    tick(t, dt) {
+      let totalTime = this.curve.getLength() / SPEED;
+      let progress = this.timeElapsed / totalTime;
 
-        this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.stopPositionalAudio(audio);
-      }  
-    },
+      let emojiPos = this.el.object3D.position;
+      let targetPos = this.data.target.object3D.position.clone();
+      targetPos.y += 2;
+
+      // audio cue
+      let dist = emojiPos.distanceTo(targetPos);
+      if (!this.soundPlayed && dist < AUDIO_THRESH) {
+        NAF.connection.broadcastData("playSound", { sound: SOUND, emojiID: this.el.id, targetID: this.data.target.id });
+        this.soundPlayed = true;
+      }
+
+      // movement
+      if (progress >= 1) {
+        // reached target
+        emojiPos.copy(targetPos);
+
+        this.el.setAttribute("owned-object-cleanup-timeout", "ttl", DURATION);
+
+        NAF.connection.broadcastData("stopSound", { emojiID: this.el.id, targetID: this.data.target.id });
+      } else {
+        // en route to target
+        emojiPos.copy(this.curve.getPointAt(progress));
+
+        let targetMovement = targetPos.sub(this.targetInitPos);
+        emojiPos.add(targetMovement);
+      }
+
+      this.timeElapsed += dt;
+    }
   });
+
+  function sendEmoji(model, particleEmitterConfig, target) {
+    const emoji = window.APP.utils.addMedia(model, "#interactable-emoji").entity;
+    emoji.setAttribute("offset-relative-to", {
+      target: "#avatar-pov-node",
+      offset: { x: 0, y: 0, z: -1.5 }
+    });
+    emoji.addEventListener("model-loaded", () => {
+      let particleEmitter = emoji.querySelector(".particle-emitter");
+      particleEmitter.setAttribute("particle-emitter", particleEmitterConfig);
+
+      emoji.setAttribute("socialvr-emoji", { target: target });
+    });
+  }
 
   AFRAME.registerComponent("socialvr-emoji-target", {
     dependencies: ["is-remote-hover-target"],
@@ -110,9 +164,8 @@
           emoji.object3D.position.copy(new THREE.Vector3(x, -0.5, -1.5));
           x += 0.5;
 
-          particleEmitterConfig.startVelocity.y = -1;
-          particleEmitterConfig.endVelocity.y = -0.25;
-          particleEmitterConfig.lifetime = 10;
+          particleEmitterConfig.startVelocity.y = 0;
+          particleEmitterConfig.endVelocity.y = -2;
           particleEmitterConfig.particleCount = 20;
 
           emoji.setAttribute("socialvr-emoji-button", { model: model, particleEmitterConfig: particleEmitterConfig, target: this.el });
@@ -127,147 +180,6 @@
       }
     }
   });
-
-  const SPEED = 0.005;      // units per frame
-  const ARC = 2;            // higher = more parabolic
-  const AUDIO_THRESH = 10;  // distance to target to play audio cue
-  const SOUND = 15;         // sound effect choice
-
-  AFRAME.registerComponent("hubs-emoji", {
-    schema: {
-      emitDecayTime: { default: 1.5 },
-      emitFadeTime: { default: 0.5 },
-      emitEndTime: { default: 0 },
-      particleEmitterConfig: {
-        default: null,
-        parse: v => (typeof v === "object" ? v : JSON.parse(v)),
-        stringify: JSON.stringify
-      },
-      target: { default: null }
-    },
-
-    init() {
-      this.data.emitEndTime = performance.now() + this.data.emitDecayTime * 1000;
-      this.physicsSystem = this.el.sceneEl.systems["hubs-systems"].physicsSystem;
-
-      // prevent auto remove
-      this.el.removeAttribute("owned-object-cleanup-timeout");
-
-      this.targetInitPos = this.data.target.object3D.position.clone();
-      this.targetInitPos.y += 2;
-
-      let emojiPos = this.el.object3D.position;
-      let pt1 = new THREE.Vector3().lerpVectors(emojiPos, this.targetInitPos, 0.33);
-      pt1.y += ARC;
-      let pt2 = new THREE.Vector3().lerpVectors(emojiPos, this.targetInitPos, 0.66);
-      pt2.y += ARC;
-      this.curve = new THREE.CubicBezierCurve3(emojiPos, pt1, pt2, this.targetInitPos);
-      this.timeElapsed = 0;
-
-      this.soundPlayed = false;
-      this.audio = this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
-        15,
-        this.el.object3D,
-        true
-      );
-      this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.stopPositionalAudio(this.audio);
-    },
-
-    play() {
-      const mediaLoader = this.el.components["media-loader"];
-      if (window.APP.utils.emojis.find(emoji => emoji.model !== mediaLoader.data.src) === -1) {
-        this.el.parentNode.removeChild(this.el);
-        return;
-      }
-
-      this.particleEmitter = this.el.querySelector(".particle-emitter");
-    },
-
-    update() {
-      if (!this.particleConfig && this.data.particleEmitterConfig) {
-        this.particleConfig = Object.assign({}, this.data.particleEmitterConfig);
-        this.originalParticleCount = this.particleConfig.particleCount;
-      }
-    },
-
-    tick(t, dt) {
-      let totalTime = this.curve.getLength() / SPEED;
-      let progress = this.timeElapsed / totalTime;
-
-      let emojiPos = this.el.object3D.position;
-      let targetPos = this.data.target.object3D.position.clone();
-      targetPos.y += 2;
-
-      // audio cue
-      let dist = emojiPos.distanceTo(targetPos);
-      if (!this.soundPlayed && dist < AUDIO_THRESH) {
-        NAF.connection.broadcastData("playSound", { sound: SOUND, emojiID: this.el.id, targetID: this.data.target.id });
-        this.soundPlayed = true;
-      }
-
-      // movement
-      if (progress >= 1) {
-        // reached target
-        emojiPos.copy(targetPos);
-
-        this.el.setAttribute("owned-object-cleanup-timeout", "ttl", 2);
-
-        NAF.connection.broadcastData("stopSound", { emojiID: this.el.id, targetID: this.data.target.id });
-      } else {
-        // en route to target
-        emojiPos.copy(this.curve.getPointAt(progress));
-
-        let targetMovement = targetPos.sub(this.targetInitPos);
-        emojiPos.add(targetMovement);
-      }
-
-      this.timeElapsed += dt;
-
-      // Hubs code
-      const isMine = this.el.components.networked.initialized && this.el.components.networked.isMine();
-
-      if (this.particleConfig && isMine) {
-        const now = performance.now();
-
-        const isHeld = this.el.sceneEl.systems.interaction.isHeld(this.el);
-
-        if (isHeld) {
-          this.data.emitEndTime = now + this.data.emitDecayTime * 1000;
-        }
-
-        const emitFadeTime = this.data.emitFadeTime * 1000;
-
-        if (now < this.data.emitEndTime && this.particleConfig.startOpacity < 1) {
-          this.particleConfig.particleCount = this.originalParticleCount;
-          this.particleConfig.startOpacity = 1;
-          this.particleConfig.middleOpacity = 1;
-          this.particleEmitter.setAttribute("particle-emitter", this.particleConfig, true);
-        } else if (now >= this.data.emitEndTime && this.particleConfig.startOpacity > 0.001) {
-          const timeSinceStop = Math.min(now - this.data.emitEndTime, emitFadeTime);
-          const opacity = 1 - timeSinceStop / emitFadeTime;
-          const particleCount = opacity < 0.001 && this.particleConfig.particleCount > 0 ? 0 : this.originalParticleCount;
-          this.particleConfig.particleCount = particleCount;
-          this.particleConfig.startOpacity = opacity;
-          this.particleConfig.middleOpacity = opacity;
-          this.particleEmitter.setAttribute("particle-emitter", this.particleConfig, true);
-        }
-      }
-    }
-  });
-
-  function sendEmoji(model, particleEmitterConfig, target) {
-    const emoji = window.APP.utils.addMedia(model, "#interactable-emoji").entity;
-    emoji.setAttribute("offset-relative-to", {
-      target: "#avatar-pov-node",
-      offset: { x: 0, y: 0, z: -1.5 }
-    });
-    emoji.addEventListener("model-loaded", () => {
-      let particleEmitter = emoji.querySelector(".particle-emitter");
-      particleEmitter.setAttribute("particle-emitter", particleEmitterConfig);
-
-      emoji.setAttribute("hubs-emoji", { particleEmitterConfig: particleEmitterConfig, target: target });
-    });
-  }
 
   AFRAME.registerComponent("socialvr-emoji-button", {
     dependencies: ["is-remote-hover-target"],
@@ -327,6 +239,46 @@
     onClick: function() {
       this.el.sceneEl.systems["socialvr-emoji-button"].unregister();
     }
+  });
+
+  AFRAME.registerComponent("socialvr-emoji-audio", {
+    init: function() {
+      console.log("[Social VR] Emoji Manager Component - Initialized");
+
+      NAF.connection.subscribeToDataChannel("playSound", this.playSound.bind(this));
+      NAF.connection.subscribeToDataChannel("stopSound", this.stopSound.bind(this));
+    
+      this.emojiAudio = {};
+  },
+    
+    remove: function() {
+      NAF.connection.unsubscribeToDataChannel("playSound");
+      NAF.connection.unsubscribeToDataChannel("stopSound");
+    },
+
+    playSound: function(senderId, dataType, data, targetId) {
+      let emoji = document.getElementById(data.emojiID);
+
+      //if (data.targetID == this player id) {
+      {
+        let audio = this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(
+          data.sound,
+          emoji.object3D,
+          true
+        );
+
+        this.emojiAudio[data.emojiID] = audio;
+      }
+    },
+
+    stopSound: function(senderId, dataType, data, targetId) {
+      //if (data.targetID == this player id) {
+      {
+        let audio = this.emojiAudio[data.emojiID];
+
+        this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.stopPositionalAudio(audio);
+      }  
+    },
   });
 
   AFRAME.registerSystem("socialvr-emoji-target", {

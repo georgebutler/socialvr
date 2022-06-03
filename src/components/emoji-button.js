@@ -1,4 +1,4 @@
-import { sendEmoji } from "../hubs/emoji"
+import { sendEmoji } from "./emoji"
 
 AFRAME.registerComponent("socialvr-emoji-button", {
   dependencies: ["is-remote-hover-target"],

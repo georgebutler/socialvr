@@ -2,24 +2,14 @@ const SPEED = 0.005;      // units per frame
 const ARC = 2;            // higher = more parabolic
 const AUDIO_THRESH = 10;  // distance to target to play audio cue
 const SOUND = 15;         // sound effect choice
+const DURATION = 3;       // duration over target before disappearing
 
-AFRAME.registerComponent("hubs-emoji", {
+AFRAME.registerComponent("socialvr-emoji", {
   schema: {
-    emitDecayTime: { default: 1.5 },
-    emitFadeTime: { default: 0.5 },
-    emitEndTime: { default: 0 },
-    particleEmitterConfig: {
-      default: null,
-      parse: v => (typeof v === "object" ? v : JSON.parse(v)),
-      stringify: JSON.stringify
-    },
     target: { default: null }
   },
 
   init() {
-    this.data.emitEndTime = performance.now() + this.data.emitDecayTime * 1000;
-    this.physicsSystem = this.el.sceneEl.systems["hubs-systems"].physicsSystem;
-
     // prevent auto remove
     this.el.removeAttribute("owned-object-cleanup-timeout");
 
@@ -53,13 +43,6 @@ AFRAME.registerComponent("hubs-emoji", {
     this.particleEmitter = this.el.querySelector(".particle-emitter");
   },
 
-  update() {
-    if (!this.particleConfig && this.data.particleEmitterConfig) {
-      this.particleConfig = Object.assign({}, this.data.particleEmitterConfig);
-      this.originalParticleCount = this.particleConfig.particleCount;
-    }
-  },
-
   tick(t, dt) {
     let totalTime = this.curve.getLength() / SPEED;
     let progress = this.timeElapsed / totalTime;
@@ -80,7 +63,7 @@ AFRAME.registerComponent("hubs-emoji", {
       // reached target
       emojiPos.copy(targetPos);
 
-      this.el.setAttribute("owned-object-cleanup-timeout", "ttl", 2);
+      this.el.setAttribute("owned-object-cleanup-timeout", "ttl", DURATION);
 
       NAF.connection.broadcastData("stopSound", { emojiID: this.el.id, targetID: this.data.target.id });
     } else {
@@ -92,36 +75,6 @@ AFRAME.registerComponent("hubs-emoji", {
     }
 
     this.timeElapsed += dt;
-
-    // Hubs code
-    const isMine = this.el.components.networked.initialized && this.el.components.networked.isMine();
-
-    if (this.particleConfig && isMine) {
-      const now = performance.now();
-
-      const isHeld = this.el.sceneEl.systems.interaction.isHeld(this.el);
-
-      if (isHeld) {
-        this.data.emitEndTime = now + this.data.emitDecayTime * 1000;
-      }
-
-      const emitFadeTime = this.data.emitFadeTime * 1000;
-
-      if (now < this.data.emitEndTime && this.particleConfig.startOpacity < 1) {
-        this.particleConfig.particleCount = this.originalParticleCount;
-        this.particleConfig.startOpacity = 1;
-        this.particleConfig.middleOpacity = 1;
-        this.particleEmitter.setAttribute("particle-emitter", this.particleConfig, true);
-      } else if (now >= this.data.emitEndTime && this.particleConfig.startOpacity > 0.001) {
-        const timeSinceStop = Math.min(now - this.data.emitEndTime, emitFadeTime);
-        const opacity = 1 - timeSinceStop / emitFadeTime;
-        const particleCount = opacity < 0.001 && this.particleConfig.particleCount > 0 ? 0 : this.originalParticleCount;
-        this.particleConfig.particleCount = particleCount;
-        this.particleConfig.startOpacity = opacity;
-        this.particleConfig.middleOpacity = opacity;
-        this.particleEmitter.setAttribute("particle-emitter", this.particleConfig, true);
-      }
-    }
   }
 });
 
@@ -135,6 +88,6 @@ export function sendEmoji(model, particleEmitterConfig, target) {
     let particleEmitter = emoji.querySelector(".particle-emitter");
     particleEmitter.setAttribute("particle-emitter", particleEmitterConfig);
 
-    emoji.setAttribute("hubs-emoji", { particleEmitterConfig: particleEmitterConfig, target: target });
+    emoji.setAttribute("socialvr-emoji", { target: target });
   });
 }

@@ -33,13 +33,14 @@
 // scene.appendChild(speechVisEl);
 // scene.appendChild(speechToolboxButton);
 
-import "./components/emoji-audio";
+import "./components/emoji";
 import "./components/emoji-target";
 import "./components/emoji-button";
 import "./components/emoji-cancel-button";
+import "./components/emoji-audio";
+
 import "./systems/emoji-target";
 import "./systems/emoji-button";
-import "./hubs/emoji";
 
 const scene = document.querySelector("a-scene");
 

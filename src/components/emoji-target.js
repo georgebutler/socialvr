@@ -67,9 +67,8 @@ AFRAME.registerComponent("socialvr-emoji-target", {
         emoji.object3D.position.copy(new THREE.Vector3(x, -0.5, -1.5));
         x += 0.5;
 
-        particleEmitterConfig.startVelocity.y = -1;
-        particleEmitterConfig.endVelocity.y = -0.25;
-        particleEmitterConfig.lifetime = 10;
+        particleEmitterConfig.startVelocity.y = 0;
+        particleEmitterConfig.endVelocity.y = -2;
         particleEmitterConfig.particleCount = 20;
 
         emoji.setAttribute("socialvr-emoji-button", { model: model, particleEmitterConfig: particleEmitterConfig, target: this.el });
