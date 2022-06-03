@@ -109,12 +109,6 @@
       this.hoverVis.object3D.position.y += 2;
       this.hoverVis.object3D.scale.copy(new THREE.Vector3(0.5, 0.5, 0.5));
       this.hoverVis.object3D.visible = false;
-
-      this.head = window.APP.componentRegistry["player-info"][0].el.querySelector("#avatar-pov-node"); 
-
-      // TODO: determine if player in VR or on Desktop
-      this.VR = true;
-      this.hudAnchor = (this.VR) ? window.APP.componentRegistry["player-info"][0].el.querySelector(".model") : this.head;
     
       this.el.addEventListener("hover", this.onHover.bind(this));
       this.el.addEventListener("unhover", this.onUnhover.bind(this));
@@ -129,7 +123,7 @@
 
     tick: function() {
       // update hover state visual to face this player
-      this.hoverVis.object3D.lookAt(this.head.object3D.getWorldPosition(new THREE.Vector3()));
+      this.hoverVis.object3D.lookAt(this.system.head.object3D.getWorldPosition(new THREE.Vector3()));
     },
 
     onHover: function() {
@@ -141,16 +135,16 @@
     },
 
     onClick: function() {
-      if (!this.hudAnchor.querySelector(".socialvr-emoji-button")) {
-        const hudScale = (this.VR) ? 0.2 : 0.5;
-        const hudX = (this.VR) ? -0.6 : -1.5;
-        const hudY = (this.VR) ? 1.4 : -0.5;
-        const hudZ = (this.VR) ? -1 : -1.5;
-        const hudSpacing = (this.VR) ? 0.2 : 0.5;
+      if (!this.system.hudAnchor.querySelector(".socialvr-emoji-button")) {
+        const hudScale = (this.system.VR) ? 0.2 : 0.5;
+        const hudX = (this.system.VR) ? -0.6 : -1.5;
+        const hudY = (this.system.VR) ? 1.4 : -0.5;
+        const hudZ = (this.system.VR) ? -1 : -1.5;
+        const hudSpacing = (this.system.VR) ? 0.2 : 0.5;
 
         let x = hudX;
         window.APP.utils.emojis.forEach(({ model, particleEmitterConfig }) => {
-          const emoji = window.APP.utils.addMedia(model, "#static-media", null, null, false, false, false, {}, false, this.hudAnchor).entity;
+          const emoji = window.APP.utils.addMedia(model, "#static-media", null, null, false, false, false, {}, false, this.system.hudAnchor).entity;
 
           emoji.object3D.scale.copy(new THREE.Vector3(hudScale, hudScale, hudScale));
           emoji.object3D.position.copy(new THREE.Vector3(x, hudY, hudZ));
@@ -166,7 +160,7 @@
 
         const cancelButton = document.createElement("a-entity");
         cancelButton.setAttribute("socialvr-emoji-cancel-button", "");
-        this.hudAnchor.appendChild(cancelButton);
+        this.system.hudAnchor.appendChild(cancelButton);
         cancelButton.object3D.position.copy(new THREE.Vector3(0, hudY - 0.3, hudZ));
         this.el.sceneEl.systems["socialvr-emoji-button"].registerCancel(cancelButton);
       }
@@ -278,6 +272,11 @@
 
   AFRAME.registerSystem("socialvr-emoji-target", {
     init: function() {
+      // TODO: determine if player in VR or on Desktop
+      this.VR = true;
+      this.head = window.APP.componentRegistry["player-info"][0].el.querySelector("#avatar-pov-node"); 
+      this.hudAnchor = (this.VR) ? window.APP.componentRegistry["player-info"][0].el.querySelector(".model") : this.head;
+      
       this.hoverEl = null;
     },
 
@@ -288,9 +287,10 @@
       });
 
       // hover state visual
+      let hudOpen = this.hudAnchor.querySelector(".socialvr-emoji-button");
       let currHoverEl = this.el.systems.interaction.state.rightRemote.hovered;
 
-      if (currHoverEl && currHoverEl.getAttribute("socialvr-emoji-target")) {
+      if (!hudOpen && currHoverEl && currHoverEl.getAttribute("socialvr-emoji-target")) {
         if (!this.hoverEl) {
           currHoverEl.emit("hover");
           this.hoverEl = currHoverEl;
