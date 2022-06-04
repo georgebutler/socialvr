@@ -48,6 +48,6 @@ const emojiAudio = document.createElement("a-entity");
 emojiAudio.setAttribute("socialvr-emoji-audio", "");
 scene.appendChild(emojiAudio);
 
-const dummy = document.createElement("a-box");
+const dummy = document.createElement("a-entity");
 dummy.setAttribute("socialvr-emoji-target", "");
 scene.appendChild(dummy);

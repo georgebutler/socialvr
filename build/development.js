@@ -165,7 +165,7 @@
 
         // custom model, local: change url for each ngrok session, remote: change url to netlify
         // TODO: do this from Spoke instead
-        const url = "https://2dd6-2601-645-c000-8880-98b5-5952-f39f-7a22.ngrok.io";
+        const url = "https://6f50-2601-645-c000-8880-7411-5a9c-1946-ff10.ngrok.io";
         const modelURL = url + "/assets/rubber_duck.glb";
         const particleURL = url + "/assets/rubber_duck.png";
         const model = new URL(modelURL, window.location).href;
@@ -387,7 +387,7 @@
   emojiAudio.setAttribute("socialvr-emoji-audio", "");
   scene.appendChild(emojiAudio);
 
-  const dummy = document.createElement("a-box");
+  const dummy = document.createElement("a-entity");
   dummy.setAttribute("socialvr-emoji-target", "");
   scene.appendChild(dummy);
 

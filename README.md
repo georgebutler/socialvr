@@ -31,3 +31,18 @@ Feature within the Social VR Toolbox. A moving platform that takes participants 
 
 `barge-button`<br/>
 Buttons on the barge that allow participants to pause, resume, or reset the barge motion.
+
+`emoji`<br/>
+The emoji object that gets sent. Contains logic on the parabolic path. Responsible for broadcasting audio event, and which sound is played.
+
+`emoji-target`<br/>
+The avatar that can receive emojis. Contains hover state visualization. Responsible for creating the HUD for selecting default or custom emojis. The corresponding system contains logic for displaying hover state, and having different HUD styles for VR and desktop.
+
+`emoji-button`<br/>
+The HUD emoji button for selecting emojis. The corresponding system facilitates removing all buttons once the HUD is removed.
+
+`emoji-cancel-button`<br/>
+The HUD cancel button for removing the HUD.
+
+`emoji-audio`<br/>
+Listens for emoji audio NAF events and plays sound for the recipient.
