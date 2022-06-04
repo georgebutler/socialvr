@@ -276,19 +276,19 @@ var development = (function (exports) {
       });
 
     // Phases
-    /*   for (let i = 0; i < scene.children.length; i++) {
-        const child = scene.children[i];
-        const phaseIndex = child.classList.search(/phase/i);
-    
-        if (phaseIndex >= 0) {
-          const phase = child.classList.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
-    
-          if (phase === "phase1" || phase === "phase2" || phase === "phase3" || phase === "phase4") {
-            console.log(`Added ${child} to ${phase}.`);
-            child.classList.add(`${phase}`);
-          }
+    for (let i = 0; i < document.getElementById("environment-scene").children[0].children[0].children.length; i++) {
+      const child = document.getElementById("environment-scene").children[0].children[0].children[i];
+      const phaseIndex = child.className.trim().toLowerCase().search(/phase/i);
+
+      if (phaseIndex >= 0) {
+        const phase = child.className.slice(phaseIndex).split(" ")[0].trim().toLowerCase();
+
+        if (phase === "phase1" || phase === "phase2" || phase === "phase3" || phase === "phase4") {
+          // console.log(`Added ${child} to ${phase}.`);
+          child.classList.add(`${phase}`);
         }
-      } */
+      }
+    }
 
     NAF.connection.subscribeToDataChannel("ChangePhase", ChangePhase);
 
