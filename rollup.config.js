@@ -1,7 +1,6 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
-import ignore from 'rollup-plugin-ignore';
 import serve from 'rollup-plugin-serve';
 
 // `npm run build` -> `production` is true

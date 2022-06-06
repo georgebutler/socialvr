@@ -64,12 +64,6 @@ AFRAME.registerComponent("socialvr-barge-button", {
     scene.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(11,this.el.object3D);
 
     if (this.data.phaseID >= 0) {
-      // Phase Button
-      ChangePhase(null, null, {index: this.data.phaseID});
-      NAF.connection.broadcastData("ChangePhase", {
-        index: this.data.phaseID
-      });
-
       // Phase 1 - Go
       if (this.data.phaseID === 1) {
         scene.emit("startMovingWorld");
