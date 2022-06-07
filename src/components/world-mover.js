@@ -44,6 +44,10 @@ AFRAME.registerComponent("socialvr-world-mover", {
                 this.el.setObject3D("mesh", window.APP.utils.threeUtils.cloneObject3D(model.scene, true));
                 this.el.setAttribute("matrix-auto-update", "");
             })
+            .finally(() => {
+                // Disable skybox
+                document.querySelector("[skybox]").components["skybox"].remove()
+            })
             .catch((e) => {
                 console.error(e);
             });

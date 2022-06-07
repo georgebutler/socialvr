@@ -3,6 +3,14 @@ import "./components/world-mover";
 
 const scene = document.querySelector("a-scene");
 
+function disableFloatyPhysics() {
+  const floaties = document.querySelectorAll('[floaty-object=""]');
+
+  floaties.forEach((floaty) => {
+    floaty.setAttribute("floaty-object", { reduceAngularFloat: true, releaseGravity: -1 });
+  });
+}
+
 scene.addEventListener("environment-scene-loaded", () => {
   // Button
   let button = document.createElement("a-entity");
@@ -24,4 +32,13 @@ scene.addEventListener("environment-scene-loaded", () => {
   const worldMover = document.createElement("a-entity");
   worldMover.setAttribute("socialvr-world-mover", "");
   scene.appendChild(worldMover);
+
+  // Changes camera inspection system to show background, regardless of user preferences.
+  const cameraSystem = scene.systems["hubs-systems"].cameraSystem;
+  cameraSystem.lightsEnabled = true;
+
+  // Disable floaty physics
+  scene.addEventListener("object_spawned", (e) => {
+    disableFloatyPhysics();
+  });
 }, { once: true })

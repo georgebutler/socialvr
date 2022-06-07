@@ -121,6 +121,10 @@
                   this.el.setObject3D("mesh", window.APP.utils.threeUtils.cloneObject3D(model.scene, true));
                   this.el.setAttribute("matrix-auto-update", "");
               })
+              .finally(() => {
+                  // Disable skybox
+                  document.querySelector("[skybox]").components["skybox"].remove();
+              })
               .catch((e) => {
                   console.error(e);
               });
@@ -202,6 +206,14 @@
 
   const scene = document.querySelector("a-scene");
 
+  function disableFloatyPhysics() {
+    const floaties = document.querySelectorAll('[floaty-object=""]');
+
+    floaties.forEach((floaty) => {
+      floaty.setAttribute("floaty-object", { reduceAngularFloat: true, releaseGravity: -1 });
+    });
+  }
+
   scene.addEventListener("environment-scene-loaded", () => {
     // Button
     let button = document.createElement("a-entity");
@@ -223,6 +235,15 @@
     const worldMover = document.createElement("a-entity");
     worldMover.setAttribute("socialvr-world-mover", "");
     scene.appendChild(worldMover);
+
+    // Changes camera inspection system to show background, regardless of user preferences.
+    const cameraSystem = scene.systems["hubs-systems"].cameraSystem;
+    cameraSystem.lightsEnabled = true;
+
+    // Disable floaty physics
+    scene.addEventListener("object_spawned", (e) => {
+      disableFloatyPhysics();
+    });
   }, { once: true });
 
 })();
