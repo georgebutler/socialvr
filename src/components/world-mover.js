@@ -13,7 +13,7 @@ AFRAME.registerComponent("socialvr-world-mover", {
 
             if (waypoint) {
                 this.destinations.push(waypoint.object3D.position.negate());
-                
+
                 console.log(`Waypoint [${i}]: ${waypoint.object3D.position}`);
             }
         }
@@ -36,6 +36,17 @@ AFRAME.registerComponent("socialvr-world-mover", {
 
         NAF.connection.subscribeToDataChannel("startMovingWorld", this.start.bind(this));
         NAF.connection.subscribeToDataChannel("stopMovingWorld", this.stop.bind(this));
+
+        // Load environment
+        window.APP.utils.GLTFModelPlus
+            .loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-2.glb")
+            .then((model) => {
+                this.el.setObject3D("mesh", window.APP.utils.threeUtils.cloneObject3D(model.scene, true));
+                this.el.setAttribute("matrix-auto-update", "");
+            })
+            .catch((e) => {
+                console.error(e);
+            });
     },
 
     remove: function () {
@@ -70,6 +81,31 @@ AFRAME.registerComponent("socialvr-world-mover", {
 
     start: function () {
         this.moving = true;
+
+        // Remove hangar objects
+        const removeImages = [
+            "https://hubscloud-assets.socialsuperpowers.net/files/04ff2033-e9f6-4f82-991a-0d7d530062f5.jpg",
+            "https://hubscloud-assets.socialsuperpowers.net/files/40fb41d1-c6cd-4541-88f2-7386076b01ae.jpg"
+        ];
+
+        document.querySelectorAll("[media-image]").forEach((element) => {
+            if (removeImages.includes(element.components["media-image"].data.src)) {
+                element.parentNode.removeChild(element);
+            }
+        });
+
+        const removeClasses = [
+            ".ReadMe__setInvisibleOnBargeMove",
+            ".GrabMe__setInvisibleOnBargeMove"
+        ];
+
+        removeClasses.forEach((target) => {
+            const element = document.querySelector(target);
+
+            if (element) {
+                element.parentNode.removeChild(element);
+            }
+        });
     },
 
     stop: function () {

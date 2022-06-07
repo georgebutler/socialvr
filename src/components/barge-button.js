@@ -1,6 +1,4 @@
 AFRAME.registerComponent("socialvr-barge-button", {
-  dependencies: ["is-remote-hover-target", "hoverable-visuals"],
-  
   schema: {
     text: {
       type: "string", 
@@ -30,11 +28,13 @@ AFRAME.registerComponent("socialvr-barge-button", {
       color: this.data.color,
       roughness: 0.5,
     });
+
     this.mesh = new THREE.Mesh(this.geometry, this.material);
 
-    this.el.setObject3D('mesh', this.mesh);
+    this.el.setObject3D("mesh", this.mesh);
     this.el.setAttribute("tags", "singleActionButton: true");
-    this.el.setAttribute("socialvr-barge-child", "");
+    this.el.setAttribute("is-remote-hover-target", "");
+    this.el.setAttribute("hoverable-visuals", "");
     this.el.classList.add("interactable");
 
     // Text
@@ -58,34 +58,13 @@ AFRAME.registerComponent("socialvr-barge-button", {
     this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(11, this.el.object3D);
 
     if (this.data.phaseID >= 0) {
-      if (this.data.phaseID === 1) {
-        // Remove hangar objects
-        const removeImages = [
-          "https://hubscloud-assets.socialsuperpowers.net/files/04ff2033-e9f6-4f82-991a-0d7d530062f5.jpg",
-          "https://hubscloud-assets.socialsuperpowers.net/files/40fb41d1-c6cd-4541-88f2-7386076b01ae.jpg"
-        ];
-
-        document.querySelectorAll("[media-image]").forEach((element) => {
-          if (removeImages.includes(element.components["media-image"].data.src)) {
-            element.parentNode.removeChild(element);
-          }
-        });
-
-        const removeClasses = [
-          ".ReadMe__setInvisibleOnBargeMove",
-          ".GrabMe__setInvisibleOnBargeMove"
-        ];
-
-        removeClasses.forEach((cls) => {
-          const element = document.querySelector(cls);
-
-          if (element) {
-            element.parentNode.removeChild(element);
-          }
-        });
-        
-        // Start moving
+      // 1 -> Start, 2 -> Finish
+      if (this.data.phaseID === 1) {        
         this.el.sceneEl.emit("startMovingWorld");
+        this.el.parentNode.removeChild(this.el);
+      } else if (this.data.phaseID === 2) {
+        this.el.sceneEl.emit("stopMovingWorld");
+        this.el.parentNode.removeChild(this.el);
       }
     } else {
       this.el.sceneEl.emit(this.data.eventName);

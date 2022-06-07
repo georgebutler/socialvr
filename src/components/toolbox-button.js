@@ -1,8 +1,6 @@
 // button for turning specified social VR systems on and off
 
 AFRAME.registerComponent("socailvr-toolbox-button", {
-  dependencies: ["is-remote-hover-target", "hoverable-visuals"],
-
   schema: {type: "string", default: "Barge"},
 
   init: function() {

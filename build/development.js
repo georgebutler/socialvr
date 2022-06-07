@@ -2,8 +2,6 @@
   'use strict';
 
   AFRAME.registerComponent("socialvr-barge-button", {
-    dependencies: ["is-remote-hover-target", "hoverable-visuals"],
-    
     schema: {
       text: {
         type: "string", 
@@ -33,11 +31,13 @@
         color: this.data.color,
         roughness: 0.5,
       });
+
       this.mesh = new THREE.Mesh(this.geometry, this.material);
 
-      this.el.setObject3D('mesh', this.mesh);
+      this.el.setObject3D("mesh", this.mesh);
       this.el.setAttribute("tags", "singleActionButton: true");
-      this.el.setAttribute("socialvr-barge-child", "");
+      this.el.setAttribute("is-remote-hover-target", "");
+      this.el.setAttribute("hoverable-visuals", "");
       this.el.classList.add("interactable");
 
       // Text
@@ -61,34 +61,13 @@
       this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(11, this.el.object3D);
 
       if (this.data.phaseID >= 0) {
-        if (this.data.phaseID === 1) {
-          // Remove hangar objects
-          const removeImages = [
-            "https://hubscloud-assets.socialsuperpowers.net/files/04ff2033-e9f6-4f82-991a-0d7d530062f5.jpg",
-            "https://hubscloud-assets.socialsuperpowers.net/files/40fb41d1-c6cd-4541-88f2-7386076b01ae.jpg"
-          ];
-
-          document.querySelectorAll("[media-image]").forEach((element) => {
-            if (removeImages.includes(element.components["media-image"].data.src)) {
-              element.parentNode.removeChild(element);
-            }
-          });
-
-          const removeClasses = [
-            ".ReadMe__setInvisibleOnBargeMove",
-            ".GrabMe__setInvisibleOnBargeMove"
-          ];
-
-          removeClasses.forEach((cls) => {
-            const element = document.querySelector(cls);
-
-            if (element) {
-              element.parentNode.removeChild(element);
-            }
-          });
-          
-          // Start moving
+        // 1 -> Start, 2 -> Finish
+        if (this.data.phaseID === 1) {        
           this.el.sceneEl.emit("startMovingWorld");
+          this.el.parentNode.removeChild(this.el);
+        } else if (this.data.phaseID === 2) {
+          this.el.sceneEl.emit("stopMovingWorld");
+          this.el.parentNode.removeChild(this.el);
         }
       } else {
         this.el.sceneEl.emit(this.data.eventName);
@@ -111,7 +90,7 @@
 
               if (waypoint) {
                   this.destinations.push(waypoint.object3D.position.negate());
-                  
+
                   console.log(`Waypoint [${i}]: ${waypoint.object3D.position}`);
               }
           }
@@ -134,6 +113,17 @@
 
           NAF.connection.subscribeToDataChannel("startMovingWorld", this.start.bind(this));
           NAF.connection.subscribeToDataChannel("stopMovingWorld", this.stop.bind(this));
+
+          // Load environment
+          window.APP.utils.GLTFModelPlus
+              .loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-2.glb")
+              .then((model) => {
+                  this.el.setObject3D("mesh", window.APP.utils.threeUtils.cloneObject3D(model.scene, true));
+                  this.el.setAttribute("matrix-auto-update", "");
+              })
+              .catch((e) => {
+                  console.error(e);
+              });
       },
 
       remove: function () {
@@ -168,6 +158,31 @@
 
       start: function () {
           this.moving = true;
+
+          // Remove hangar objects
+          const removeImages = [
+              "https://hubscloud-assets.socialsuperpowers.net/files/04ff2033-e9f6-4f82-991a-0d7d530062f5.jpg",
+              "https://hubscloud-assets.socialsuperpowers.net/files/40fb41d1-c6cd-4541-88f2-7386076b01ae.jpg"
+          ];
+
+          document.querySelectorAll("[media-image]").forEach((element) => {
+              if (removeImages.includes(element.components["media-image"].data.src)) {
+                  element.parentNode.removeChild(element);
+              }
+          });
+
+          const removeClasses = [
+              ".ReadMe__setInvisibleOnBargeMove",
+              ".GrabMe__setInvisibleOnBargeMove"
+          ];
+
+          removeClasses.forEach((target) => {
+              const element = document.querySelector(target);
+
+              if (element) {
+                  element.parentNode.removeChild(element);
+              }
+          });
       },
 
       stop: function () {
@@ -200,7 +215,7 @@
     button = document.createElement("a-entity");
     position = document.querySelector(".CompleteButton_phase3").object3D.position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0));
 
-    button.setAttribute("socialvr-barge-button", "text: Complete; radius: 0.3; color: #C576F6; phaseID: 4");
+    button.setAttribute("socialvr-barge-button", "text: Complete; radius: 0.3; color: #C576F6; phaseID: 2");
     button.setAttribute("position", position);
     scene.appendChild(button);
 
@@ -208,16 +223,6 @@
     const worldMover = document.createElement("a-entity");
     worldMover.setAttribute("socialvr-world-mover", "");
     scene.appendChild(worldMover);
-
-    window.APP.utils.GLTFModelPlus
-      .loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-2.glb")
-      .then((model) => {
-        worldMover.setObject3D("mesh", window.APP.utils.threeUtils.cloneObject3D(model.scene, true));
-        worldMover.setAttribute("matrix-auto-update", "");
-      })
-      .catch((e) => {
-        console.error(e);
-      });
   }, { once: true });
 
 })();
