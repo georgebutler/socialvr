@@ -8,7 +8,6 @@ scene.addEventListener("environment-scene-loaded", () => {
   let button = document.createElement("a-entity");
   let position = document.querySelector(".startButton").object3D.position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0))
 
-  button.setAttribute("phase0", "");
   button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.3; color: #C576F6; phaseID: 1");
   button.setAttribute("position", position);
   scene.appendChild(button);
@@ -17,7 +16,6 @@ scene.addEventListener("environment-scene-loaded", () => {
   button = document.createElement("a-entity");
   position = document.querySelector(".CompleteButton_phase3").object3D.position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0))
 
-  button.setAttribute("phase3", "");
   button.setAttribute("socialvr-barge-button", "text: Complete; radius: 0.3; color: #C576F6; phaseID: 4");
   button.setAttribute("position", position);
   scene.appendChild(button);

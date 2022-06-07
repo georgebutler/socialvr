@@ -1,9 +1,6 @@
-import { ChangePhase } from "../main";
-
 AFRAME.registerComponent("socialvr-barge-button", {
   dependencies: ["is-remote-hover-target", "hoverable-visuals"],
   
-  // start, stop, reset
   schema: {
     text: {
       type: "string", 
@@ -28,7 +25,6 @@ AFRAME.registerComponent("socialvr-barge-button", {
   },
 
   init: function() {
-    // Geometry
     this.geometry = new THREE.SphereGeometry(this.data.radius, 16, 8);
     this.material = new THREE.MeshStandardMaterial({
       color: this.data.color,
@@ -59,18 +55,17 @@ AFRAME.registerComponent("socialvr-barge-button", {
   },
 
   onClick: function() {
-    const scene = document.querySelector("a-scene");
-
-    scene.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(11,this.el.object3D);
+    this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(11, this.el.object3D);
 
     if (this.data.phaseID >= 0) {
       // Phase 1 - Go
       if (this.data.phaseID === 1) {
-        scene.emit("startMovingWorld");
+        this.el.sceneEl.emit("startMovingWorld");
+        console.log("Go time");
       }
     } else {
       // Generic Button
-      scene.emit(this.data.eventName);
+      this.el.sceneEl.emit(this.data.eventName);
     }
   }
 });

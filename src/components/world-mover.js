@@ -2,7 +2,7 @@ AFRAME.registerComponent("socialvr-world-mover", {
     init: function () {
         this.moving = false;
         this.destinations = [];
-        this.currentDestination = -1;
+        this.currentDestination = 0;
         this.direction = new window.APP.utils.THREE.Vector3(0, 0, 0);
         this.speed = 1;
         this.lastCheck = 0;
@@ -15,6 +15,18 @@ AFRAME.registerComponent("socialvr-world-mover", {
                 this.destinations.push(waypoint.object3D.position);
                 console.log(`Waypoint [${i}]: ${waypoint.object3D.position}`);
             }
+        }
+
+        if (this.destinations.length >= 1) {
+            console.log(`Registered ${this.destinations.length} waypoints.`);
+        } else {
+            console.warn("No waypoints found!");
+            console.warn("Registering default waypoints.");
+
+            this.destinations.push(new window.APP.utils.THREE.Vector3(10, 0, 0));
+            this.destinations.push(new window.APP.utils.THREE.Vector3(10, 0, 20));
+            this.destinations.push(new window.APP.utils.THREE.Vector3(-10, 10, 20));
+            this.destinations.push(new window.APP.utils.THREE.Vector3(-10, 20, 30));
         }
 
         // Networked Events
@@ -38,11 +50,11 @@ AFRAME.registerComponent("socialvr-world-mover", {
                 this.direction.copy(target).sub(this.el.object3D.position);
 
                 if (this.el.object3D.position.distanceToSquared(target) >= 1) {
-                    direction.multiplyScalar(this.speed / this.direction.length() * (delta / 1000));
+                    this.direction.multiplyScalar(this.speed / this.direction.length() * (delta / 1000));
 
-                    this.el.object3D.position.x += direction.x;
-                    this.el.object3D.position.y += direction.y;
-                    this.el.object3D.position.z += direction.z;
+                    this.el.object3D.position.x += this.direction.x;
+                    this.el.object3D.position.y += this.direction.y;
+                    this.el.object3D.position.z += this.direction.z;
                 } else {
                     if (isNaN(this.lastCheck) || time >= this.lastCheck) {
                         this.lastCheck = time + 100;
@@ -51,7 +63,6 @@ AFRAME.registerComponent("socialvr-world-mover", {
                 }
             } else {
                 this.moving = false;
-                return
             }
         }
     },
