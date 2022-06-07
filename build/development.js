@@ -61,13 +61,36 @@
       this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(11, this.el.object3D);
 
       if (this.data.phaseID >= 0) {
-        // Phase 1 - Go
         if (this.data.phaseID === 1) {
+          // Remove hangar objects
+          const removeImages = [
+            "https://hubscloud-assets.socialsuperpowers.net/files/04ff2033-e9f6-4f82-991a-0d7d530062f5.jpg",
+            "https://hubscloud-assets.socialsuperpowers.net/files/40fb41d1-c6cd-4541-88f2-7386076b01ae.jpg"
+          ];
+
+          document.querySelectorAll("[media-image]").forEach((element) => {
+            if (removeImages.includes(element.components["media-image"].data.src)) {
+              element.parentNode.removeChild(element);
+            }
+          });
+
+          const removeClasses = [
+            ".ReadMe__setInvisibleOnBargeMove",
+            ".GrabMe__setInvisibleOnBargeMove"
+          ];
+
+          removeClasses.forEach((cls) => {
+            const element = document.querySelector(cls);
+
+            if (element) {
+              element.parentNode.removeChild(element);
+            }
+          });
+          
+          // Start moving
           this.el.sceneEl.emit("startMovingWorld");
-          console.log("Go time");
         }
       } else {
-        // Generic Button
         this.el.sceneEl.emit(this.data.eventName);
       }
     }
@@ -87,7 +110,8 @@
               const waypoint = document.querySelector(".Waypoint_" + i);
 
               if (waypoint) {
-                  this.destinations.push(waypoint.object3D.position);
+                  this.destinations.push(waypoint.object3D.position.negate());
+                  
                   console.log(`Waypoint [${i}]: ${waypoint.object3D.position}`);
               }
           }
@@ -98,10 +122,10 @@
               console.warn("No waypoints found!");
               console.warn("Registering default waypoints.");
 
-              this.destinations.push(new window.APP.utils.THREE.Vector3(10, 0, 0));
-              this.destinations.push(new window.APP.utils.THREE.Vector3(10, 0, 20));
-              this.destinations.push(new window.APP.utils.THREE.Vector3(-10, 10, 20));
-              this.destinations.push(new window.APP.utils.THREE.Vector3(-10, 20, 30));
+              this.destinations.push(new window.APP.utils.THREE.Vector3(10, 0, 0).negate());
+              this.destinations.push(new window.APP.utils.THREE.Vector3(10, 0, 20).negate());
+              this.destinations.push(new window.APP.utils.THREE.Vector3(-10, 10, 20).negate());
+              this.destinations.push(new window.APP.utils.THREE.Vector3(-10, 20, 30).negate());
           }
 
           // Networked Events

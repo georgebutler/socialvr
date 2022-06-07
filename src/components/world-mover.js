@@ -12,7 +12,8 @@ AFRAME.registerComponent("socialvr-world-mover", {
             const waypoint = document.querySelector(".Waypoint_" + i);
 
             if (waypoint) {
-                this.destinations.push(waypoint.object3D.position);
+                this.destinations.push(waypoint.object3D.position.negate());
+                
                 console.log(`Waypoint [${i}]: ${waypoint.object3D.position}`);
             }
         }
@@ -23,10 +24,10 @@ AFRAME.registerComponent("socialvr-world-mover", {
             console.warn("No waypoints found!");
             console.warn("Registering default waypoints.");
 
-            this.destinations.push(new window.APP.utils.THREE.Vector3(10, 0, 0));
-            this.destinations.push(new window.APP.utils.THREE.Vector3(10, 0, 20));
-            this.destinations.push(new window.APP.utils.THREE.Vector3(-10, 10, 20));
-            this.destinations.push(new window.APP.utils.THREE.Vector3(-10, 20, 30));
+            this.destinations.push(new window.APP.utils.THREE.Vector3(10, 0, 0).negate());
+            this.destinations.push(new window.APP.utils.THREE.Vector3(10, 0, 20).negate());
+            this.destinations.push(new window.APP.utils.THREE.Vector3(-10, 10, 20).negate());
+            this.destinations.push(new window.APP.utils.THREE.Vector3(-10, 20, 30).negate());
         }
 
         // Networked Events
