@@ -3,14 +3,6 @@ import "./components/world-mover";
 
 const scene = document.querySelector("a-scene");
 
-function disableFloatyPhysics() {
-  const floaties = document.querySelectorAll('[floaty-object=""]');
-
-  floaties.forEach((floaty) => {
-    floaty.setAttribute("floaty-object", { reduceAngularFloat: true, releaseGravity: -1 });
-  });
-}
-
 scene.addEventListener("environment-scene-loaded", () => {
   // Button
   let button = document.createElement("a-entity");
@@ -39,6 +31,10 @@ scene.addEventListener("environment-scene-loaded", () => {
 
   // Disable floaty physics
   scene.addEventListener("object_spawned", (e) => {
-    disableFloatyPhysics();
+    const floaties = document.querySelectorAll('[floaty-object=""]');
+
+    floaties.forEach((floaty) => {
+      floaty.setAttribute("floaty-object", { reduceAngularFloat: true, releaseGravity: -1 });
+    });
   });
 }, { once: true })
