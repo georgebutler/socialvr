@@ -75,6 +75,28 @@
     }
   });
 
+  AFRAME.registerComponent("socialvr-barge-clock", {
+    init: function () {
+      this.text = document.createElement("a-entity");
+      this.text.setAttribute("text", `value: Time; align: center; side: double; width: 4;`);
+      this.text.setAttribute("geometry", `primitive: plane; height: auto; width: 1;`);
+      this.text.setAttribute("material", "color: #807e7e; side: double;");
+      this.text.setAttribute("animation", "property: rotation; to: 0 -360 0; easing: linear; loop: true; dur: 100000;");
+
+      this.el.appendChild(this.text);
+    },
+
+    tick: function () {
+      let time = new Date();
+      let hours = time.getHours() % 12;
+      let minutes = time.getMinutes() < 10 ? `0${time.getMinutes()}` : time.getMinutes();
+      let ampm = time.getHours() >= 12 ? "PM" : "AM";
+
+      hours = hours ? hours : 12;
+      this.text.setAttribute("text", `value: ${hours}:${minutes} ${ampm}; align: center; width: 4;`);
+    }
+  });
+
   AFRAME.registerComponent("socialvr-world-mover", {
       init: function () {
           this.moving = false;
@@ -227,9 +249,15 @@
     button.setAttribute("position", position);
     scene.appendChild(button);
 
-    // Frames
-    const frameKnowledge = document.querySelector(".knowledgeFrame_phase1");
+    // Clock
+    const clock = document.createElement("a-entity");
 
+    clock.setAttribute("radius", 0.1);
+    clock.setAttribute("socialvr-barge-clock", "");
+    clock.setAttribute("position", document.querySelector(".clock-placeholder").object3D.position);
+    scene.appendChild(clock);
+
+    // Frames
     for (let index = 1; index <= 3; index++) {
       const slot = document.createElement("a-box");
 
@@ -239,10 +267,8 @@
       slot.setAttribute("height", 0.25);
       slot.setAttribute("ksa-type", "knowledge");
       slot.setAttribute("ksa-ranking", 4 - index);
-      frameKnowledge.appendChild(slot); 
+      document.querySelector(".knowledgeFrame_phase1").appendChild(slot); 
     }
-
-    const frameAbilities = document.querySelector(".KSA_ranking_frameglb_1_phase1");
 
     for (let index = 1; index <= 3; index++) {
       const slot = document.createElement("a-box");
@@ -253,10 +279,8 @@
       slot.setAttribute("height", 0.25);
       slot.setAttribute("ksa-type", "abilities");
       slot.setAttribute("ksa-ranking", 4 - index);
-      frameAbilities.appendChild(slot); 
+      document.querySelector(".KSA_ranking_frameglb_1_phase1").appendChild(slot); 
     }
-
-    const frameSkills = document.querySelector(".KSA_ranking_frameglb_phase1");
 
     for (let index = 1; index <= 3; index++) {
       const slot = document.createElement("a-box");
@@ -267,11 +291,10 @@
       slot.setAttribute("height", 0.25);
       slot.setAttribute("ksa-type", "skills");
       slot.setAttribute("ksa-ranking", 4 - index);
-      frameSkills.appendChild(slot); 
+      document.querySelector(".KSA_ranking_frameglb_phase1").appendChild(slot); 
     }
 
     // Canidate Frame
-    const frameCanidate = document.querySelector(".candidate_frameglb_phase3");
     const slot = document.createElement("a-box");
 
     // slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
@@ -280,7 +303,7 @@
     slot.setAttribute("height", 1);
     slot.setAttribute("depth", 1);
     slot.setAttribute("canidate-frame", "");
-    frameCanidate.appendChild(slot); 
+    document.querySelector(".candidate_frameglb_phase3").appendChild(slot); 
 
     // World Mover
     const worldMover = document.createElement("a-entity");

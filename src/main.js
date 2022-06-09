@@ -1,4 +1,5 @@
 import "./components/barge-button";
+import "./components/barge-clock";
 import "./components/world-mover";
 
 const scene = document.querySelector("a-scene");
@@ -20,9 +21,15 @@ scene.addEventListener("environment-scene-loaded", () => {
   button.setAttribute("position", position);
   scene.appendChild(button);
 
-  // Frames
-  const frameKnowledge = document.querySelector(".knowledgeFrame_phase1");
+  // Clock
+  const clock = document.createElement("a-entity");
 
+  clock.setAttribute("radius", 0.1);
+  clock.setAttribute("socialvr-barge-clock", "");
+  clock.setAttribute("position", document.querySelector(".clock-placeholder").object3D.position);
+  scene.appendChild(clock);
+
+  // Frames
   for (let index = 1; index <= 3; index++) {
     const slot = document.createElement("a-box");
 
@@ -32,10 +39,8 @@ scene.addEventListener("environment-scene-loaded", () => {
     slot.setAttribute("height", 0.25);
     slot.setAttribute("ksa-type", "knowledge");
     slot.setAttribute("ksa-ranking", 4 - index);
-    frameKnowledge.appendChild(slot); 
+    document.querySelector(".knowledgeFrame_phase1").appendChild(slot); 
   }
-
-  const frameAbilities = document.querySelector(".KSA_ranking_frameglb_1_phase1");
 
   for (let index = 1; index <= 3; index++) {
     const slot = document.createElement("a-box");
@@ -46,10 +51,8 @@ scene.addEventListener("environment-scene-loaded", () => {
     slot.setAttribute("height", 0.25);
     slot.setAttribute("ksa-type", "abilities");
     slot.setAttribute("ksa-ranking", 4 - index);
-    frameAbilities.appendChild(slot); 
+    document.querySelector(".KSA_ranking_frameglb_1_phase1").appendChild(slot); 
   }
-
-  const frameSkills = document.querySelector(".KSA_ranking_frameglb_phase1");
 
   for (let index = 1; index <= 3; index++) {
     const slot = document.createElement("a-box");
@@ -60,11 +63,10 @@ scene.addEventListener("environment-scene-loaded", () => {
     slot.setAttribute("height", 0.25);
     slot.setAttribute("ksa-type", "skills");
     slot.setAttribute("ksa-ranking", 4 - index);
-    frameSkills.appendChild(slot); 
+    document.querySelector(".KSA_ranking_frameglb_phase1").appendChild(slot); 
   }
 
   // Canidate Frame
-  const frameCanidate = document.querySelector(".candidate_frameglb_phase3");
   const slot = document.createElement("a-box");
 
   // slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
@@ -73,7 +75,7 @@ scene.addEventListener("environment-scene-loaded", () => {
   slot.setAttribute("height", 1);
   slot.setAttribute("depth", 1);
   slot.setAttribute("canidate-frame", "");
-  frameCanidate.appendChild(slot); 
+  document.querySelector(".candidate_frameglb_phase3").appendChild(slot); 
 
   // World Mover
   const worldMover = document.createElement("a-entity");
