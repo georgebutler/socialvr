@@ -1,5 +1,6 @@
 import "./components/barge-button";
 import "./components/barge-clock";
+import "./components/barge-slot";
 import "./components/world-mover";
 
 const scene = document.querySelector("a-scene");
@@ -23,58 +24,36 @@ scene.addEventListener("environment-scene-loaded", () => {
 
   // Clock
   const clock = document.createElement("a-entity");
-
   clock.setAttribute("radius", 0.1);
   clock.setAttribute("socialvr-barge-clock", "");
   clock.setAttribute("position", document.querySelector(".clock-placeholder").object3D.position);
   scene.appendChild(clock);
 
-  // Frames
+  // Ranking Slots
   for (let index = 1; index <= 3; index++) {
-    const slot = document.createElement("a-box");
-
+    const slot = document.createElement("a-entity");
     slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
-    slot.setAttribute("material", { color: "#FF0000", transparent: true, opacity: 0.5 });
-    slot.setAttribute("width", 2);
-    slot.setAttribute("height", 0.25);
-    slot.setAttribute("ksa-type", "knowledge");
-    slot.setAttribute("ksa-ranking", 4 - index);
+    slot.setAttribute("socialvr-barge-slot", `type: knowledge; rank: ${4 - index}`);
     document.querySelector(".knowledgeFrame_phase1").appendChild(slot); 
   }
 
   for (let index = 1; index <= 3; index++) {
-    const slot = document.createElement("a-box");
-
+    const slot = document.createElement("a-entity");
     slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
-    slot.setAttribute("material", { color: "#FF0000", transparent: true, opacity: 0.5 });
-    slot.setAttribute("width", 2);
-    slot.setAttribute("height", 0.25);
-    slot.setAttribute("ksa-type", "abilities");
-    slot.setAttribute("ksa-ranking", 4 - index);
+    slot.setAttribute("socialvr-barge-slot", `type: abilities; rank: ${4 - index}`);
     document.querySelector(".KSA_ranking_frameglb_1_phase1").appendChild(slot); 
   }
 
   for (let index = 1; index <= 3; index++) {
-    const slot = document.createElement("a-box");
-
+    const slot = document.createElement("a-entity");
     slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
-    slot.setAttribute("material", { color: "#FF0000", transparent: true, opacity: 0.5 });
-    slot.setAttribute("width", 2);
-    slot.setAttribute("height", 0.25);
-    slot.setAttribute("ksa-type", "skills");
-    slot.setAttribute("ksa-ranking", 4 - index);
+    slot.setAttribute("socialvr-barge-slot", `type: skills; rank: ${4 - index}`);
     document.querySelector(".KSA_ranking_frameglb_phase1").appendChild(slot); 
   }
 
-  // Canidate Frame
-  const slot = document.createElement("a-box");
-
-  // slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
-  slot.setAttribute("material", { color: "#FF0000", transparent: true, opacity: 0.5 });
-  slot.setAttribute("width", 0.5);
-  slot.setAttribute("height", 1);
-  slot.setAttribute("depth", 1);
-  slot.setAttribute("canidate-frame", "");
+  // Canidate Slot
+  const slot = document.createElement("a-entity");
+  slot.setAttribute("socialvr-barge-slot", `type: canidate; rank: 1; width: 0.5; height: 1; depth: 1;`);
   document.querySelector(".candidate_frameglb_phase3").appendChild(slot); 
 
   // World Mover
