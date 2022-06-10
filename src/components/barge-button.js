@@ -1,7 +1,9 @@
+import { process } from "../data";
+
 AFRAME.registerComponent("socialvr-barge-button", {
   schema: {
     text: {
-      type: "string", 
+      type: "string",
       default: "start"
     },
     eventName: {
@@ -22,7 +24,7 @@ AFRAME.registerComponent("socialvr-barge-button", {
     }
   },
 
-  init: function() {
+  init: function () {
     this.geometry = new THREE.SphereGeometry(this.data.radius, 16, 8);
     this.material = new THREE.MeshStandardMaterial({
       color: this.data.color,
@@ -45,26 +47,28 @@ AFRAME.registerComponent("socialvr-barge-button", {
     this.text.setAttribute("material", "color: #807e7e;");
     this.text.setAttribute("billboard", "onlyY: true;");
     this.el.appendChild(this.text);
-    
+
     this.onClick = this.onClick.bind(this);
     this.el.object3D.addEventListener("interact", this.onClick);
   },
 
-  remove: function() {
+  remove: function () {
     this.el.object3D.removeEventListener("interact", this.onClick);
   },
 
-  onClick: function() {
+  onClick: function () {
     this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(11, this.el.object3D);
 
     if (this.data.phaseID >= 0) {
       // 1 -> Start, 2 -> Finish
-      if (this.data.phaseID === 1) {        
+      if (this.data.phaseID === 1) {
         this.el.sceneEl.emit("startMovingWorld");
         this.el.parentNode.removeChild(this.el);
       } else if (this.data.phaseID === 2) {
+        process();
+
         this.el.sceneEl.emit("stopMovingWorld");
-        this.el.parentNode.removeChild(this.el);
+        //this.el.parentNode.removeChild(this.el);
       }
     } else {
       this.el.sceneEl.emit(this.data.eventName);
