@@ -11,36 +11,66 @@
 
         slots.forEach((slot) => {
             if (slot.components["socialvr-barge-slot"].data.type === "canidate") {
-                let canidate1, canidate2, canidate3, canidate4;
-                let result = null;
+                let slotPosition = new THREE.Vector3();
+                let results = [
+                    {
+                        el: null,
+                        name: "Zoya A. Chopra",
+                        distance: 9999
+                    },
+                    {
+                        el: null,
+                        name: "Robert P. Johnson",
+                        distance: 9999
+                    },
+                    {
+                        el: null,
+                        name: "William K. Bevins",
+                        distance: 9999
+                    },
+                    {
+                        el: null,
+                        name: "Kathy L. Stromm",
+                        distance: 9999
+                    }
+                ];
 
-                document.querySelectorAll('.interactable').forEach((interactable) => {
+                slot.object3D.getWorldPosition(slotPosition);
+                document.querySelectorAll('.interactable:not([super-spawner=""])').forEach((interactable) => {
                     if (interactable.components["gltf-model-plus"]) {
                         if (interactable.components["gltf-model-plus"].data.src === "https://hubscloud-assets.socialsuperpowers.net/files/eda91395-193b-44d5-af66-327159f80980.glb") {
-                            canidate1 = interactable;
+                            let c1Position = new THREE.Vector3();
+                            interactable.object3D.getWorldPosition(c1Position);
+
+                            results[0].el = interactable;
+                            results[0].distance = slotPosition.distanceToSquared(c1Position);
                         } else if (interactable.components["gltf-model-plus"].data.src === "https://hubscloud-assets.socialsuperpowers.net/files/0f59f587-f4a7-435a-af5d-f8c75a1f5ec6.glb") {
-                            canidate2 = interactable;
+                            let c2Position = new THREE.Vector3();
+                            interactable.object3D.getWorldPosition(c2Position);
+
+                            results[1].el = interactable;
+                            results[1].distance = slotPosition.distanceToSquared(c2Position);
                         } else if (interactable.components["gltf-model-plus"].data.src === "https://hubscloud-assets.socialsuperpowers.net/files/1e4396b3-3a06-40e8-b33a-811f6da19cd2.glb") {
-                            canidate3 = interactable;
+                            let c3Position = new THREE.Vector3();
+                            interactable.object3D.getWorldPosition(c3Position);
+
+                            results[2].el = interactable;
+                            results[2].distance = slotPosition.distanceToSquared(c3Position);
                         } else if (interactable.components["gltf-model-plus"].data.src === "https://hubscloud-assets.socialsuperpowers.net/files/40a1d1a6-771d-4ec3-8e23-38e08dc35f91.glb") {
-                            canidate4 = interactable;
+                            let c4Position = new THREE.Vector3();
+                            interactable.object3D.getWorldPosition(c4Position);
+
+                            results[3].el = interactable;
+                            results[3].distance = slotPosition.distanceToSquared(c4Position);
                         }
                     }
                 });
 
-                result = (slot.object3D.position.distanceTo(canidate1.object3D.position) <= slot.object3D.position.distanceTo(canidate2.object3D.position)) ? canidate1 : canidate2;
-                result = (slot.object3D.position.distanceTo(canidate2.object3D.position) <= slot.object3D.position.distanceTo(canidate3.object3D.position)) ? canidate2 : canidate3;
-                result = (slot.object3D.position.distanceTo(canidate3.object3D.position) <= slot.object3D.position.distanceTo(canidate4.object3D.position)) ? canidate3 : canidate4;
+                results.sort(function(a, b) {
+                    return a.distance - b.distance;
+                });
 
-                if (result === canidate1) {
-                    selected_canidate = "Name 1";
-                } else if (result === canidate2) {
-                    selected_canidate = "Name 2";
-                } else if (result === canidate3) {
-                    selected_canidate = "Name 3";
-                } else if (result === canidate4) {
-                    selected_canidate = "Name 4";
-                }
+                selected_canidate = results[0].name;
             }
         });
 
