@@ -8,9 +8,13 @@ AFRAME.registerComponent("socialvr-barge-slot", {
             type: "number",
             default: 1
         },
+        consumed: {
+            type: "boolean",
+            default: false
+        },
         width: {
             type: "number",
-            default: 2
+            default: 0.5
         },
         height: {
             type: "number",
@@ -32,5 +36,6 @@ AFRAME.registerComponent("socialvr-barge-slot", {
 
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.el.setObject3D("mesh", this.mesh);
+        this.el.getObject3D("mesh").visible = false;
     }
 });
