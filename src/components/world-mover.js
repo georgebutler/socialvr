@@ -46,11 +46,11 @@ AFRAME.registerComponent("socialvr-world-mover", {
             })
             .finally(() => {
                 // Disable skybox
-                const skybox = document.querySelector('[skybox=""]');
+                //const skybox = document.querySelector('[skybox=""]');
 
-                if (skybox) {
-                    skybox.parentNode.removeChild(skybox);
-                }
+                //if (skybox) {
+                    //skybox.parentNode.removeChild(skybox);
+                //}
             })
             .catch((e) => {
                 console.error(e);
