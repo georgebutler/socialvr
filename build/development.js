@@ -436,23 +436,51 @@
                     this.el.setAttribute("matrix-auto-update", "");
                 })
                 .finally(() => {
-                    const skysphere = document.createElement("a-entity");
+                    // Disable original sky
+                    const skybox = document.querySelector('[skybox=""]');
+
+                    if (skybox) {
+                        skybox.removeObject3D("mesh");
+                    }
+
+                    // Create sky
+                    const sky = document.createElement("a-entity");
+                    const geometry = new THREE.SphereGeometry(8192, 8, 8);
+                    const material = new THREE.ShaderMaterial({
+                        side: THREE.BackSide,
+                        transparent: false,
+                        fog: false,
+                        uniforms: {
+                            color1: {
+                                value: new THREE.Color(0x87CEEB)
+                            },
+                            color2: {
+                                value: new THREE.Color(0xF0FFFF)
+                            }
+                        },
+                        vertexShader: `
+                        varying vec2 vUv;
                     
-                    // Load skybox model
-                    window.APP.utils.GLTFModelPlus
-                    .loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/360sphere.glb")
-                    .then((model) => {
-                        // Set model
-                        skysphere.setObject3D("mesh", window.APP.utils.threeUtils.cloneObject3D(model.scene, true));
-                        skysphere.setAttribute("matrix-auto-update", "");
-
-                        // Disable original sky
-                        const skybox = document.querySelector('[skybox=""]');
-
-                        if (skybox) {
-                            skybox.removeObject3D("mesh");
+                        void main() {
+                          vUv = uv;
+                          gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
                         }
+                      `,
+                        fragmentShader: `
+                        uniform vec3 color1;
+                        uniform vec3 color2;
+                      
+                        varying vec2 vUv;
+                        
+                        void main() {
+                          
+                          gl_FragColor = vec4(mix(color1, color2, vUv.y), 1.0);
+                        }
+                      `
                     });
+
+                    sky.setObject3D("mesh", new THREE.Mesh(geometry, material));
+                    this.el.sceneEl.appendChild(sky);
                 })
                 .catch((e) => {
                     console.error(e);
@@ -460,8 +488,8 @@
         },
 
         remove: function () {
-            this.el.sceneEl.removeEventListener("startMovingWorld");
-            this.el.sceneEl.removeEventListener("stopMovingWorld");
+            this.el.sceneEl.removeEventListener("startMovingWorld", this._start.bind(this));
+            this.el.sceneEl.removeEventListener("stopMovingWorld", this._stop.bind(this));
         },
 
         tick: function (time, delta) {
