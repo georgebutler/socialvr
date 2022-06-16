@@ -45,12 +45,23 @@ AFRAME.registerComponent("socialvr-world-mover", {
                 this.el.setAttribute("matrix-auto-update", "");
             })
             .finally(() => {
-                // Disable skybox
-                //const skybox = document.querySelector('[skybox=""]');
+                const skysphere = document.createElement("a-entity");
+                
+                // Load skybox model
+                window.APP.utils.GLTFModelPlus
+                .loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/360sphere.glb")
+                .then((model) => {
+                    // Set model
+                    skysphere.setObject3D("mesh", window.APP.utils.threeUtils.cloneObject3D(model.scene, true));
+                    skysphere.setAttribute("matrix-auto-update", "");
 
-                //if (skybox) {
-                    //skybox.parentNode.removeChild(skybox);
-                //}
+                    // Disable original sky
+                    const skybox = document.querySelector('[skybox=""]');
+
+                    if (skybox) {
+                        skybox.removeObject3D("mesh");
+                    }
+                })
             })
             .catch((e) => {
                 console.error(e);
