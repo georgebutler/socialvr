@@ -239,7 +239,7 @@
             completed_at: Date.now(),
             knowledge: knowledge_ranks,
             skills: skills_ranks,
-            abilties: abilities_ranks,
+            abilities: abilities_ranks,
             canidate: selected_canidate
         };
 
