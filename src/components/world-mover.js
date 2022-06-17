@@ -24,10 +24,10 @@ AFRAME.registerComponent("socialvr-world-mover", {
             console.warn("No waypoints found!");
             console.warn("Registering default waypoints.");
 
-            this.destinations.push(new window.APP.utils.THREE.Vector3(10, 0, 0).negate());
-            this.destinations.push(new window.APP.utils.THREE.Vector3(10, 0, 20).negate());
-            this.destinations.push(new window.APP.utils.THREE.Vector3(-10, 10, 20).negate());
-            this.destinations.push(new window.APP.utils.THREE.Vector3(-10, 20, 30).negate());
+            this.destinations.push(new THREE.Vector3(10, 0, 0).negate());
+            this.destinations.push(new THREE.Vector3(10, 0, 20).negate());
+            this.destinations.push(new THREE.Vector3(-10, 10, 20).negate());
+            this.destinations.push(new THREE.Vector3(-10, 20, 30).negate());
         }
 
         // Networked Events

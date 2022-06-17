@@ -328,12 +328,20 @@
     AFRAME.registerComponent("socialvr-barge-clock", {
       init: function () {
         this.text = document.createElement("a-entity");
-        this.text.setAttribute("text", `value: Time; align: center; side: double; width: 4;`);
-        this.text.setAttribute("geometry", `primitive: plane; height: auto; width: 1;`);
-        this.text.setAttribute("material", "color: #807e7e; side: double;");
-        this.text.setAttribute("animation", "property: rotation; to: 0 -360 0; easing: linear; loop: true; dur: 100000;");
+        this.text.setAttribute("text", "value: Time; align: center; width: 4;");
+        this.text.setAttribute("rotation", "0, 0, 0");
+        this.text.setAttribute("geometry", "primitive: plane; height: auto; width: 1;");
+        this.text.setAttribute("material", "color: #807e7e;");
+
+        this.text2 = document.createElement("a-entity");
+        this.text2.setAttribute("text", "value: Time; align: center; width: 4;");
+        this.text2.setAttribute("rotation", "0, 180, 0");
+        this.text2.setAttribute("geometry", "primitive: plane; height: auto; width: 1;");
+        this.text2.setAttribute("material", "color: #807e7e;");
 
         this.el.appendChild(this.text);
+        this.el.appendChild(this.text2);
+        this.el.setAttribute("animation", "property: rotation; to: 0 -360 0; easing: linear; loop: true; dur: 100000;");
       },
 
       tick: function () {
@@ -343,7 +351,9 @@
         let ampm = time.getHours() >= 12 ? "PM" : "AM";
 
         hours = hours ? hours : 12;
+
         this.text.setAttribute("text", `value: ${hours}:${minutes} ${ampm}; align: center; width: 4;`);
+        this.text2.setAttribute("text", `value: ${hours}:${minutes} ${ampm}; align: center; width: 4;`);
       }
     });
 
@@ -415,10 +425,10 @@
                 console.warn("No waypoints found!");
                 console.warn("Registering default waypoints.");
 
-                this.destinations.push(new window.APP.utils.THREE.Vector3(10, 0, 0).negate());
-                this.destinations.push(new window.APP.utils.THREE.Vector3(10, 0, 20).negate());
-                this.destinations.push(new window.APP.utils.THREE.Vector3(-10, 10, 20).negate());
-                this.destinations.push(new window.APP.utils.THREE.Vector3(-10, 20, 30).negate());
+                this.destinations.push(new THREE.Vector3(10, 0, 0).negate());
+                this.destinations.push(new THREE.Vector3(10, 0, 20).negate());
+                this.destinations.push(new THREE.Vector3(-10, 10, 20).negate());
+                this.destinations.push(new THREE.Vector3(-10, 20, 30).negate());
             }
 
             // Networked Events
@@ -566,7 +576,7 @@
     scene.addEventListener("environment-scene-loaded", () => {
       // Button
       let button = document.createElement("a-entity");
-      let position = document.querySelector(".startButton").object3D.position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0));
+      let position = document.querySelector(".startButton").object3D.position.add(new THREE.Vector3(0, 0.5, 0));
 
       button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.3; color: #C576F6; phaseID: 1");
       button.setAttribute("position", position);
@@ -574,7 +584,7 @@
 
       // Button
       button = document.createElement("a-entity");
-      position = document.querySelector(".CompleteButton_phase3").object3D.position.add(new window.APP.utils.THREE.Vector3(0, 0.5, 0));
+      position = document.querySelector(".CompleteButton_phase3").object3D.position.add(new THREE.Vector3(0, 0.5, 0));
 
       button.setAttribute("socialvr-barge-button", "text: Complete; radius: 0.3; color: #C576F6; phaseID: 2");
       button.setAttribute("position", position);
