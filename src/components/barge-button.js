@@ -1,5 +1,3 @@
-import { setStarted, process } from "../data";
-
 AFRAME.registerComponent("socialvr-barge-button", {
   schema: {
     text: {
@@ -58,19 +56,16 @@ AFRAME.registerComponent("socialvr-barge-button", {
 
   onClick: function () {
     this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(11, this.el.object3D);
+    // this.el.parentNode.removeChild(this.el);
 
     if (this.data.phaseID >= 0) {
-      // 1 -> Start, 2 -> Finish
       if (this.data.phaseID === 1) {
-        setStarted();
-        
         this.el.sceneEl.emit("startMovingWorld");
-        this.el.parentNode.removeChild(this.el);
-      } else if (this.data.phaseID === 2) {
-        process();
-
+        this.el.sceneEl.emit("logPhaseEvent", { detail: this.data.phaseID });
+      } else if (this.data.phaseID === 4) {
         this.el.sceneEl.emit("stopMovingWorld");
-        this.el.parentNode.removeChild(this.el);
+        this.el.sceneEl.emit("logPhaseEvent", { detail: this.data.phaseID });
+        this.el.sceneEl.emit("generateDataEvent");
       }
     } else {
       this.el.sceneEl.emit(this.data.eventName);
