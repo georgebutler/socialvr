@@ -55,9 +55,6 @@ AFRAME.registerComponent("socialvr-barge-button", {
   },
 
   onClick: function () {
-    this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(11, this.el.object3D);
-    // this.el.parentNode.removeChild(this.el);
-
     if (this.data.phaseID >= 0) {
       this.el.sceneEl.emit("logPhaseEvent", { detail: this.data.phaseID });
 
@@ -68,6 +65,7 @@ AFRAME.registerComponent("socialvr-barge-button", {
         this.el.sceneEl.emit("generateDataEvent");
       }
     } else {
+      this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playSoundOneShot(11);
       this.el.sceneEl.emit(this.data.eventName);
     }
   }

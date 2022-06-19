@@ -58,9 +58,6 @@
     },
 
     onClick: function () {
-      this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundFollowing(11, this.el.object3D);
-      // this.el.parentNode.removeChild(this.el);
-
       if (this.data.phaseID >= 0) {
         this.el.sceneEl.emit("logPhaseEvent", { detail: this.data.phaseID });
 
@@ -71,6 +68,7 @@
           this.el.sceneEl.emit("generateDataEvent");
         }
       } else {
+        this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playSoundOneShot(11);
         this.el.sceneEl.emit(this.data.eventName);
       }
     }
@@ -402,7 +400,6 @@
           NAF.connection.broadcastData("generateDataEvent", {});
       },
 
-      // TODO: Make buttons disappear when clicked.
       logPhaseEvent: function (senderId, dataType, data) {
           if (data.phase === 1) {
               this.started = Date.now();
@@ -412,6 +409,14 @@
               timestamp: Date.now(),
               phase: `${data.phase}`
           };
+
+          // Remove clicked phase buttons on all clients
+          document.querySelectorAll("[socialvr-barge-button]").forEach((element) => {
+              if (element.components["socialvr-barge-button"].data.phaseID == data.phase) {
+                  this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playSoundOneShot(18);
+                  element.parentNode.removeChild(element);
+              }
+          });
       },
 
       _logPhaseEvent: function (e) {
