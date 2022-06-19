@@ -62,12 +62,12 @@
       // this.el.parentNode.removeChild(this.el);
 
       if (this.data.phaseID >= 0) {
+        this.el.sceneEl.emit("logPhaseEvent", { detail: this.data.phaseID });
+
         if (this.data.phaseID === 1) {
           this.el.sceneEl.emit("startMovingWorld");
-          this.el.sceneEl.emit("logPhaseEvent", { detail: this.data.phaseID });
         } else if (this.data.phaseID === 4) {
           this.el.sceneEl.emit("stopMovingWorld");
-          this.el.sceneEl.emit("logPhaseEvent", { detail: this.data.phaseID });
           this.el.sceneEl.emit("generateDataEvent");
         }
       } else {
@@ -389,7 +389,7 @@
               clock_events: this.clockEvents
           };
 
-          //console.clear();
+          console.clear();
           console.log(JSON.stringify(data));
       },
 
@@ -402,7 +402,12 @@
           NAF.connection.broadcastData("generateDataEvent", {});
       },
 
+      // TODO: Make buttons disappear when clicked.
       logPhaseEvent: function (senderId, dataType, data) {
+          if (data.phase === 1) {
+              this.started = Date.now();
+          }
+
           this.phaseEvents[data.phase - 1] = {
               timestamp: Date.now(),
               phase: `${data.phase}`

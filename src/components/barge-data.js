@@ -237,7 +237,7 @@ AFRAME.registerComponent("socialvr-barge-data", {
             clock_events: this.clockEvents
         };
 
-        //console.clear();
+        console.clear();
         console.log(JSON.stringify(data));
     },
 
@@ -250,7 +250,12 @@ AFRAME.registerComponent("socialvr-barge-data", {
         NAF.connection.broadcastData("generateDataEvent", {});
     },
 
+    // TODO: Make buttons disappear when clicked.
     logPhaseEvent: function (senderId, dataType, data) {
+        if (data.phase === 1) {
+            this.started = Date.now()
+        }
+
         this.phaseEvents[data.phase - 1] = {
             timestamp: Date.now(),
             phase: `${data.phase}`

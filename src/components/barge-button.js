@@ -59,12 +59,12 @@ AFRAME.registerComponent("socialvr-barge-button", {
     // this.el.parentNode.removeChild(this.el);
 
     if (this.data.phaseID >= 0) {
+      this.el.sceneEl.emit("logPhaseEvent", { detail: this.data.phaseID });
+
       if (this.data.phaseID === 1) {
         this.el.sceneEl.emit("startMovingWorld");
-        this.el.sceneEl.emit("logPhaseEvent", { detail: this.data.phaseID });
       } else if (this.data.phaseID === 4) {
         this.el.sceneEl.emit("stopMovingWorld");
-        this.el.sceneEl.emit("logPhaseEvent", { detail: this.data.phaseID });
         this.el.sceneEl.emit("generateDataEvent");
       }
     } else {
