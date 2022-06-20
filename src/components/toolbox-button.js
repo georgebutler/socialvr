@@ -37,10 +37,10 @@ AFRAME.registerComponent("socailvr-toolbox-button", {
       case "Barge":
         if (this.barge.getAttribute("visible")) {
           this.removeBarge();
-          NAF.connection.broadcastData("removeBarge", {});
+          NAF.connection.broadcastDataGuaranteed("removeBarge", {});
         } else {
           this.createBarge();
-          NAF.connection.broadcastData("createBarge", {});          
+          NAF.connection.broadcastDataGuaranteed("createBarge", {});          
         }
 
       default:
