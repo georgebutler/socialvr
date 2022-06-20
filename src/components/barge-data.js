@@ -127,7 +127,7 @@ AFRAME.registerComponent("socialvr-barge-data", {
             this.pov_raycaster.setFromCamera(new THREE.Vector2(), document.getElementById("viewing-camera").object3DMap.camera);
             const time = Date.now();
 
-            if (this.last_clock_time + 1200 <= time) {
+            if (this.last_clock_time + 6000 <= time) {
                 this.last_clock_time = time;
 
                 const clock = document.querySelector("[socialvr-barge-clock]");
