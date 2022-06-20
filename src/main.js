@@ -89,7 +89,7 @@ scene.addEventListener("environment-scene-loaded", () => {
 
   // Disable floaty physics
   scene.addEventListener("object_spawned", (e) => {
-    const floaties = document.querySelectorAll('[floaty-object=""]');
+    const floaties = document.querySelectorAll("[floaty-object]");
 
     floaties.forEach((floaty) => {
       floaty.setAttribute("floaty-object", { 

@@ -65,7 +65,7 @@ AFRAME.registerComponent("socialvr-barge-button", {
         this.el.sceneEl.emit("generateDataEvent");
       }
     } else {
-      this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playSoundOneShot(11);
+      this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playSoundOneShot(18);
       this.el.sceneEl.emit(this.data.eventName);
     }
   }

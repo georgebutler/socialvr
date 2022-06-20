@@ -1,5 +1,14 @@
 AFRAME.registerComponent("socialvr-barge-clock", {
   init: function () {
+    this.geometry = new THREE.SphereGeometry(2, 16, 8);
+    this.material = new THREE.MeshBasicMaterial({
+      alphaTest: 0, 
+      visible: false
+    });
+
+    this.mesh = new THREE.Mesh(this.geometry, this.material);
+    this.el.setObject3D("mesh", this.mesh);
+
     this.text = document.createElement("a-entity");
     this.text.setAttribute("text", "value: Time; align: center; width: 4;");
     this.text.setAttribute("rotation", "0, 0, 0");

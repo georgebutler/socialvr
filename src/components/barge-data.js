@@ -8,6 +8,9 @@ AFRAME.registerComponent("socialvr-barge-data", {
         this.abilities_ranks = [];
         this.selected_canidate = "";
 
+        this.pov_raycaster = new THREE.Raycaster();
+        this.last_clock_time = -1;
+
         this.knowledge_blocks = [
             {
                 name: "Transportation",
@@ -114,6 +117,22 @@ AFRAME.registerComponent("socialvr-barge-data", {
 
         this.el.sceneEl.addEventListener("generateDataEvent", this._generateData.bind(this));
         NAF.connection.subscribeToDataChannel("generateDataEvent", this.generateData.bind(this));
+    },
+
+    tock: function () {
+        this.pov_raycaster.setFromCamera(new THREE.Vector2(), document.getElementById("viewing-camera").object3DMap.camera)
+        const time = Date.now()
+
+        if (this.last_clock_time + 5000 <= time) {
+            this.last_clock_time = time
+
+            const clocks = this.pov_raycaster.intersectObject(document.querySelector("[socialvr-barge-clock]").object3D)
+
+            if (clocks.length >= 1) {
+                console.log("I see it!");
+                // TODO: Send network event and log
+            }
+        }
     },
 
     generate() {
@@ -247,7 +266,7 @@ AFRAME.registerComponent("socialvr-barge-data", {
 
     _generateData: function () {
         this.generateData(null, null, {});
-        NAF.connection.broadcastData("generateDataEvent", {});
+        NAF.connection.broadcastDataGuaranteed("generateDataEvent", {});
     },
 
     logPhaseEvent: function (senderId, dataType, data) {
@@ -262,7 +281,7 @@ AFRAME.registerComponent("socialvr-barge-data", {
 
         // Remove clicked phase buttons on all clients
         document.querySelectorAll("[socialvr-barge-button]").forEach((element) => {
-            if (element.components["socialvr-barge-button"].data.phaseID == data.phase) {
+            if (element.components["socialvr-barge-button"].data.phaseID === data.phase) {
                 this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playSoundOneShot(18);
                 element.parentNode.removeChild(element);
             }
@@ -271,6 +290,6 @@ AFRAME.registerComponent("socialvr-barge-data", {
 
     _logPhaseEvent: function (e) {
         this.logPhaseEvent(null, null, { phase: e.detail });
-        NAF.connection.broadcastData("logPhaseEvent", { phase: e.detail });
+        NAF.connection.broadcastDataGuaranteed("logPhaseEvent", { phase: e.detail });
     }
 });

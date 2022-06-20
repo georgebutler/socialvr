@@ -161,11 +161,11 @@ AFRAME.registerComponent("socialvr-world-mover", {
 
     _start: function () {
         this.start(null, null, {});
-        NAF.connection.broadcastData("startMovingWorld", {});
+        NAF.connection.broadcastDataGuaranteed("startMovingWorld", {});
     },
 
     _stop: function () {
         this.stop(null, null, {});
-        NAF.connection.broadcastData("stopMovingWorld", {});
+        NAF.connection.broadcastDataGuaranteed("stopMovingWorld", {});
     }
 })
