@@ -115,22 +115,33 @@ AFRAME.registerComponent("socialvr-barge-data", {
         this.el.sceneEl.addEventListener("logPhaseEvent", (e) => { this._logPhaseEvent.call(this, e.detail) });
         NAF.connection.subscribeToDataChannel("logPhaseEvent", this.logPhaseEvent.bind(this));
 
+        this.el.sceneEl.addEventListener("logClockEvent", (e) => { this._logClockEvent.call(this, e.detail) });
+        NAF.connection.subscribeToDataChannel("logClockEvent", this.logClockEvent.bind(this));
+
         this.el.sceneEl.addEventListener("generateDataEvent", this._generateData.bind(this));
         NAF.connection.subscribeToDataChannel("generateDataEvent", this.generateData.bind(this));
     },
 
     tock: function () {
-        this.pov_raycaster.setFromCamera(new THREE.Vector2(), document.getElementById("viewing-camera").object3DMap.camera)
-        const time = Date.now()
+        if (this.started >= 0) {
+            this.pov_raycaster.setFromCamera(new THREE.Vector2(), document.getElementById("viewing-camera").object3DMap.camera);
+            const time = Date.now();
 
-        if (this.last_clock_time + 5000 <= time) {
-            this.last_clock_time = time
+            if (this.last_clock_time + 1200 <= time) {
+                this.last_clock_time = time;
 
-            const clocks = this.pov_raycaster.intersectObject(document.querySelector("[socialvr-barge-clock]").object3D)
+                const clock = document.querySelector("[socialvr-barge-clock]");
+                const playerInfo = document.querySelectorAll("[player-info]")[0].components["player-info"];
+                const intersected = this.pov_raycaster.intersectObject(clock.object3D);
 
-            if (clocks.length >= 1) {
-                console.log("I see it!");
-                // TODO: Send network event and log
+                if (intersected.length >= 1) {
+                    this.el.sceneEl.emit("logClockEvent", { 
+                        detail: {
+                            displayName: playerInfo.displayName,
+                            playerSessionId: playerInfo.playerSessionId
+                        }
+                    });
+                }
             }
         }
     },
@@ -291,5 +302,18 @@ AFRAME.registerComponent("socialvr-barge-data", {
     _logPhaseEvent: function (e) {
         this.logPhaseEvent(null, null, { phase: e.detail });
         NAF.connection.broadcastDataGuaranteed("logPhaseEvent", { phase: e.detail });
-    }
+    },
+
+    logClockEvent: function (senderId, dataType, data) {
+        this.clockEvents.push({
+            timestamp: Date.now(),
+            sessionID: data.playerSessionId,
+            displayName: data.displayName
+        });
+    },
+
+    _logClockEvent: function (e) {
+        this.logClockEvent(null, null, { ...e.detail });
+        NAF.connection.broadcastDataGuaranteed("logClockEvent", { ...e.detail });
+    },
 });
