@@ -107,10 +107,20 @@ scene.addEventListener("environment-scene-loaded", () => {
   }
 
   if (FEATURE_HALO) {
-    let halo = document.createElement("a-entity");
+    setInterval(() => {
+      if (scene.is("entered")) {
+        let halo = document.createElement("a-entity");
 
-    halo.setAttribute("socialvr-halo", "");
-    halo.setAttribute("position", new THREE.Vector3(8, 1, -8));
-    scene.appendChild(halo);
+        halo.setAttribute("socialvr-halo", "");
+        halo.setAttribute("offset-relative-to", {
+          target: "#avatar-rig",
+          offset: { x: 0, y: window.APP.utils.getCurrentPlayerHeight() + 0.5, z: 0 },
+          orientation: 1,
+          selfDestruct: true
+        });
+
+        scene.appendChild(halo);
+      }
+    }, 3000);
   }
 }, { once: true })

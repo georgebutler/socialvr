@@ -653,22 +653,29 @@
 
   AFRAME.registerComponent("socialvr-halo", {
       init: function () {
-          this.geometry = new THREE.TorusGeometry(1, 0.1, 16, 24);
+          this.radius = 0;
+
+          this.geometry = new THREE.TorusGeometry(this.radius, 0.1, 8, 6);
           this.material = new THREE.MeshStandardMaterial({
               color: "#FF6782",
           });
 
           this.mesh = new THREE.Mesh(this.geometry, this.material);
-          this.el.setObject3D("mesh", this.mesh);
-          
           this.mesh.rotateX(THREE.Math.degToRad(90));
+          this.el.setObject3D("mesh", this.mesh);
       },
 
       tock: function (time, delta) {
-          const scale = growthPerSecond * (delta / 1000);
+          this.radius = this.radius + growthPerSecond * (delta / 1000);
 
-          this.mesh.scale.addScalar(scale);
-          this.mesh.matrixAutoUpdate = true;
+          this.geometry = new THREE.TorusGeometry(this.radius, 0.1, 16, 24);
+          this.mesh = new THREE.Mesh(this.geometry, this.material);
+          this.mesh.rotateX(THREE.Math.degToRad(90));
+          this.el.setObject3D("mesh", this.mesh);
+
+          if (this.radius >= 5) {
+              this.el.parentEl.removeChild(this.el);
+          }
       }
   });
 
@@ -677,11 +684,21 @@
   scene.addEventListener("environment-scene-loaded", () => {
 
     {
-      let halo = document.createElement("a-entity");
+      setInterval(() => {
+        if (scene.is("entered")) {
+          let halo = document.createElement("a-entity");
 
-      halo.setAttribute("socialvr-halo", "");
-      halo.setAttribute("position", new THREE.Vector3(8, 1, -8));
-      scene.appendChild(halo);
+          halo.setAttribute("socialvr-halo", "");
+          halo.setAttribute("offset-relative-to", {
+            target: "#avatar-rig",
+            offset: { x: 0, y: window.APP.utils.getCurrentPlayerHeight() + 0.5, z: 0 },
+            orientation: 1,
+            selfDestruct: true
+          });
+
+          scene.appendChild(halo);
+        }
+      }, 3000);
     }
   }, { once: true });
 
