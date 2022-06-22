@@ -4,8 +4,8 @@ import "./components/barge-slot";
 import "./components/barge-data";
 import "./components/world-mover";
 
-const FEATURE_BARGE = false;
-const FEATURE_HALO = true;
+const FEATURE_BARGE = true;
+const FEATURE_HALO = false;
 
 const scene = document.querySelector("a-scene");
 
