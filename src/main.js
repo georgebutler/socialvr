@@ -3,6 +3,7 @@ import "./components/barge-clock";
 import "./components/barge-slot";
 import "./components/barge-data";
 import "./components/world-mover";
+import "./components/halo";
 
 const FEATURE_BARGE = false;
 const FEATURE_HALO = true;
@@ -106,6 +107,10 @@ scene.addEventListener("environment-scene-loaded", () => {
   }
 
   if (FEATURE_HALO) {
-    console.log("Halo system");
+    let halo = document.createElement("a-entity");
+
+    halo.setAttribute("socialvr-halo", "");
+    halo.setAttribute("position", new THREE.Vector3(8, 1, -8));
+    scene.appendChild(halo);
   }
 }, { once: true })
