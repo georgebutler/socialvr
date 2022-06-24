@@ -26,19 +26,31 @@ NAF.schemas.getComponents = (template) => {
 }
 
 AFRAME.registerComponent("socialvr-halo", {
+    schema: {
+        target: { type: "selector", default: "#avatar-rig", },
+        offset: { type: "vec3", default: { x: 0, y: 0.5, z: 0 } }
+    },
+
     init: function () {
-        this.geometry = new THREE.TorusGeometry(1, 0.1, 8, 6);
-        this.material = new THREE.MeshStandardMaterial({
-            color: "#FF6782",
-        });
+        this.target = new THREE.Vector3(0, 0, 0);
+        this.delta = new THREE.Vector3(0, 0, 0);
+
+        this.geometry = new THREE.TorusGeometry(2, 0.5, 16, 32);
+        this.material = new THREE.MeshStandardMaterial({ color: "#FF6782", side: "both" });
 
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.rotateX(THREE.Math.degToRad(90));
+        this.mesh.scale.set(0.1, 0.1, 0.1);
+
         this.el.setObject3D("mesh", this.mesh);
         this.el.setAttribute("networked", { template: "#socialvr-halo" });
     },
 
     tock: function (time, delta) {
+        if (!this.data.target) {
+            return;
+        }
+
         if (!NAF.utils.isMine(this.el)) {
             return;
         }
@@ -46,6 +58,7 @@ AFRAME.registerComponent("socialvr-halo", {
         const scale = 0.1 * (delta / 1000);
 
         this.mesh.scale.addScalar(scale);
+        this.mesh.scale.set(this.mesh.scale.x, this.mesh.scale.y, 1);
         this.mesh.matrixAutoUpdate = true;
     }
 });

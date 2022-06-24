@@ -5,8 +5,8 @@ import "./components/barge-data";
 import "./components/world-mover";
 import "./components/halo";
 
-const FEATURE_BARGE = true;
-const FEATURE_HALO = false;
+const FEATURE_BARGE = false;
+const FEATURE_HALO = true;
 
 const scene = document.querySelector("a-scene");
 
@@ -114,13 +114,12 @@ scene.addEventListener("environment-scene-loaded", () => {
         halo.setAttribute("socialvr-halo", "");
         halo.setAttribute("offset-relative-to", {
           target: "#avatar-rig",
-          offset: { x: 0, y: window.APP.utils.getCurrentPlayerHeight() + 0.5, z: 0 },
-          orientation: 1,
-          selfDestruct: true
+          offset: { x: 0, y: window.APP.utils.getCurrentPlayerHeight() + 2, z: 0 },
+          orientation: 1
         });
 
         scene.appendChild(halo);
       }
-    }, 3000);
+    }, 10000);
   }
 }, { once: true })
