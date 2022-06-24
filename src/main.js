@@ -8,9 +8,8 @@ import "./components/halo";
 const FEATURE_BARGE = false;
 const FEATURE_HALO = true;
 
-const scene = document.querySelector("a-scene");
-
-scene.addEventListener("environment-scene-loaded", () => {
+// Barge
+window.APP.scene.addEventListener("environment-scene-loaded", () => {
   if (FEATURE_BARGE) {
     // Button
     let button = document.createElement("a-entity");
@@ -18,7 +17,7 @@ scene.addEventListener("environment-scene-loaded", () => {
 
     button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.3; color: #C576F6; phaseID: 1");
     button.setAttribute("position", position);
-    scene.appendChild(button);
+    window.APP.scene.appendChild(button);
 
     // Button
     button = document.createElement("a-entity");
@@ -26,7 +25,7 @@ scene.addEventListener("environment-scene-loaded", () => {
 
     button.setAttribute("socialvr-barge-button", "text: Next Task; radius: 0.3; color: #C576F6; phaseID: 2");
     button.setAttribute("position", position);
-    scene.appendChild(button);
+    window.APP.scene.appendChild(button);
 
     // Button
     button = document.createElement("a-entity");
@@ -34,7 +33,7 @@ scene.addEventListener("environment-scene-loaded", () => {
 
     button.setAttribute("socialvr-barge-button", "text: Next Task; radius: 0.3; color: #C576F6; phaseID: 3");
     button.setAttribute("position", position);
-    scene.appendChild(button);
+    window.APP.scene.appendChild(button);
 
     // Button
     button = document.createElement("a-entity");
@@ -42,14 +41,14 @@ scene.addEventListener("environment-scene-loaded", () => {
 
     button.setAttribute("socialvr-barge-button", "text: Complete; radius: 0.3; color: #C576F6; phaseID: 4");
     button.setAttribute("position", position);
-    scene.appendChild(button);
+    window.APP.scene.appendChild(button);
 
     // Clock
     const clock = document.createElement("a-entity");
     clock.setAttribute("radius", 0.1);
     clock.setAttribute("socialvr-barge-clock", "");
     clock.setAttribute("position", document.querySelector(".clock-placeholder").object3D.position);
-    scene.appendChild(clock);
+    window.APP.scene.appendChild(clock);
 
     // Ranking Slots
     for (let index = 1; index <= 3; index++) {
@@ -81,19 +80,19 @@ scene.addEventListener("environment-scene-loaded", () => {
     // World Mover
     const worldMover = document.createElement("a-entity");
     worldMover.setAttribute("socialvr-world-mover", "");
-    scene.appendChild(worldMover);
+    window.APP.scene.appendChild(worldMover);
 
     // Data Logger
     const dataLogger = document.createElement("a-entity");
     dataLogger.setAttribute("socialvr-barge-data", "");
-    scene.appendChild(dataLogger);
+    window.APP.scene.appendChild(dataLogger);
 
     // Changes camera inspection system to show background, regardless of user preferences.
-    const cameraSystem = scene.systems["hubs-systems"].cameraSystem;
+    const cameraSystem = window.APP.scene.systems["hubs-systems"].cameraSystem;
     cameraSystem.lightsEnabled = true;
 
     // Disable floaty physics
-    scene.addEventListener("object_spawned", (e) => {
+    window.APP.scene.addEventListener("object_spawned", (e) => {
       const floaties = document.querySelectorAll("[floaty-object]");
 
       floaties.forEach((floaty) => {
@@ -105,21 +104,18 @@ scene.addEventListener("environment-scene-loaded", () => {
       });
     });
   }
+}, { once: true });
 
+// Halo
+// TODO: Loop through presence list and create halos for each person, and assign target in component to el.
+let myHalo = null;
+window.APP.hubChannel.presence.onJoin(() => {
   if (FEATURE_HALO) {
-    setInterval(() => {
-      if (scene.is("entered")) {
-        let halo = document.createElement("a-entity");
+    if (myHalo) { return; }
+    let halo = document.createElement("a-entity");
 
-        halo.setAttribute("socialvr-halo", "");
-        halo.setAttribute("offset-relative-to", {
-          target: "#avatar-rig",
-          offset: { x: 0, y: window.APP.utils.getCurrentPlayerHeight() + 2, z: 0 },
-          orientation: 1
-        });
-
-        scene.appendChild(halo);
-      }
-    }, 10000);
+    halo.setAttribute("socialvr-halo", "");
+    window.APP.scene.appendChild(halo);
+    myHalo = halo;
   }
-}, { once: true })
+});
