@@ -1,58 +1,12 @@
-if (!document.querySelector("#socialvr-halo")) {
-    const template = document.createElement("template");
-    const htmlString = `<a-entity socialvr-halo=""></a-entity>`
-
-    template.id = "socialvr-halo"
-    template.innerHTML = htmlString.trim();
-
-    document.querySelector("a-assets").appendChild(template);
-}
-
-NAF.schemas.getComponentsOriginal = NAF.schemas.getComponents;
-NAF.schemas.getComponents = (template) => {
-    if (!NAF.schemas.hasTemplate("#socialvr-halo")) {
-        NAF.schemas.add({
-            template: "#socialvr-halo",
-            components: [
-                "position",
-                "rotation",
-                "scale"
-            ]
-        });
-    }
-
-    const components = NAF.schemas.getComponentsOriginal(template);
-    return components;
-}
-
 AFRAME.registerComponent("socialvr-halo", {
-    schema: {
-        target: { type: "selector", default: "#avatar-rig", },
-        offset: { type: "vec3", default: { x: 0, y: 1.85, z: 0 } }
-    },
-
     init: function () {
-        this.target = new THREE.Vector3(0, 0, 0);
-        this.delta = new THREE.Vector3(0, 0, 0);
-
-        this.geometry = new THREE.TorusGeometry(2, 0.5, 8, 16);
+        this.geometry = new THREE.TorusGeometry(0.05, 0.01, 8, 16);
         this.material = new THREE.MeshStandardMaterial({ color: "#FF6782" });
 
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.rotateX(THREE.Math.degToRad(90));
-        this.mesh.scale.set(0.05, 0.05, 0.05);
 
         this.el.setObject3D("mesh", this.mesh);
-        this.el.setAttribute("networked", { template: "#socialvr-halo" });
-    },
-
-    tick: function (time, delta) {
-        if (!this.data.target) { return; }
-        if (!NAF.utils.isMine(this.el)) { return; }
-
-        this.delta.addVectors(this.data.target.object3D.position, this.data.offset);
-        this.mesh.position.copy(this.delta);
-        this.mesh.matrixAutoUpdate = true;
     },
 
     tock: function(time, delta) {

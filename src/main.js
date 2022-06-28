@@ -107,15 +107,25 @@ window.APP.scene.addEventListener("environment-scene-loaded", () => {
 }, { once: true });
 
 // Halo
-// TODO: Loop through presence list and create halos for each person, and assign target in component to el.
-let myHalo = null;
 window.APP.hubChannel.presence.onJoin(() => {
   if (FEATURE_HALO) {
-    if (myHalo) { return; }
-    let halo = document.createElement("a-entity");
+    APP.componentRegistry["player-info"].forEach((playerInfo) => {
+      if (!playerInfo.socialVRHalo) {
+        const halo = document.createElement("a-entity");
+        const neck = playerInfo.el.querySelector(".Neck");
 
-    halo.setAttribute("socialvr-halo", "");
-    window.APP.scene.appendChild(halo);
-    myHalo = halo;
+        halo.setAttribute("socialvr-halo", "");
+        halo.setAttribute("position", "0 0.45 0");
+
+        if (neck) {
+          neck.appendChild(halo);
+        } else {
+          playerInfo.el.appendChild(halo);
+        }
+
+        // hack but it works.
+        playerInfo.socialVRHalo = true
+      }
+    })
   }
 });
