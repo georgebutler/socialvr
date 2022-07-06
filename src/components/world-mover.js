@@ -132,7 +132,11 @@ AFRAME.registerComponent("socialvr-world-mover", {
         // Remove hangar objects
         const removeImages = [
             "https://hubscloud-assets.socialsuperpowers.net/files/04ff2033-e9f6-4f82-991a-0d7d530062f5.jpg",
-            "https://hubscloud-assets.socialsuperpowers.net/files/40fb41d1-c6cd-4541-88f2-7386076b01ae.jpg"
+            "https://hubscloud-assets.socialsuperpowers.net/files/40fb41d1-c6cd-4541-88f2-7386076b01ae.jpg",
+            "https://hubscloud-assets.socialsuperpowers.net/files/5a57b59f-e76d-42ae-b01e-371673cf3624.png",
+            "https://hubscloud-assets.socialsuperpowers.net/files/4878ef88-4761-485f-bfce-f40bbf577457.png",
+            "https://hubscloud-assets.socialsuperpowers.net/files/0a65963c-8957-43c0-916d-da283efa5bf8.png",
+            "https://hubscloud-assets.socialsuperpowers.net/files/95c62972-9d00-4e1c-ac42-f003d764c751.png"
         ];
 
         document.querySelectorAll("[media-image]").forEach((element) => {
@@ -142,8 +146,9 @@ AFRAME.registerComponent("socialvr-world-mover", {
         });
 
         const removeClasses = [
-            ".ReadMe__setInvisibleOnBargeMove",
-            ".GrabMe__setInvisibleOnBargeMove"
+            ".tutorialblock1",
+            ".tutorialblock2",
+            ".tutorialblock3"
         ];
 
         removeClasses.forEach((target) => {
