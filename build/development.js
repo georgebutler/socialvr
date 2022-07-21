@@ -250,19 +250,19 @@
           this.canidate_blocks = [
               {
                   name: "Zoya A. Chopra",
-                  model: "https://hubscloud-assets.socialsuperpowers.net/files/eda91395-193b-44d5-af66-327159f80980.glb",
+                  model: "https://hubscloud-assets.socialsuperpowers.net/files/dec43ec6-a9a3-4400-b3db-6adc3cce4666.glb",
               },
               {
                   name: "Robert P. Johnson",
-                  model: "https://hubscloud-assets.socialsuperpowers.net/files/0f59f587-f4a7-435a-af5d-f8c75a1f5ec6.glb",
+                  model: "https://hubscloud-assets.socialsuperpowers.net/files/a135ec4e-615c-455b-9a58-7412403a522b.glb",
               },
               {
                   name: "William K. Bevins",
-                  model: "https://hubscloud-assets.socialsuperpowers.net/files/1e4396b3-3a06-40e8-b33a-811f6da19cd2.glb",
+                  model: "https://hubscloud-assets.socialsuperpowers.net/files/62f03c4b-3bb5-4998-8bd6-2fdbe6b9fd6b.glb",
               },
               {
                   name: "Kathy L. Stromm",
-                  model: "https://hubscloud-assets.socialsuperpowers.net/files/40a1d1a6-771d-4ec3-8e23-38e08dc35f91.glb",
+                  model: "https://hubscloud-assets.socialsuperpowers.net/files/d3a50b69-9340-4eab-b8f0-bb8eac5b2080.glb",
               },
           ];
 
@@ -426,7 +426,7 @@
               clock_events: this.clockEvents
           };
 
-          console.clear();
+          //console.clear();
           console.log(JSON.stringify(data));
       },
 
@@ -757,6 +757,11 @@
       const dataLogger = document.createElement("a-entity");
       dataLogger.setAttribute("socialvr-barge-data", "");
       window.APP.scene.appendChild(dataLogger);
+
+      // Override command
+      window.logBargeData = () => {
+        window.APP.scene.emit("generateDataEvent");
+      };
 
       // Changes camera inspection system to show background, regardless of user preferences.
       const cameraSystem = window.APP.scene.systems["hubs-systems"].cameraSystem;

@@ -87,6 +87,11 @@ window.APP.scene.addEventListener("environment-scene-loaded", () => {
     dataLogger.setAttribute("socialvr-barge-data", "");
     window.APP.scene.appendChild(dataLogger);
 
+    // Override command
+    window.logBargeData = () => {
+      window.APP.scene.emit("generateDataEvent");
+    }
+
     // Changes camera inspection system to show background, regardless of user preferences.
     const cameraSystem = window.APP.scene.systems["hubs-systems"].cameraSystem;
     cameraSystem.lightsEnabled = true;
