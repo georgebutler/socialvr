@@ -39,7 +39,7 @@ AFRAME.registerComponent("socialvr-world-mover", {
 
         // Load environment
         window.APP.utils.GLTFModelPlus
-            .loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-4.glb")
+            .loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-5.glb")
             .then((model) => {
                 this.el.setObject3D("mesh", window.APP.utils.threeUtils.cloneObject3D(model.scene, true));
                 this.el.setAttribute("matrix-auto-update", "");

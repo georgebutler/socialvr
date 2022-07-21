@@ -518,7 +518,7 @@
 
           // Load environment
           window.APP.utils.GLTFModelPlus
-              .loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-4.glb")
+              .loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-5.glb")
               .then((model) => {
                   this.el.setObject3D("mesh", window.APP.utils.threeUtils.cloneObject3D(model.scene, true));
                   this.el.setAttribute("matrix-auto-update", "");
@@ -654,6 +654,13 @@
       }
   });
 
+  const MIC_PRESENCE_VOLUME_THRESHOLD = 0.00001;
+
+  const SPEECH_TIME_PER_TICK = 10; // every speech tick = 10ms of realtime
+  const MIN_SPEECH_TIME_FOR_EVENT = 100; // 0.1s realtime
+  const MAX_SPEECH_TIME_FOR_EVENT = 5000; // 5s realtime
+  const CONTINUOUS_SPEECH_LENIENCY_TIME = 100; // 0.1s realtime
+
   AFRAME.registerComponent("socialvr-halo", {
       init: function () {
           this.geometry = new THREE.TorusGeometry(0.05, 0.01, 8, 16);
@@ -663,9 +670,38 @@
           this.mesh.rotateX(THREE.Math.degToRad(90));
 
           this.el.setObject3D("mesh", this.mesh);
+
+          // Audio
+          this.localAudioAnalyser = this.el.sceneEl.systems["local-audio-analyser"];
+          this.playerInfo = APP.componentRegistry["player-info"][0];
+
+          this.continuousSpeechTime = 0;
+          this.continuousSpeechLeniencyTime = 0;
       },
 
-      tock: function(time, delta) {
+      tock: function (time, delta) {
+          const muted = this.playerInfo.data.muted;
+          const speaking = !muted && this.localAudioAnalyser.volume > MIC_PRESENCE_VOLUME_THRESHOLD;
+
+          if (speaking) {
+              if (this.continuousSpeechTime === 0) ;
+
+              this.continuousSpeechTime += SPEECH_TIME_PER_TICK;
+              this.continuousSpeechLeniencyTime = CONTINUOUS_SPEECH_LENIENCY_TIME;
+
+              if (this.continuousSpeechTime <= MAX_SPEECH_TIME_FOR_EVENT) {
+                  // Size up
+                  console.log("Size up");
+              } else {
+                  alert("limit reached");
+              }
+          } else {
+              if (this.continuousSpeechLeniencyTime > 0) {
+                  this.continuousSpeechLeniencyTime -= SPEECH_TIME_PER_TICK;
+              }
+              if (this.continuousSpeechLeniencyTime <= 0 && this.continuousSpeechTime >= MIN_SPEECH_TIME_FOR_EVENT) ;
+          }
+
           /** 
           if (!this.data.target) { return; }
           if (!NAF.utils.isMine(this.el)) { return; }

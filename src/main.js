@@ -117,18 +117,12 @@ window.APP.hubChannel.presence.onJoin(() => {
     APP.componentRegistry["player-info"].forEach((playerInfo) => {
       if (!playerInfo.socialVRHalo) {
         const halo = document.createElement("a-entity");
-        const neck = playerInfo.el.querySelector(".Neck");
 
         halo.setAttribute("socialvr-halo", "");
-        halo.setAttribute("position", "0 0.45 0");
-
-        if (neck) {
-          neck.appendChild(halo);
-        } else {
-          playerInfo.el.appendChild(halo);
-        }
+        halo.setAttribute("position", "0 1.75 0");
 
         // hack but it works.
+        playerInfo.el.appendChild(halo);
         playerInfo.socialVRHalo = true
       }
     })
