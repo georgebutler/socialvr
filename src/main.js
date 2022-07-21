@@ -5,8 +5,8 @@ import "./components/barge-data";
 import "./components/world-mover";
 import "./components/halo";
 
-const FEATURE_BARGE = false;
-const FEATURE_HALO = true;
+const FEATURE_BARGE = true;
+const FEATURE_HALO = false;
 
 // Barge
 window.APP.scene.addEventListener("environment-scene-loaded", () => {
