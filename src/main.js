@@ -1,130 +1,123 @@
-import "./components/barge-button";
-import "./components/barge-clock";
-import "./components/barge-slot";
-import "./components/barge-data";
-import "./components/world-mover";
-import "./components/halo";
+// import "./components/barge-button";
+// import "./components/barge-clock";
+// import "./components/barge-slot";
+// import "./components/barge-data";
+// import "./components/world-mover";
+// import "./components/halo";
+import "./components/avatar-proxvis";
 
-const FEATURE_BARGE = true;
-const FEATURE_HALO = false;
+const FEATURE_PROXVIS = true;
 
-// Barge
-window.APP.scene.addEventListener("environment-scene-loaded", () => {
-  if (FEATURE_BARGE) {
-    // Button
-    let button = document.createElement("a-entity");
-    let position = document.querySelector(".startButton").object3D.position.add(new THREE.Vector3(0, 0.5, 0))
+// // Barge
+// window.APP.scene.addEventListener("environment-scene-loaded", () => {
 
-    button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.3; color: #C576F6; phaseID: 1");
-    button.setAttribute("position", position);
-    window.APP.scene.appendChild(button);
+//   if (FEATURE_BARGE) {
+//     // Button
+//     let button = document.createElement("a-entity");
+//     let position = document.querySelector(".startButton").object3D.position.add(new THREE.Vector3(0, 0.5, 0))
 
-    // Button
-    button = document.createElement("a-entity");
-    position = document.querySelector(".CompleteButton_phase1").object3D.position.add(new THREE.Vector3(0, 0.5, 0))
+//     button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.3; color: #C576F6; phaseID: 1");
+//     button.setAttribute("position", position);
+//     window.APP.scene.appendChild(button);
 
-    button.setAttribute("socialvr-barge-button", "text: Next Task; radius: 0.3; color: #C576F6; phaseID: 2");
-    button.setAttribute("position", position);
-    window.APP.scene.appendChild(button);
+//     // Button
+//     button = document.createElement("a-entity");
+//     position = document.querySelector(".CompleteButton_phase1").object3D.position.add(new THREE.Vector3(0, 0.5, 0))
 
-    // Button
-    button = document.createElement("a-entity");
-    position = document.querySelector(".CompleteButton_phase2").object3D.position.add(new THREE.Vector3(0, 0.5, 0))
+//     button.setAttribute("socialvr-barge-button", "text: Next Task; radius: 0.3; color: #C576F6; phaseID: 2");
+//     button.setAttribute("position", position);
+//     window.APP.scene.appendChild(button);
 
-    button.setAttribute("socialvr-barge-button", "text: Next Task; radius: 0.3; color: #C576F6; phaseID: 3");
-    button.setAttribute("position", position);
-    window.APP.scene.appendChild(button);
+//     // Button
+//     button = document.createElement("a-entity");
+//     position = document.querySelector(".CompleteButton_phase2").object3D.position.add(new THREE.Vector3(0, 0.5, 0))
 
-    // Button
-    button = document.createElement("a-entity");
-    position = document.querySelector(".CompleteButton_phase3").object3D.position.add(new THREE.Vector3(0, 0.5, 0))
+//     button.setAttribute("socialvr-barge-button", "text: Next Task; radius: 0.3; color: #C576F6; phaseID: 3");
+//     button.setAttribute("position", position);
+//     window.APP.scene.appendChild(button);
 
-    button.setAttribute("socialvr-barge-button", "text: Complete; radius: 0.3; color: #C576F6; phaseID: 4");
-    button.setAttribute("position", position);
-    window.APP.scene.appendChild(button);
+//     // Button
+//     button = document.createElement("a-entity");
+//     position = document.querySelector(".CompleteButton_phase3").object3D.position.add(new THREE.Vector3(0, 0.5, 0))
 
-    // Clock
-    const clock = document.createElement("a-entity");
-    clock.setAttribute("radius", 0.1);
-    clock.setAttribute("socialvr-barge-clock", "");
-    clock.setAttribute("position", document.querySelector(".clock-placeholder").object3D.position);
-    window.APP.scene.appendChild(clock);
+//     button.setAttribute("socialvr-barge-button", "text: Complete; radius: 0.3; color: #C576F6; phaseID: 4");
+//     button.setAttribute("position", position);
+//     window.APP.scene.appendChild(button);
 
-    // Ranking Slots
-    for (let index = 1; index <= 3; index++) {
-      const slot = document.createElement("a-entity");
-      slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
-      slot.setAttribute("socialvr-barge-slot", `type: knowledge; rank: ${4 - index}`);
-      document.querySelector(".knowledgeFrame_phase1").appendChild(slot);
-    }
+//     // Clock
+//     const clock = document.createElement("a-entity");
+//     clock.setAttribute("radius", 0.1);
+//     clock.setAttribute("socialvr-barge-clock", "");
+//     clock.setAttribute("position", document.querySelector(".clock-placeholder").object3D.position);
+//     window.APP.scene.appendChild(clock);
 
-    for (let index = 1; index <= 3; index++) {
-      const slot = document.createElement("a-entity");
-      slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
-      slot.setAttribute("socialvr-barge-slot", `type: abilities; rank: ${4 - index}`);
-      document.querySelector(".KSA_ranking_frameglb_1_phase1").appendChild(slot);
-    }
+//     // Ranking Slots
+//     for (let index = 1; index <= 3; index++) {
+//       const slot = document.createElement("a-entity");
+//       slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
+//       slot.setAttribute("socialvr-barge-slot", `type: knowledge; rank: ${4 - index}`);
+//       document.querySelector(".knowledgeFrame_phase1").appendChild(slot);
+//     }
 
-    for (let index = 1; index <= 3; index++) {
-      const slot = document.createElement("a-entity");
-      slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
-      slot.setAttribute("socialvr-barge-slot", `type: skills; rank: ${4 - index}`);
-      document.querySelector(".KSA_ranking_frameglb_phase1").appendChild(slot);
-    }
+//     for (let index = 1; index <= 3; index++) {
+//       const slot = document.createElement("a-entity");
+//       slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
+//       slot.setAttribute("socialvr-barge-slot", `type: abilities; rank: ${4 - index}`);
+//       document.querySelector(".KSA_ranking_frameglb_1_phase1").appendChild(slot);
+//     }
 
-    // Canidate Slot
-    const slot = document.createElement("a-entity");
-    slot.setAttribute("socialvr-barge-slot", `type: canidate; rank: 1; width: 0.5; height: 1; depth: 1;`);
-    document.querySelector(".candidate_frameglb_phase3").appendChild(slot);
+//     for (let index = 1; index <= 3; index++) {
+//       const slot = document.createElement("a-entity");
+//       slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
+//       slot.setAttribute("socialvr-barge-slot", `type: skills; rank: ${4 - index}`);
+//       document.querySelector(".KSA_ranking_frameglb_phase1").appendChild(slot);
+//     }
 
-    // World Mover
-    const worldMover = document.createElement("a-entity");
-    worldMover.setAttribute("socialvr-world-mover", "");
-    window.APP.scene.appendChild(worldMover);
+//     // Canidate Slot
+//     const slot = document.createElement("a-entity");
+//     slot.setAttribute("socialvr-barge-slot", `type: canidate; rank: 1; width: 0.5; height: 1; depth: 1;`);
+//     document.querySelector(".candidate_frameglb_phase3").appendChild(slot);
 
-    // Data Logger
-    const dataLogger = document.createElement("a-entity");
-    dataLogger.setAttribute("socialvr-barge-data", "");
-    window.APP.scene.appendChild(dataLogger);
+//     // World Mover
+//     const worldMover = document.createElement("a-entity");
+//     worldMover.setAttribute("socialvr-world-mover", "");
+//     window.APP.scene.appendChild(worldMover);
 
-    // Changes camera inspection system to show background, regardless of user preferences.
-    const cameraSystem = window.APP.scene.systems["hubs-systems"].cameraSystem;
-    cameraSystem.lightsEnabled = true;
+//     // Data Logger
+//     const dataLogger = document.createElement("a-entity");
+//     dataLogger.setAttribute("socialvr-barge-data", "");
+//     window.APP.scene.appendChild(dataLogger);
 
-    // Disable floaty physics
-    window.APP.scene.addEventListener("object_spawned", (e) => {
-      const floaties = document.querySelectorAll("[floaty-object]");
+//     // Changes camera inspection system to show background, regardless of user preferences.
+//     const cameraSystem = window.APP.scene.systems["hubs-systems"].cameraSystem;
+//     cameraSystem.lightsEnabled = true;
 
-      floaties.forEach((floaty) => {
-        floaty.setAttribute("floaty-object", {
-          reduceAngularFloat: true,
-          autoLockOnRelease: true,
-          gravitySpeedLimit: 0
-        });
-      });
-    });
-  }
-}, { once: true });
+//     // Disable floaty physics
+//     window.APP.scene.addEventListener("object_spawned", (e) => {
+//       const floaties = document.querySelectorAll("[floaty-object]");
+
+//       floaties.forEach((floaty) => {
+//         floaty.setAttribute("floaty-object", {
+//           reduceAngularFloat: true,
+//           autoLockOnRelease: true,
+//           gravitySpeedLimit: 0
+//         });
+//       });
+//     });
+//   }
+// }, { once: true });
 
 // Halo
 window.APP.hubChannel.presence.onJoin(() => {
-  if (FEATURE_HALO) {
+  if(FEATURE_PROXVIS){
+    console.log('proxvis activated !')
     APP.componentRegistry["player-info"].forEach((playerInfo) => {
-      if (!playerInfo.socialVRHalo) {
-        const halo = document.createElement("a-entity");
-        const neck = playerInfo.el.querySelector(".Neck");
-
-        halo.setAttribute("socialvr-halo", "");
-        halo.setAttribute("position", "0 0.45 0");
-
-        if (neck) {
-          neck.appendChild(halo);
-        } else {
-          playerInfo.el.appendChild(halo);
-        }
-
-        // hack but it works.
-        playerInfo.socialVRHalo = true
+      if (!playerInfo.socialVRProxvis) {
+        const proxvis = document.createElement("a-entity");
+        proxvis.setAttribute('socialvr-proxvis',"")
+        //checks if social VR Proxvis has already been activated
+        playerInfo.socialVRProxvis = true
+        playerInfo.el.appendChild(proxvis);
       }
     })
   }
