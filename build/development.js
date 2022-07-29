@@ -314,16 +314,16 @@
               if (slot.components["socialvr-barge-slot"].data.type === "knowledge") {
                   document.querySelectorAll('.interactable:not([super-spawner=""])').forEach((interactable) => {
                       if (interactable.components["gltf-model-plus"]) {
-                          if (interactable.components["gltf-model-plus"].data.src === knowledge_blocks[0].model) {
+                          if (interactable.components["gltf-model-plus"].data.src === this.knowledge_blocks[0].model) {
                               this.knowledge_blocks[0].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
                           }
-                          else if (interactable.components["gltf-model-plus"].data.src === knowledge_blocks[1].model) {
+                          else if (interactable.components["gltf-model-plus"].data.src === this.knowledge_blocks[1].model) {
                               this.knowledge_blocks[1].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
                           }
-                          else if (interactable.components["gltf-model-plus"].data.src === knowledge_blocks[2].model) {
+                          else if (interactable.components["gltf-model-plus"].data.src === this.knowledge_blocks[2].model) {
                               this.knowledge_blocks[2].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
                           }
-                          else if (interactable.components["gltf-model-plus"].data.src === knowledge_blocks[3].model) {
+                          else if (interactable.components["gltf-model-plus"].data.src === this.knowledge_blocks[3].model) {
                               this.knowledge_blocks[3].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
                           }
                       }
@@ -332,16 +332,16 @@
               else if (slot.components["socialvr-barge-slot"].data.type === "skills") {
                   document.querySelectorAll('.interactable:not([super-spawner=""])').forEach((interactable) => {
                       if (interactable.components["gltf-model-plus"]) {
-                          if (interactable.components["gltf-model-plus"].data.src === skills_blocks[0].model) {
+                          if (interactable.components["gltf-model-plus"].data.src === this.skills_blocks[0].model) {
                               this.skills_blocks[0].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
                           }
-                          else if (interactable.components["gltf-model-plus"].data.src === skills_blocks[1].model) {
+                          else if (interactable.components["gltf-model-plus"].data.src === this.skills_blocks[1].model) {
                               this.skills_blocks[1].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
                           }
-                          else if (interactable.components["gltf-model-plus"].data.src === skills_blocks[2].model) {
+                          else if (interactable.components["gltf-model-plus"].data.src === this.skills_blocks[2].model) {
                               this.skills_blocks[2].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
                           }
-                          else if (interactable.components["gltf-model-plus"].data.src === skills_blocks[3].model) {
+                          else if (interactable.components["gltf-model-plus"].data.src === this.skills_blocks[3].model) {
                               this.skills_blocks[3].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
                           }
                       }
@@ -350,16 +350,16 @@
               else if (slot.components["socialvr-barge-slot"].data.type === "abilities") {
                   document.querySelectorAll('.interactable:not([super-spawner=""])').forEach((interactable) => {
                       if (interactable.components["gltf-model-plus"]) {
-                          if (interactable.components["gltf-model-plus"].data.src === abilities_blocks[0].model) {
+                          if (interactable.components["gltf-model-plus"].data.src === this.abilities_blocks[0].model) {
                               this.abilities_blocks[0].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
                           }
-                          else if (interactable.components["gltf-model-plus"].data.src === abilities_blocks[1].model) {
+                          else if (interactable.components["gltf-model-plus"].data.src === this.abilities_blocks[1].model) {
                               this.abilities_blocks[1].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
                           }
-                          else if (interactable.components["gltf-model-plus"].data.src === abilities_blocks[2].model) {
+                          else if (interactable.components["gltf-model-plus"].data.src === this.abilities_blocks[2].model) {
                               this.abilities_blocks[2].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
                           }
-                          else if (interactable.components["gltf-model-plus"].data.src === abilities_blocks[3].model) {
+                          else if (interactable.components["gltf-model-plus"].data.src === this.abilities_blocks[3].model) {
                               this.abilities_blocks[3].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
                           }
                       }
@@ -368,16 +368,16 @@
               else if (slot.components["socialvr-barge-slot"].data.type === "canidate") {
                   document.querySelectorAll('.interactable:not([super-spawner=""])').forEach((interactable) => {
                       if (interactable.components["gltf-model-plus"]) {
-                          if (interactable.components["gltf-model-plus"].data.src === canidate_blocks[0].model) {
+                          if (interactable.components["gltf-model-plus"].data.src === this.canidate_blocks[0].model) {
                               this.canidate_blocks[0].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
                           }
-                          else if (interactable.components["gltf-model-plus"].data.src === canidate_blocks[1].model) {
+                          else if (interactable.components["gltf-model-plus"].data.src === this.canidate_blocks[1].model) {
                               this.canidate_blocks[1].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
                           }
-                          else if (interactable.components["gltf-model-plus"].data.src === canidate_blocks[2].model) {
+                          else if (interactable.components["gltf-model-plus"].data.src === this.canidate_blocks[2].model) {
                               this.canidate_blocks[2].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
                           }
-                          else if (interactable.components["gltf-model-plus"].data.src === canidate_blocks[3].model) {
+                          else if (interactable.components["gltf-model-plus"].data.src === this.canidate_blocks[3].model) {
                               this.canidate_blocks[3].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
                           }
                       }
