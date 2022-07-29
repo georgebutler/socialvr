@@ -4,12 +4,15 @@ import "./components/barge-slot";
 import "./components/barge-data";
 import "./components/world-mover";
 import "./components/halo";
+import "./components/toolbox-dashboard";
 
-const FEATURE_BARGE = true;
+const FEATURE_BARGE = false;
 const FEATURE_HALO = false;
+const FEATURE_DASHBOARD = true;
 
-// Barge
+
 window.APP.scene.addEventListener("environment-scene-loaded", () => {
+  // Barge
   if (FEATURE_BARGE) {
     // Button
     let button = document.createElement("a-entity");
@@ -108,6 +111,15 @@ window.APP.scene.addEventListener("environment-scene-loaded", () => {
         });
       });
     });
+  }
+
+  // Dashboard
+  if (FEATURE_DASHBOARD) {
+    let dashboard = document.createElement("a-entity");
+
+    dashboard.setAttribute("socialvr-toolbox-dashboard", "");
+    dashboard.setAttribute("position", new THREE.Vector3(0, 3, 0));
+    window.APP.scene.appendChild(dashboard);
   }
 }, { once: true });
 

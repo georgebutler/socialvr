@@ -715,106 +715,50 @@
       }
   });
 
-  // Barge
+  AFRAME.registerComponent("socialvr-toolbox-dashboard", {
+      init: function () {
+          this.geometry = new THREE.SphereGeometry(0.5, 16, 8);
+          this.material = new THREE.MeshStandardMaterial({ color: "#FF6782" });
+          this.mesh = new THREE.Mesh(this.geometry, this.material);
+
+          this.el.setObject3D("mesh", this.mesh);
+          this.pos = new THREE.Vector3();
+
+          this.createButtons();
+      },
+
+      createButtons: function() {
+          const num = 6;
+          const r = 4.0;
+  		let step = Math.PI * 2 / num;
+          let angle = this.el.object3D.rotation.y;
+
+          this.el.object3D.getWorldPosition(this.pos);
+
+          for (let i = 0; i <= num; i++) {
+              let button = document.createElement("a-entity");
+              let position = new THREE.Vector3(this.pos.x + r * Math.sin(angle), this.pos.y, this.pos.z + r * Math.cos(angle));
+          
+              button.setAttribute("socialvr-barge-button", "text: Toggle; radius: 0.3; color: #C576F6; phaseID: 1");
+              button.setAttribute("position", position);
+              window.APP.scene.appendChild(button);
+
+              angle += step;
+          }
+
+          window.APP.hubChannel.sendMessage("Test message", "chat");
+      }
+  });
+
   window.APP.scene.addEventListener("environment-scene-loaded", () => {
+
+    // Dashboard
     {
-      // Button
-      let button = document.createElement("a-entity");
-      let position = document.querySelector(".startButton").object3D.position.add(new THREE.Vector3(0, 0.5, 0));
+      let dashboard = document.createElement("a-entity");
 
-      button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.3; color: #C576F6; phaseID: 1");
-      button.setAttribute("position", position);
-      window.APP.scene.appendChild(button);
-
-      // Button
-      button = document.createElement("a-entity");
-      position = document.querySelector(".CompleteButton_phase1").object3D.position.add(new THREE.Vector3(0, 0.5, 0));
-
-      button.setAttribute("socialvr-barge-button", "text: Next Task; radius: 0.3; color: #C576F6; phaseID: 2");
-      button.setAttribute("position", position);
-      window.APP.scene.appendChild(button);
-
-      // Button
-      button = document.createElement("a-entity");
-      position = document.querySelector(".CompleteButton_phase2").object3D.position.add(new THREE.Vector3(0, 0.5, 0));
-
-      button.setAttribute("socialvr-barge-button", "text: Next Task; radius: 0.3; color: #C576F6; phaseID: 3");
-      button.setAttribute("position", position);
-      window.APP.scene.appendChild(button);
-
-      // Button
-      button = document.createElement("a-entity");
-      position = document.querySelector(".CompleteButton_phase3").object3D.position.add(new THREE.Vector3(0, 0.5, 0));
-
-      button.setAttribute("socialvr-barge-button", "text: Complete; radius: 0.3; color: #C576F6; phaseID: 4");
-      button.setAttribute("position", position);
-      window.APP.scene.appendChild(button);
-
-      // Clock
-      const clock = document.createElement("a-entity");
-      clock.setAttribute("radius", 0.1);
-      clock.setAttribute("socialvr-barge-clock", "");
-      clock.setAttribute("position", document.querySelector(".clock-placeholder").object3D.position);
-      window.APP.scene.appendChild(clock);
-
-      // Ranking Slots
-      for (let index = 1; index <= 3; index++) {
-        const slot = document.createElement("a-entity");
-        slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
-        slot.setAttribute("socialvr-barge-slot", `type: knowledge; rank: ${4 - index}`);
-        document.querySelector(".knowledgeFrame_phase1").appendChild(slot);
-      }
-
-      for (let index = 1; index <= 3; index++) {
-        const slot = document.createElement("a-entity");
-        slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
-        slot.setAttribute("socialvr-barge-slot", `type: abilities; rank: ${4 - index}`);
-        document.querySelector(".KSA_ranking_frameglb_1_phase1").appendChild(slot);
-      }
-
-      for (let index = 1; index <= 3; index++) {
-        const slot = document.createElement("a-entity");
-        slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
-        slot.setAttribute("socialvr-barge-slot", `type: skills; rank: ${4 - index}`);
-        document.querySelector(".KSA_ranking_frameglb_phase1").appendChild(slot);
-      }
-
-      // Canidate Slot
-      const slot = document.createElement("a-entity");
-      slot.setAttribute("socialvr-barge-slot", `type: canidate; rank: 1; width: 0.5; height: 1; depth: 1;`);
-      document.querySelector(".candidate_frameglb_phase3").appendChild(slot);
-
-      // World Mover
-      const worldMover = document.createElement("a-entity");
-      worldMover.setAttribute("socialvr-world-mover", "");
-      window.APP.scene.appendChild(worldMover);
-
-      // Data Logger
-      const dataLogger = document.createElement("a-entity");
-      dataLogger.setAttribute("socialvr-barge-data", "");
-      window.APP.scene.appendChild(dataLogger);
-
-      // Override command
-      window.logBargeData = () => {
-        window.APP.scene.emit("generateDataEvent");
-      };
-
-      // Changes camera inspection system to show background, regardless of user preferences.
-      const cameraSystem = window.APP.scene.systems["hubs-systems"].cameraSystem;
-      cameraSystem.lightsEnabled = true;
-
-      // Disable floaty physics
-      window.APP.scene.addEventListener("object_spawned", (e) => {
-        const floaties = document.querySelectorAll("[floaty-object]");
-
-        floaties.forEach((floaty) => {
-          floaty.setAttribute("floaty-object", {
-            reduceAngularFloat: true,
-            autoLockOnRelease: true,
-            gravitySpeedLimit: 0
-          });
-        });
-      });
+      dashboard.setAttribute("socialvr-toolbox-dashboard", "");
+      dashboard.setAttribute("position", new THREE.Vector3(0, 3, 0));
+      window.APP.scene.appendChild(dashboard);
     }
   }, { once: true });
 
