@@ -10,74 +10,121 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
         this.features = {
             CONVERSATION_BALANCE: {
                 name: "cb",
-                color: "#FFFF00",
-                icon: "https://9717-2600-1700-bd40-6ca0-e951-b84d-b4a7-c897.ngrok.io/assets/images/1F4AC_color.png",
+                color: "#fff182",
+                emissiveColor: "#807100",
+                icon: "../assets/images/1F4AC_color.png",
                 enabled: false,
+                showButton: true,
                 elements: []
             },
             EMOJI: {
                 name: "emoji",
-                color: "#00FF00",
-                icon: "https://9717-2600-1700-bd40-6ca0-e951-b84d-b4a7-c897.ngrok.io/assets/images/1F48C_color.png",
+                color: "#c4a3e6",
+                emissiveColor: "#8000ff",
+                icon: "../assets/images/1F48C_color.png",
                 enabled: false,
+                showButton: true,
+                elements: []
+            },
+            BUILDINGKIT: {
+                name: "buildingkit",
+                color: "#91c7ff",
+                emissiveColor: "#002f61",
+                icon: "../assets/images/1F48C_color.png",
+                enabled: false,
+                showButton: true,
                 elements: []
             },
             BARGE: {
                 name: "barge",
                 color: "#FF0000",
-                icon: "https://9717-2600-1700-bd40-6ca0-e951-b84d-b4a7-c897.ngrok.io/assets/images/26F5_color.png",
+                icon: "../assets/images/26F5_color.png",
                 enabled: false,
+                showButton: false,
                 elements: []
             },
             HALO: {
                 name: "halo",
                 color: "#0000FF",
-                icon: "https://9717-2600-1700-bd40-6ca0-e951-b84d-b4a7-c897.ngrok.io/assets/images/1F607_color.png",
+                icon: "../assets/images/1F607_color.png",
                 enabled: false,
+                showButton: true,
                 elements: []
             }
         }
 
-        this.createButtons();
-
         window.APP.hubChannel.presence.onJoin(() => {
             if (this.features.HALO.enabled) {
-                APP.componentRegistry["player-info"].forEach((playerInfo) => {
-                    if (!playerInfo.socialVRHalo) {
-                        const halo = document.createElement("a-entity");
-
-                        halo.setAttribute("socialvr-halo", "");
-                        halo.setAttribute("position", "0 1.75 0");
-
-                        // hack but it works.
-                        playerInfo.el.appendChild(halo);
-                        playerInfo.socialVRHalo = true;
-
-                        this.features.HALO.elements.push(halo);
-                    }
-                })
+                this.createHalos();
             }
         });
+
+        this.el.sceneEl.addEventListener("enableFeatureHalo", (e) => { this._enableFeatureHalo.call(this) });
+        NAF.connection.subscribeToDataChannel("enableFeatureHalo", this.enableFeatureHalo.bind(this));
+
+        this.createButtons();
     },
 
     createButtons: function () {
+        let featureCount = 0;
+
+        // TODO: Maybe use a filter to avoid another loop? Not sure if it matters.
+        Object.keys(this.features).forEach(key => {
+            let feature = this.features[key];
+
+            if (feature.showButton) {
+                featureCount++
+            }
+        })
+
         const r = 0.5;
-        let step = Math.PI * 2 / Object.keys(this.features).length;
+        let step = Math.PI * 2 / featureCount;
         let angle = this.el.object3D.rotation.y;
 
         this.el.object3D.getWorldPosition(this.pos);
 
         Object.keys(this.features).forEach(key => {
-            let button = document.createElement("a-entity");
-            let position = new THREE.Vector3(this.pos.x + r * Math.sin(angle), this.pos.y, this.pos.z + r * Math.cos(angle));
             let feature = this.features[key];
 
-            button.setAttribute("socialvr-toolbox-dashboard-button", `icon: ${feature.icon}; radius: 0.1; color: ${feature.color}; featureName: ${feature.name};`);
-            button.setAttribute("position", position);
-            window.APP.scene.appendChild(button);
+            if (feature.showButton) {
+                let button = document.createElement("a-entity");
+                let position = new THREE.Vector3(this.pos.x + r * Math.sin(angle), this.pos.y, this.pos.z + r * Math.cos(angle));
 
-            angle += step;
+                button.setAttribute("socialvr-toolbox-dashboard-button", `icon: ${feature.icon}; radius: 0.1; color: ${feature.color}; emissiveColor: ${feature.emissiveColor}; featureName: ${feature.name};`);
+                button.setAttribute("position", position);
+                window.APP.scene.appendChild(button);
+
+                angle += step;
+            }
         });
+    },
+
+    createHalos: function () {
+        APP.componentRegistry["player-info"].forEach((playerInfo) => {
+            if (!playerInfo.socialVRHalo) {
+                const halo = document.createElement("a-entity");
+
+                halo.setAttribute("socialvr-halo", "");
+                halo.setAttribute("position", "0 1.75 0");
+
+                // hack but it works.
+                playerInfo.el.appendChild(halo);
+                playerInfo.socialVRHalo = true;
+
+                this.features.HALO.elements.push(halo);
+            }
+        })
+    },
+
+    enableFeatureHalo: function () {
+        this.features.HALO.enabled = true;
+        this.createHalos();
+        console.log("[SocialVR]: Halos Enabled");
+    },
+
+    _enableFeatureHalo: function () {
+        this.enableFeatureHalo(null, null, {});
+        NAF.connection.broadcastDataGuaranteed("enableFeatureHalo", {});
     },
 
     enableFeatureBarge: function () {

@@ -15,6 +15,10 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
         color: {
             type: "color",
             default: "#FFF"
+        },
+        emissiveColor: {
+            type: "color",
+            default: "#000"
         }
     },
 
@@ -22,7 +26,8 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
         this.geometry = new THREE.SphereGeometry(this.data.radius, 16, 8);
         this.material = new THREE.MeshStandardMaterial({
             color: this.data.color,
-            roughness: 0.5,
+            emissive: this.data.emissiveColor,
+            roughness: 1,
         });
 
         this.mesh = new THREE.Mesh(this.geometry, this.material);
@@ -53,8 +58,8 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
     onClick: function () {
         this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playSoundOneShot(18);
 
-        if (this.data.featureName === "barge") {
-            this.el.sceneEl.emit(this.data.eventName);
+        if (this.data.featureName === "halo") {
+            this.el.sceneEl.emit("enableFeatureHalo", {});
         }
     }
 });

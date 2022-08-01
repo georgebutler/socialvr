@@ -11,7 +11,7 @@ window.APP.scene.addEventListener("environment-scene-loaded", () => {
   const dashboard = document.createElement("a-entity");
 
   dashboard.setAttribute("socialvr-toolbox-dashboard", "");
-  dashboard.setAttribute("position", new THREE.Vector3(0, 3, 0));
+  dashboard.setAttribute("position", new THREE.Vector3(0, 1.2, 0));
   window.APP.scene.appendChild(dashboard);
 
   // Backup command
