@@ -32,7 +32,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
                 emissiveColor: "#002f61",
                 icon: "../assets/images/1F48C_color.png",
                 enabled: false,
-                showButton: true,
+                showButton: false,
                 elements: []
             },
             BARGE: {
@@ -48,7 +48,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
                 color: "#0000FF",
                 icon: "../assets/images/1F607_color.png",
                 enabled: false,
-                showButton: true,
+                showButton: false,
                 elements: []
             }
         }

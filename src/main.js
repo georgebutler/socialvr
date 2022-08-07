@@ -7,12 +7,29 @@ import "./components/halo";
 import "./components/toolbox-dashboard";
 import "./components/toolbox-dashboard-button";
 
+import "./components/emoji";
+import "./components/emoji-target";
+import "./components/emoji-button";
+import "./components/emoji-cancel-button";
+import "./components/emoji-audio";
+
+import "./systems/emoji-target";
+import "./systems/emoji-button";
+
 window.APP.scene.addEventListener("environment-scene-loaded", () => {
   const dashboard = document.createElement("a-entity");
 
   dashboard.setAttribute("socialvr-toolbox-dashboard", "");
   dashboard.setAttribute("position", new THREE.Vector3(0, 1.2, 0));
   window.APP.scene.appendChild(dashboard);
+
+  const emojiAudio = document.createElement("a-entity");
+  emojiAudio.setAttribute("socialvr-emoji-audio", "");
+  window.APP.scene.appendChild(emojiAudio);
+
+  const dummy = document.createElement("a-entity");
+  dummy.setAttribute("socialvr-emoji-target", "");
+  window.APP.scene.appendChild(dummy);
 
   // Backup command
   window.logBargeData = () => {
