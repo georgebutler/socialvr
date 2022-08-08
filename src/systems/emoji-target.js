@@ -26,11 +26,6 @@ AFRAME.registerSystem("socialvr-emoji-target", {
   },
 
   tick: function () {
-    // TODO: dont do this in tick, do it as players join instead
-    window.APP.componentRegistry["player-info"].forEach(player => {
-      player.el.setAttribute("socialvr-emoji-target", "name", player.displayName);
-    });
-
     // hover state visual
     let hudOpen = this.hudAnchor.querySelector(".socialvr-emoji-button");
     let currHoverEl = this.el.systems.interaction.state.rightRemote.hovered;

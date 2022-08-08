@@ -54,10 +54,17 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
         }
 
         window.APP.hubChannel.presence.onJoin(() => {
+            if (this.features.EMOJI.enabled) {
+                this.initEmoji();
+            }
+
             if (this.features.HALO.enabled) {
-                this.createHalos();
+                this.initHalos();
             }
         });
+
+        this.el.sceneEl.addEventListener("enableFeatureEmoji", (e) => { this._enableFeatureEmoji.call(this) });
+        NAF.connection.subscribeToDataChannel("enableFeatureEmoji", this.enableFeatureEmoji.bind(this));
 
         this.el.sceneEl.addEventListener("enableFeatureHalo", (e) => { this._enableFeatureHalo.call(this) });
         NAF.connection.subscribeToDataChannel("enableFeatureHalo", this.enableFeatureHalo.bind(this));
@@ -99,7 +106,22 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
         });
     },
 
-    createHalos: function () {
+    initEmoji: function () {
+        APP.componentRegistry["player-info"].forEach((playerInfo) => {
+            if (!playerInfo.socialVREmoji) {
+                playerInfo.el.setAttribute("socialvr-emoji-target", "name", playerInfo.displayName);
+                playerInfo.socialVREmoji = true;
+            }
+        });
+
+        const emojiAudio = document.createElement("a-entity");
+        emojiAudio.setAttribute("socialvr-emoji-audio", "");
+        window.APP.scene.appendChild(emojiAudio);
+
+        this.features.EMOJI.elements.push(emojiAudio);
+    },
+
+    initHalos: function () {
         APP.componentRegistry["player-info"].forEach((playerInfo) => {
             if (!playerInfo.socialVRHalo) {
                 const halo = document.createElement("a-entity");
@@ -113,12 +135,23 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
 
                 this.features.HALO.elements.push(halo);
             }
-        })
+        });
+    },
+
+    enableFeatureEmoji: function () {
+        this.features.EMOJI.enabled = true;
+        this.initEmoji();
+        console.log("[SocialVR]: Emoji Enabled");
+    },
+
+    _enableFeatureEmoji: function () {
+        this.enableFeatureEmoji(null, null, {});
+        NAF.connection.broadcastDataGuaranteed("enableFeatureEmoji", {});
     },
 
     enableFeatureHalo: function () {
         this.features.HALO.enabled = true;
-        this.createHalos();
+        this.initHalos();
         console.log("[SocialVR]: Halos Enabled");
     },
 
@@ -225,5 +258,9 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
         window.APP.scene.appendChild(dataLogger);
 
         this.features.BARGE.elements.push(dataLogger);
-    }
+    },
+
+    _enableFeatureBarge: function () {
+        console.log("")
+    },
 });

@@ -61,5 +61,8 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
         if (this.data.featureName === "halo") {
             this.el.sceneEl.emit("enableFeatureHalo", {});
         }
+        else if (this.data.featureName === "emoji") {
+            this.el.sceneEl.emit("enableFeatureEmoji", {});
+        }
     }
 });

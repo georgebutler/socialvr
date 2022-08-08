@@ -771,10 +771,17 @@
           };
 
           window.APP.hubChannel.presence.onJoin(() => {
+              if (this.features.EMOJI.enabled) {
+                  this.initEmoji();
+              }
+
               if (this.features.HALO.enabled) {
-                  this.createHalos();
+                  this.initHalos();
               }
           });
+
+          this.el.sceneEl.addEventListener("enableFeatureEmoji", (e) => { this._enableFeatureEmoji.call(this); });
+          NAF.connection.subscribeToDataChannel("enableFeatureEmoji", this.enableFeatureEmoji.bind(this));
 
           this.el.sceneEl.addEventListener("enableFeatureHalo", (e) => { this._enableFeatureHalo.call(this); });
           NAF.connection.subscribeToDataChannel("enableFeatureHalo", this.enableFeatureHalo.bind(this));
@@ -816,7 +823,22 @@
           });
       },
 
-      createHalos: function () {
+      initEmoji: function () {
+          APP.componentRegistry["player-info"].forEach((playerInfo) => {
+              if (!playerInfo.socialVREmoji) {
+                  playerInfo.el.setAttribute("socialvr-emoji-target", "name", playerInfo.displayName);
+                  playerInfo.socialVREmoji = true;
+              }
+          });
+
+          const emojiAudio = document.createElement("a-entity");
+          emojiAudio.setAttribute("socialvr-emoji-audio", "");
+          window.APP.scene.appendChild(emojiAudio);
+
+          this.features.EMOJI.elements.push(emojiAudio);
+      },
+
+      initHalos: function () {
           APP.componentRegistry["player-info"].forEach((playerInfo) => {
               if (!playerInfo.socialVRHalo) {
                   const halo = document.createElement("a-entity");
@@ -833,9 +855,20 @@
           });
       },
 
+      enableFeatureEmoji: function () {
+          this.features.EMOJI.enabled = true;
+          this.initEmoji();
+          console.log("[SocialVR]: Emoji Enabled");
+      },
+
+      _enableFeatureEmoji: function () {
+          this.enableFeatureEmoji(null, null, {});
+          NAF.connection.broadcastDataGuaranteed("enableFeatureEmoji", {});
+      },
+
       enableFeatureHalo: function () {
           this.features.HALO.enabled = true;
-          this.createHalos();
+          this.initHalos();
           console.log("[SocialVR]: Halos Enabled");
       },
 
@@ -942,7 +975,11 @@
           window.APP.scene.appendChild(dataLogger);
 
           this.features.BARGE.elements.push(dataLogger);
-      }
+      },
+
+      _enableFeatureBarge: function () {
+          console.log("");
+      },
   });
 
   AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
@@ -1007,6 +1044,9 @@
 
           if (this.data.featureName === "halo") {
               this.el.sceneEl.emit("enableFeatureHalo", {});
+          }
+          else if (this.data.featureName === "emoji") {
+              this.el.sceneEl.emit("enableFeatureEmoji", {});
           }
       }
   });
@@ -1338,11 +1378,6 @@
     },
 
     tick: function () {
-      // TODO: dont do this in tick, do it as players join instead
-      window.APP.componentRegistry["player-info"].forEach(player => {
-        player.el.setAttribute("socialvr-emoji-target", "name", player.displayName);
-      });
-
       // hover state visual
       let hudOpen = this.hudAnchor.querySelector(".socialvr-emoji-button");
       let currHoverEl = this.el.systems.interaction.state.rightRemote.hovered;
@@ -1395,14 +1430,6 @@
     dashboard.setAttribute("socialvr-toolbox-dashboard", "");
     dashboard.setAttribute("position", new THREE.Vector3(0, 1.2, 0));
     window.APP.scene.appendChild(dashboard);
-
-    const emojiAudio = document.createElement("a-entity");
-    emojiAudio.setAttribute("socialvr-emoji-audio", "");
-    window.APP.scene.appendChild(emojiAudio);
-
-    const dummy = document.createElement("a-entity");
-    dummy.setAttribute("socialvr-emoji-target", "");
-    window.APP.scene.appendChild(dummy);
 
     // Backup command
     window.logBargeData = () => {

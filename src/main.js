@@ -23,14 +23,6 @@ window.APP.scene.addEventListener("environment-scene-loaded", () => {
   dashboard.setAttribute("position", new THREE.Vector3(0, 1.2, 0));
   window.APP.scene.appendChild(dashboard);
 
-  const emojiAudio = document.createElement("a-entity");
-  emojiAudio.setAttribute("socialvr-emoji-audio", "");
-  window.APP.scene.appendChild(emojiAudio);
-
-  const dummy = document.createElement("a-entity");
-  dummy.setAttribute("socialvr-emoji-target", "");
-  window.APP.scene.appendChild(dummy);
-
   // Backup command
   window.logBargeData = () => {
     window.APP.scene.emit("generateDataEvent");
