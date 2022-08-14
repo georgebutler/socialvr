@@ -66,6 +66,9 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
         this.el.sceneEl.addEventListener("enableFeatureEmoji", (e) => { this._enableFeatureEmoji.call(this) });
         NAF.connection.subscribeToDataChannel("enableFeatureEmoji", this.enableFeatureEmoji.bind(this));
 
+        this.el.sceneEl.addEventListener("disableFeatureEmoji", (e) => { this._disableFeatureEmoji.call(this) });
+        NAF.connection.subscribeToDataChannel("disableFeatureEmoji", this.disableFeatureEmoji.bind(this));
+
         this.el.sceneEl.addEventListener("enableFeatureHalo", (e) => { this._enableFeatureHalo.call(this) });
         NAF.connection.subscribeToDataChannel("enableFeatureHalo", this.enableFeatureHalo.bind(this));
 
@@ -147,6 +150,19 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
     _enableFeatureEmoji: function () {
         this.enableFeatureEmoji(null, null, {});
         NAF.connection.broadcastDataGuaranteed("enableFeatureEmoji", {});
+    },
+
+    disableFeatureEmoji: function () {
+        this.features.EMOJI.enabled = false;
+        this.features.EMOJI.elements.forEach((element) => {
+            element.parentNode.removeChild(element);
+        });
+        console.log("[SocialVR]: Emoji Disabled");
+    },
+
+    _disableFeatureEmoji: function () {
+        this.disableFeatureEmoji(null, null, {});
+        NAF.connection.broadcastDataGuaranteed("disableFeatureEmoji", {});
     },
 
     enableFeatureHalo: function () {

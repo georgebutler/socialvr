@@ -783,6 +783,9 @@
           this.el.sceneEl.addEventListener("enableFeatureEmoji", (e) => { this._enableFeatureEmoji.call(this); });
           NAF.connection.subscribeToDataChannel("enableFeatureEmoji", this.enableFeatureEmoji.bind(this));
 
+          this.el.sceneEl.addEventListener("disableFeatureEmoji", (e) => { this._disableFeatureEmoji.call(this); });
+          NAF.connection.subscribeToDataChannel("disableFeatureEmoji", this.disableFeatureEmoji.bind(this));
+
           this.el.sceneEl.addEventListener("enableFeatureHalo", (e) => { this._enableFeatureHalo.call(this); });
           NAF.connection.subscribeToDataChannel("enableFeatureHalo", this.enableFeatureHalo.bind(this));
 
@@ -864,6 +867,19 @@
       _enableFeatureEmoji: function () {
           this.enableFeatureEmoji(null, null, {});
           NAF.connection.broadcastDataGuaranteed("enableFeatureEmoji", {});
+      },
+
+      disableFeatureEmoji: function () {
+          this.features.EMOJI.enabled = false;
+          this.features.EMOJI.elements.forEach((element) => {
+              element.parentNode.removeChild(element);
+          });
+          console.log("[SocialVR]: Emoji Disabled");
+      },
+
+      _disableFeatureEmoji: function () {
+          this.disableFeatureEmoji(null, null, {});
+          NAF.connection.broadcastDataGuaranteed("disableFeatureEmoji", {});
       },
 
       enableFeatureHalo: function () {
@@ -982,6 +998,9 @@
       },
   });
 
+  const STATE_OFF = 0;
+  const STATE_ON = 1;
+
   AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
       schema: {
           icon: {
@@ -1014,6 +1033,7 @@
               roughness: 1,
           });
 
+          this.state = STATE_OFF;
           this.mesh = new THREE.Mesh(this.geometry, this.material);
 
           this.el.setObject3D("mesh", this.mesh);
@@ -1033,21 +1053,57 @@
 
           this.onClick = this.onClick.bind(this);
           this.el.object3D.addEventListener("interact", this.onClick);
+
+          this.el.sceneEl.addEventListener("dashboardButtonStateChanged", (e) => { this._changeState.call(this, e.detail); });
+          NAF.connection.subscribeToDataChannel("dashboardButtonStateChanged", (e) => { this.changeState.bind(this, e.detail); });
       },
 
       remove: function () {
           this.el.object3D.removeEventListener("interact", this.onClick);
       },
 
-      onClick: function () {
+      changeState: function () {
           this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playSoundOneShot(18);
 
-          if (this.data.featureName === "halo") {
-              this.el.sceneEl.emit("enableFeatureHalo", {});
+          if (this.state === STATE_OFF) {
+              this.state = STATE_ON;
+
+              if (this.data.featureName === "halo") {
+                  this.el.sceneEl.emit("enableFeatureHalo", {});
+              }
+              else if (this.data.featureName === "emoji") {
+                  this.el.sceneEl.emit("enableFeatureEmoji", {});
+              }
           }
-          else if (this.data.featureName === "emoji") {
-              this.el.sceneEl.emit("enableFeatureEmoji", {});
+          else if (this.state === STATE_ON) {
+              this.state = STATE_OFF;
+
+              if (this.data.featureName === "halo") {
+                  this.el.sceneEl.emit("disableFeatureHalo", {});
+              }
+              else if (this.data.featureName === "emoji") {
+                  this.el.sceneEl.emit("disableFeatureEmoji", {});
+              }
           }
+
+          console.log(`My state is: ${this.state}`);
+      },
+
+      _changeState: function () {
+          this.changeState(null, null, {});
+          NAF.connection.broadcastDataGuaranteed("dashboardButtonStateChanged", {
+              detail: {
+                  state: this.state
+              }
+          });
+      },
+
+      onClick: function () {
+          this.el.sceneEl.emit("dashboardButtonStateChanged", {
+              detail: {
+                  state: this.state
+              }
+          });
       }
   });
 
