@@ -27,14 +27,19 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
 
     init: function () {
         this.geometry = new THREE.SphereGeometry(this.data.radius, 16, 8);
-        this.material = new THREE.MeshStandardMaterial({
+        this.material_off = new THREE.MeshStandardMaterial({
             color: this.data.color,
             emissive: this.data.emissiveColor,
             roughness: 1,
         });
+        this.material_on = new THREE.MeshStandardMaterial({
+            color: this.data.color,
+            emissive: this.data.color,
+            roughness: 1,
+        });
 
         this.state = STATE_OFF
-        this.mesh = new THREE.Mesh(this.geometry, this.material);
+        this.mesh = new THREE.Mesh(this.geometry, this.material_off);
 
         this.el.setObject3D("mesh", this.mesh);
         this.el.setAttribute("tags", "singleActionButton: true");
@@ -54,8 +59,8 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
         this.onClick = this.onClick.bind(this);
         this.el.object3D.addEventListener("interact", this.onClick);
 
-        this.el.sceneEl.addEventListener("dashboardButtonStateChanged", (e) => { this._changeState.call(this, e.detail) });
-        NAF.connection.subscribeToDataChannel("dashboardButtonStateChanged", (e) => { this.changeState.bind(this, e.detail) });
+        this.el.sceneEl.addEventListener(`dashboardButtonStateChanged_${this.data.featureName}`, (e) => { this._changeState.call(this, e.detail) });
+        NAF.connection.subscribeToDataChannel(`dashboardButtonStateChanged_${this.data.featureName}`, (e) => { this.changeState.bind(this, e.detail) });
     },
 
     remove: function () {
@@ -66,7 +71,8 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
         this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playSoundOneShot(18);
 
         if (this.state === STATE_OFF) {
-            this.state = STATE_ON
+            this.state = STATE_ON;
+            this.el.setObject3D("mesh", new THREE.Mesh(this.geometry, this.material_on));
 
             if (this.data.featureName === "halo") {
                 this.el.sceneEl.emit("enableFeatureHalo", {});
@@ -76,7 +82,8 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
             }
         }
         else if (this.state === STATE_ON) {
-            this.state = STATE_OFF
+            this.state = STATE_OFF;
+            this.el.setObject3D("mesh", new THREE.Mesh(this.geometry, this.material_off));
 
             if (this.data.featureName === "halo") {
                 this.el.sceneEl.emit("disableFeatureHalo", {});
@@ -87,11 +94,12 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
         }
 
         console.log(`My state is: ${this.state}`);
+        console.log(`My feature is: ${this.data.featureName}`);
     },
 
     _changeState: function () {
         this.changeState(null, null, {});
-        NAF.connection.broadcastDataGuaranteed("dashboardButtonStateChanged", {
+        NAF.connection.broadcastDataGuaranteed(`dashboardButtonStateChanged_${this.data.featureName}`, {
             detail: {
                 state: this.state
             }
@@ -99,7 +107,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
     },
 
     onClick: function () {
-        this.el.sceneEl.emit("dashboardButtonStateChanged", {
+        this.el.sceneEl.emit(`dashboardButtonStateChanged_${this.data.featureName}`, {
             detail: {
                 state: this.state
             }

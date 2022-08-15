@@ -53,16 +53,6 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
             }
         }
 
-        window.APP.hubChannel.presence.onJoin(() => {
-            if (this.features.EMOJI.enabled) {
-                this.initEmoji();
-            }
-
-            if (this.features.HALO.enabled) {
-                this.initHalos();
-            }
-        });
-
         this.el.sceneEl.addEventListener("enableFeatureEmoji", (e) => { this._enableFeatureEmoji.call(this) });
         NAF.connection.subscribeToDataChannel("enableFeatureEmoji", this.enableFeatureEmoji.bind(this));
 
@@ -155,7 +145,9 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
     disableFeatureEmoji: function () {
         this.features.EMOJI.enabled = false;
         this.features.EMOJI.elements.forEach((element) => {
-            element.parentNode.removeChild(element);
+            if (element.parentNode) {
+                element.parentNode.removeChild(element);
+            }
         });
         console.log("[SocialVR]: Emoji Disabled");
     },

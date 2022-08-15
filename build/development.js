@@ -715,6 +715,16 @@
       }
   });
 
+  AFRAME.registerComponent("socialvr-eye-laser", {
+      init: function () {
+          this.geometry = new THREE.CylinderGeometry(0.1, 0.1, 100, 3, 3);
+          this.material = new THREE.MeshStandardMaterial({ color: "#FF6782" });
+          this.mesh = new THREE.Mesh(this.geometry, this.material);
+          this.mesh.rotateX(THREE.Math.degToRad(90));
+          this.el.setObject3D("mesh", this.mesh);
+      }
+  });
+
   AFRAME.registerComponent("socialvr-toolbox-dashboard", {
       init: function () {
           this.geometry = new THREE.SphereGeometry(0.02, 16, 8);
@@ -769,16 +779,6 @@
                   elements: []
               }
           };
-
-          window.APP.hubChannel.presence.onJoin(() => {
-              if (this.features.EMOJI.enabled) {
-                  this.initEmoji();
-              }
-
-              if (this.features.HALO.enabled) {
-                  this.initHalos();
-              }
-          });
 
           this.el.sceneEl.addEventListener("enableFeatureEmoji", (e) => { this._enableFeatureEmoji.call(this); });
           NAF.connection.subscribeToDataChannel("enableFeatureEmoji", this.enableFeatureEmoji.bind(this));
@@ -872,7 +872,9 @@
       disableFeatureEmoji: function () {
           this.features.EMOJI.enabled = false;
           this.features.EMOJI.elements.forEach((element) => {
-              element.parentNode.removeChild(element);
+              if (element.parentNode) {
+                  element.parentNode.removeChild(element);
+              }
           });
           console.log("[SocialVR]: Emoji Disabled");
       },
@@ -1027,14 +1029,19 @@
 
       init: function () {
           this.geometry = new THREE.SphereGeometry(this.data.radius, 16, 8);
-          this.material = new THREE.MeshStandardMaterial({
+          this.material_off = new THREE.MeshStandardMaterial({
               color: this.data.color,
               emissive: this.data.emissiveColor,
               roughness: 1,
           });
+          this.material_on = new THREE.MeshStandardMaterial({
+              color: this.data.color,
+              emissive: this.data.color,
+              roughness: 1,
+          });
 
           this.state = STATE_OFF;
-          this.mesh = new THREE.Mesh(this.geometry, this.material);
+          this.mesh = new THREE.Mesh(this.geometry, this.material_off);
 
           this.el.setObject3D("mesh", this.mesh);
           this.el.setAttribute("tags", "singleActionButton: true");
@@ -1054,8 +1061,8 @@
           this.onClick = this.onClick.bind(this);
           this.el.object3D.addEventListener("interact", this.onClick);
 
-          this.el.sceneEl.addEventListener("dashboardButtonStateChanged", (e) => { this._changeState.call(this, e.detail); });
-          NAF.connection.subscribeToDataChannel("dashboardButtonStateChanged", (e) => { this.changeState.bind(this, e.detail); });
+          this.el.sceneEl.addEventListener(`dashboardButtonStateChanged_${this.data.featureName}`, (e) => { this._changeState.call(this, e.detail); });
+          NAF.connection.subscribeToDataChannel(`dashboardButtonStateChanged_${this.data.featureName}`, (e) => { this.changeState.bind(this, e.detail); });
       },
 
       remove: function () {
@@ -1067,6 +1074,7 @@
 
           if (this.state === STATE_OFF) {
               this.state = STATE_ON;
+              this.el.setObject3D("mesh", new THREE.Mesh(this.geometry, this.material_on));
 
               if (this.data.featureName === "halo") {
                   this.el.sceneEl.emit("enableFeatureHalo", {});
@@ -1077,6 +1085,7 @@
           }
           else if (this.state === STATE_ON) {
               this.state = STATE_OFF;
+              this.el.setObject3D("mesh", new THREE.Mesh(this.geometry, this.material_off));
 
               if (this.data.featureName === "halo") {
                   this.el.sceneEl.emit("disableFeatureHalo", {});
@@ -1087,11 +1096,12 @@
           }
 
           console.log(`My state is: ${this.state}`);
+          console.log(`My feature is: ${this.data.featureName}`);
       },
 
       _changeState: function () {
           this.changeState(null, null, {});
-          NAF.connection.broadcastDataGuaranteed("dashboardButtonStateChanged", {
+          NAF.connection.broadcastDataGuaranteed(`dashboardButtonStateChanged_${this.data.featureName}`, {
               detail: {
                   state: this.state
               }
@@ -1099,7 +1109,7 @@
       },
 
       onClick: function () {
-          this.el.sceneEl.emit("dashboardButtonStateChanged", {
+          this.el.sceneEl.emit(`dashboardButtonStateChanged_${this.data.featureName}`, {
               detail: {
                   state: this.state
               }
@@ -1486,6 +1496,27 @@
     dashboard.setAttribute("socialvr-toolbox-dashboard", "");
     dashboard.setAttribute("position", new THREE.Vector3(0, 1.2, 0));
     window.APP.scene.appendChild(dashboard);
+
+    window.APP.hubChannel.presence.onJoin(() => {
+      if (dashboard.components["socialvr-toolbox-dashboard"].features.EMOJI.enabled) {
+        dashboard.components["socialvr-toolbox-dashboard"].initEmoji();
+      }
+
+      if (dashboard.components["socialvr-toolbox-dashboard"].features.HALO.enabled) {
+        dashboard.components["socialvr-toolbox-dashboard"].initHalos();
+      }
+
+      // Eye laser
+      APP.componentRegistry["player-info"].forEach((playerInfo) => {
+        if (!playerInfo.socialVREyeLaser) {
+          const laser = document.createElement("a-entity");
+          laser.setAttribute("socialvr-eye-laser", "");
+
+          playerInfo.el.querySelector("#avatar-pov-node").appendChild(laser);
+          playerInfo.socialVREyeLaser = true;
+        }
+      });
+    });
 
     // Backup command
     window.logBargeData = () => {
