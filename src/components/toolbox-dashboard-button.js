@@ -60,7 +60,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
         this.el.object3D.addEventListener("interact", this.onClick);
 
         this.el.sceneEl.addEventListener(`dashboardButtonStateChanged_${this.data.featureName}`, (e) => { this._changeState.call(this, e.detail) });
-        NAF.connection.subscribeToDataChannel(`dashboardButtonStateChanged_${this.data.featureName}`, (e) => { this.changeState.bind(this, e.detail) });
+        NAF.connection.subscribeToDataChannel(`dashboardButtonStateChanged_${this.data.featureName}`, this.changeState.bind(this));
     },
 
     remove: function () {

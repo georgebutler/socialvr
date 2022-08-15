@@ -36,13 +36,16 @@ window.APP.scene.addEventListener("environment-scene-loaded", () => {
 
     // Eye laser
     APP.componentRegistry["player-info"].forEach((playerInfo) => {
-      if (!playerInfo.socialVREyeLaser) {
-        const laser = document.createElement("a-entity");
-        laser.setAttribute("socialvr-eye-laser", "");
-
-        playerInfo.el.querySelector("#avatar-pov-node").appendChild(laser);
-        playerInfo.socialVREyeLaser = true;
-      }
+      /*       
+        if (!playerInfo.socialVREyeLaser) {
+          const laser = document.createElement("a-entity");
+          laser.setAttribute("socialvr-eye-laser", "");
+          laser.setAttribute("position", "0 1.75 0");
+  
+          playerInfo.el.appendChild(laser);
+          playerInfo.socialVREyeLaser = true;
+        } 
+      */
     });
   });
 

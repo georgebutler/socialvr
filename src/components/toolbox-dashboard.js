@@ -144,11 +144,24 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
 
     disableFeatureEmoji: function () {
         this.features.EMOJI.enabled = false;
+
+        document.querySelectorAll("[emoji]").forEach((element) => {
+            if (element.parentNode) {
+                element.parentNode.removeChild(element);
+            }
+        });
+
         this.features.EMOJI.elements.forEach((element) => {
             if (element.parentNode) {
                 element.parentNode.removeChild(element);
             }
         });
+
+        APP.componentRegistry["player-info"].forEach((playerInfo) => {
+            playerInfo.el.removeAttribute("socialvr-emoji-target");
+            playerInfo.socialVREmoji = false;
+        });
+
         console.log("[SocialVR]: Emoji Disabled");
     },
 
