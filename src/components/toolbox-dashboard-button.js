@@ -68,7 +68,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
     },
 
     changeState: function () {
-        this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playSoundOneShot(18);
+        this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundAt(19, this.el.object3D.position, false);
 
         if (this.state === STATE_OFF) {
             this.state = STATE_ON;
@@ -80,6 +80,9 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
             else if (this.data.featureName === "emoji") {
                 this.el.sceneEl.emit("enableFeatureEmoji", {});
             }
+            else if (this.data.featureName === "cb") {
+                this.el.sceneEl.emit("enableFeatureCB", {});
+            }
         }
         else if (this.state === STATE_ON) {
             this.state = STATE_OFF;
@@ -90,6 +93,9 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
             }
             else if (this.data.featureName === "emoji") {
                 this.el.sceneEl.emit("disableFeatureEmoji", {});
+            }
+            else if (this.data.featureName === "cb") {
+                this.el.sceneEl.emit("disableFeatureCB", {});
             }
         }
 

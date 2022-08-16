@@ -62,6 +62,9 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
         this.el.sceneEl.addEventListener("enableFeatureHalo", (e) => { this._enableFeatureHalo.call(this) });
         NAF.connection.subscribeToDataChannel("enableFeatureHalo", this.enableFeatureHalo.bind(this));
 
+        this.el.sceneEl.addEventListener("enableFeatureCB", (e) => { this._enableFeatureCB.call(this) });
+        NAF.connection.subscribeToDataChannel("enableFeatureCB", this.enableFeatureCB.bind(this));
+
         this.createButtons();
     },
 
@@ -151,15 +154,15 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
             }
         });
 
+        APP.componentRegistry["player-info"].forEach((playerInfo) => {
+            playerInfo.el.removeAttribute("socialvr-emoji-target");
+            playerInfo.socialVREmoji = false;
+        });
+
         this.features.EMOJI.elements.forEach((element) => {
             if (element.parentNode) {
                 element.parentNode.removeChild(element);
             }
-        });
-
-        APP.componentRegistry["player-info"].forEach((playerInfo) => {
-            playerInfo.el.removeAttribute("socialvr-emoji-target");
-            playerInfo.socialVREmoji = false;
         });
 
         console.log("[SocialVR]: Emoji Disabled");
@@ -168,6 +171,22 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
     _disableFeatureEmoji: function () {
         this.disableFeatureEmoji(null, null, {});
         NAF.connection.broadcastDataGuaranteed("disableFeatureEmoji", {});
+    },
+
+    enableFeatureCB: function () {
+        this.features.CONVERSATION_BALANCE.enabled = true;
+
+        const vis = document.createElement("a-entity");
+        vis.setAttribute("socialvr-speech", "");
+        vis.setAttribute("position", "0 1.75 0");
+        window.APP.scene.appendChild(vis);
+
+        this.features.CONVERSATION_BALANCE.elements.push(vis);
+    },
+
+    _enableFeatureCB: function () {
+        this.enableFeatureCB(null, null, {});
+        NAF.connection.broadcastDataGuaranteed("enableFeatureCB", {}); 
     },
 
     enableFeatureHalo: function () {

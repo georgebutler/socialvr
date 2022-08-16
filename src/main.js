@@ -2,12 +2,10 @@ import "./components/barge-button";
 import "./components/barge-clock";
 import "./components/barge-slot";
 import "./components/barge-data";
-import "./components/world-mover";
-import "./components/halo";
-import "./components/eye-laser";
 
-import "./components/toolbox-dashboard";
-import "./components/toolbox-dashboard-button";
+import "./components/halo";
+import "./components/world-mover";
+import "./components/eye-laser";
 
 import "./components/emoji";
 import "./components/emoji-target";
@@ -17,6 +15,12 @@ import "./components/emoji-audio";
 
 import "./systems/emoji-target";
 import "./systems/emoji-button";
+
+import "./components/speech";
+import "./systems/speech";
+
+import "./components/toolbox-dashboard";
+import "./components/toolbox-dashboard-button";
 
 window.APP.scene.addEventListener("environment-scene-loaded", () => {
   const dashboard = document.createElement("a-entity");
