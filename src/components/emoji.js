@@ -83,6 +83,6 @@ export function sendEmoji(model, particleEmitterConfig, target) {
     let particleEmitter = emoji.querySelector(".particle-emitter");
     particleEmitter.setAttribute("particle-emitter", particleEmitterConfig);
 
-    emoji.setAttribute("socialvr-emoji", "target", target );
+    emoji.setAttribute("socialvr-emoji", "target", target);
   });
 }
