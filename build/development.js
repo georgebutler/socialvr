@@ -893,7 +893,7 @@
 
               let model = new URL("https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/Rainbow.glb", window.location).href;
               let particleEmitterConfig = {
-                src: new URL("https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/Emojis_0000_Rainbow.png", window.location).href,
+                src: new URL("https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0000_Rainbow.png", window.location).href,
                 resolve: false,
                 particleCount: 20,
                 startSize: 0.01,
@@ -1412,7 +1412,7 @@
                   name: "emoji",
                   color: "#c4a3e6",
                   emissiveColor: "#8000ff",
-                  icon: "../assets/images/1F48C_color.png",
+                  icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/icons/toggle.png",
                   enabled: false,
                   showButton: true,
                   elements: []

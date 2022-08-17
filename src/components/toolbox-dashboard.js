@@ -21,7 +21,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
                 name: "emoji",
                 color: "#c4a3e6",
                 emissiveColor: "#8000ff",
-                icon: "../assets/images/1F48C_color.png",
+                icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/icons/toggle.png",
                 enabled: false,
                 showButton: true,
                 elements: []

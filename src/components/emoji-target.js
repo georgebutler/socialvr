@@ -77,7 +77,7 @@ AFRAME.registerComponent("socialvr-emoji-target", {
 
             let model = new URL("https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/Rainbow.glb", window.location).href;
             let particleEmitterConfig = {
-              src: new URL("https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/Emojis_0000_Rainbow.png", window.location).href,
+              src: new URL("https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0000_Rainbow.png", window.location).href,
               resolve: false,
               particleCount: 20,
               startSize: 0.01,

@@ -6,12 +6,10 @@ import serve from 'rollup-plugin-serve';
 // `npm run build` -> `production` is true
 // `npm run dev` -> `production` is false
 const production = !process.env.ROLLUP_WATCH;
-
-let name = production ? 'production' : 'development';
-let input = 'src/main.js';
+const name = production ? 'production' : 'development';
 
 export default {
-	input: `${input}`,
+	input: 'src/main.js',
 	output: {
 		name: `${name}`,
 		file: `build/${name}.js`,
