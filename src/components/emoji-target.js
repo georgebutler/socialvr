@@ -71,6 +71,60 @@ AFRAME.registerComponent("socialvr-emoji-target", {
             cancelButton.object3D.position.copy(new THREE.Vector3(0, hudY - 0.3, hudZ));
             this.el.sceneEl.systems["socialvr-emoji-button"].registerCancel(cancelButton);
 
+            const buttonY = (this.system.VR) ? hudY + 0.2 : hudY + 0.4;
+
+            // Rainbow
+
+            let model = new URL("https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/Rainbow.glb", window.location).href;
+            let particleEmitterConfig = {
+              src: new URL("https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/Emojis_0000_Rainbow.png", window.location).href,
+              resolve: false,
+              particleCount: 20,
+              startSize: 0.01,
+              endSize: 0.2,
+              sizeRandomness: 0.05,
+              lifetime: 1,
+              lifetimeRandomness: 0.2,
+              ageRandomness: 1,
+              startVelocity: { x: 0, y: 0, z: 0 },
+              endVelocity: { x: 0, y: -2, z: 0 },
+              startOpacity: 1,
+              middleOpacity: 1,
+              endOpacity: 0
+            };
+
+            let button = window.APP.utils.addMedia(model, "#static-media", null, null, false, false, false, {}, false, this.system.hudAnchor).entity;
+            button.object3D.position.copy(new THREE.Vector3(0, buttonY, hudZ));
+            button.object3D.scale.copy(new THREE.Vector3(hudScale, hudScale, hudScale));
+            button.setAttribute("socialvr-emoji-button", { model: model, particleEmitterConfig: particleEmitterConfig, target: this.el });
+            button.className = "socialvr-emoji-button";
+
+            // Poop
+
+            // model = new URL("https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/Scary%20Poop.glb", window.location).href;
+            // particleEmitterConfig = {
+            //   src: new URL("https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/Emojis_0006_Poop.png", window.location).href,
+            //   resolve: false,
+            //   particleCount: 20,
+            //   startSize: 0.01,
+            //   endSize: 0.2,
+            //   sizeRandomness: 0.05,
+            //   lifetime: 1,
+            //   lifetimeRandomness: 0.2,
+            //   ageRandomness: 1,
+            //   startVelocity: { x: 0, y: 0, z: 0 },
+            //   endVelocity: { x: 0, y: -2, z: 0 },
+            //   startOpacity: 1,
+            //   middleOpacity: 1,
+            //   endOpacity: 0
+            // };
+
+            // button = window.APP.utils.addMedia(model, "#static-media", null, null, false, false, false, {}, false, this.system.hudAnchor).entity;
+            // button.object3D.position.copy(new THREE.Vector3(0, buttonY, hudZ));
+            // button.object3D.scale.copy(new THREE.Vector3(hudScale, hudScale, hudScale));
+            // button.setAttribute("socialvr-emoji-button", { model: model, particleEmitterConfig: particleEmitterConfig, target: this.el });
+            // button.className = "socialvr-emoji-button";
+
             // // custom model, local: change url for each ngrok session, remote: change url to netlify
             // // TODO: do this from Spoke instead
             // const url = "https://6f50-2601-645-c000-8880-7411-5a9c-1946-ff10.ngrok.io";

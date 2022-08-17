@@ -65,6 +65,9 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
         this.el.sceneEl.addEventListener("enableFeatureCB", (e) => { this._enableFeatureCB.call(this) });
         NAF.connection.subscribeToDataChannel("enableFeatureCB", this.enableFeatureCB.bind(this));
 
+        this.el.sceneEl.addEventListener("disableFeatureCB", (e) => { this._disableFeatureCB.call(this) });
+        NAF.connection.subscribeToDataChannel("disableFeatureCB", this.disableFeatureCB.bind(this));
+
         this.createButtons();
     },
 
@@ -187,6 +190,21 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
     _enableFeatureCB: function () {
         this.enableFeatureCB(null, null, {});
         NAF.connection.broadcastDataGuaranteed("enableFeatureCB", {}); 
+    },
+
+    disableFeatureCB: function () {
+        this.features.CONVERSATION_BALANCE.enabled = false;
+
+        this.features.CONVERSATION_BALANCE.elements.forEach((element) => {
+            if (element.parentNode) {
+                element.parentNode.removeChild(element);
+            }
+        });
+    },
+
+    _disableFeatureCB: function () {
+        this.disableFeatureCB(null, null, {});
+        NAF.connection.broadcastDataGuaranteed("disableFeatureCB", {}); 
     },
 
     enableFeatureHalo: function () {
