@@ -1540,8 +1540,6 @@
       },
 
       disableFeatureEmoji: function () {
-          this.features.EMOJI.enabled = false;
-
           document.querySelectorAll("[emoji]").forEach((element) => {
               if (element.parentNode) {
                   element.parentNode.removeChild(element);
@@ -1559,7 +1557,7 @@
               }
           });
 
-          console.log("[SocialVR]: Emoji Disabled");
+          this.features.EMOJI.enabled = false;
       },
 
       _disableFeatureEmoji: function () {
@@ -1570,9 +1568,9 @@
       enableFeatureCB: function () {
           this.features.CONVERSATION_BALANCE.enabled = true;
 
-          const vis = document.createElement("a-entity");
+          const vis = document.createElement("a-sphere");
           vis.setAttribute("socialvr-speech", "");
-          vis.setAttribute("position", "0 1.75 0");
+          vis.setAttribute("position", "0 0 0");
           window.APP.scene.appendChild(vis);
 
           this.features.CONVERSATION_BALANCE.elements.push(vis);

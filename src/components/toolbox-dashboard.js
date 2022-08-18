@@ -1,3 +1,7 @@
+const COLOR_OFF = "#C0C0C0";
+const COLOR_ON = "#489610";
+const COLOR_HOVER = "#8FE054";
+
 AFRAME.registerComponent("socialvr-toolbox-dashboard", {
     init: function () {
         this.geometry = new THREE.SphereGeometry(0.02, 16, 8);
@@ -149,8 +153,6 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
     },
 
     disableFeatureEmoji: function () {
-        this.features.EMOJI.enabled = false;
-
         document.querySelectorAll("[emoji]").forEach((element) => {
             if (element.parentNode) {
                 element.parentNode.removeChild(element);
@@ -168,7 +170,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
             }
         });
 
-        console.log("[SocialVR]: Emoji Disabled");
+        this.features.EMOJI.enabled = false;
     },
 
     _disableFeatureEmoji: function () {
@@ -179,9 +181,9 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
     enableFeatureCB: function () {
         this.features.CONVERSATION_BALANCE.enabled = true;
 
-        const vis = document.createElement("a-entity");
+        const vis = document.createElement("a-sphere");
         vis.setAttribute("socialvr-speech", "");
-        vis.setAttribute("position", "0 1.75 0");
+        vis.setAttribute("position", "0 0 0");
         window.APP.scene.appendChild(vis);
 
         this.features.CONVERSATION_BALANCE.elements.push(vis);
