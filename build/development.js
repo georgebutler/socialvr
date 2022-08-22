@@ -482,7 +482,7 @@
           this.moving = false;
           this.destinations = [];
           this.currentDestination = 0;
-          this.direction = new window.APP.utils.THREE.Vector3(0, 0, 0);
+          this.direction = new THREE.Vector3(0, 0, 0);
           this.speed = 1;
           this.lastCheck = 0;
 
@@ -518,7 +518,7 @@
 
           // Load environment
           window.APP.utils.GLTFModelPlus
-              .loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-6.glb")
+              .loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-7.glb")
               .then((model) => {
                   this.el.setObject3D("mesh", window.APP.utils.threeUtils.cloneObject3D(model.scene, true));
                   this.el.setAttribute("matrix-auto-update", "");
