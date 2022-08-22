@@ -520,7 +520,7 @@
           window.APP.utils.GLTFModelPlus
               .loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-7.glb")
               .then((model) => {
-                  this.el.setObject3D("mesh", window.APP.utils.threeUtils.cloneObject3D(model.scene, true));
+                  this.el.setObject3D("mesh", window.APP.utils.cloneObject3D(model.scene, true));
                   this.el.setAttribute("matrix-auto-update", "");
               })
               .finally(() => {
