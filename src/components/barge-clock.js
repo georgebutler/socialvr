@@ -10,13 +10,13 @@ AFRAME.registerComponent("socialvr-barge-clock", {
     this.el.setObject3D("mesh", this.mesh);
 
     this.text = document.createElement("a-entity");
-    this.text.setAttribute("text", "value: Time; align: center; width: 4;");
+    this.text.setAttribute("text", "value: Time;");
     this.text.setAttribute("rotation", "0, 0, 0");
     this.text.setAttribute("geometry", "primitive: plane; height: auto; width: 1;");
     this.text.setAttribute("material", "color: #807e7e;");
 
     this.text2 = document.createElement("a-entity");
-    this.text2.setAttribute("text", "value: Time; align: center; width: 4;");
+    this.text2.setAttribute("text", "value: Time;");
     this.text2.setAttribute("rotation", "0, 180, 0");
     this.text2.setAttribute("geometry", "primitive: plane; height: auto; width: 1;");
     this.text2.setAttribute("material", "color: #807e7e;");
@@ -34,7 +34,7 @@ AFRAME.registerComponent("socialvr-barge-clock", {
 
     hours = hours ? hours : 12;
 
-    this.text.setAttribute("text", `value: ${hours}:${minutes} ${ampm}; align: center; width: 4;`);
-    this.text2.setAttribute("text", `value: ${hours}:${minutes} ${ampm}; align: center; width: 4;`);
+    this.text.setAttribute("text", `value: ${hours}:${minutes} ${ampm};`);
+    this.text2.setAttribute("text", `value: ${hours}:${minutes} ${ampm};`);
   }
 });
