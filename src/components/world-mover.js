@@ -41,8 +41,7 @@ AFRAME.registerComponent("socialvr-world-mover", {
         window.APP.utils.GLTFModelPlus
             .loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-7.glb")
             .then((model) => {
-                this.el.setObject3D("mesh", window.APP.utils.cloneObject3D(model.scene, true));
-                this.el.setAttribute("matrix-auto-update", "");
+                this.el.setObject3D("mesh", model.scene);
             })
             .finally(() => {
                 // Disable original sky
@@ -111,9 +110,11 @@ AFRAME.registerComponent("socialvr-world-mover", {
                 if (this.el.object3D.position.distanceToSquared(target) >= 1) {
                     this.direction.multiplyScalar(this.speed / this.direction.length() * (delta / 1000));
 
-                    this.el.object3D.position.x += this.direction.x;
-                    this.el.object3D.position.y += this.direction.y;
-                    this.el.object3D.position.z += this.direction.z;
+                    this.el.setAttribute("position", { 
+                        x: this.el.object3D.position.x + this.direction.x, 
+                        y: this.el.object3D.position.y + this.direction.y, 
+                        z: this.el.object3D.position.z + this.direction.z, 
+                    });
                 } else {
                     if (isNaN(this.lastCheck) || time >= this.lastCheck) {
                         this.lastCheck = time + 100;
