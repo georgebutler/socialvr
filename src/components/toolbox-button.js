@@ -6,7 +6,7 @@ AFRAME.registerComponent("socailvr-toolbox-button", {
   init: function() {
     // button text
     const textEl = document.createElement("a-entity");
-    textEl.setAttribute("text", `value: ${this.data.toUpperCase()}; align: center; color: black`);
+    textEl.setAttribute("text", `value: ${this.data.toUpperCase()}; color: black`);
     textEl.setAttribute("rotation", "0 270 0");
     textEl.setAttribute("position", "0 0.4 0");
     this.el.appendChild(textEl);

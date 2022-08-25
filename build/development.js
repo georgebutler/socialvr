@@ -43,7 +43,7 @@
       // Text
       this.text = document.createElement("a-entity");
       this.text.setAttribute("position", `0 ${this.data.radius + 0.2} 0`);
-      this.text.setAttribute("text", `value: ${this.data.text}; align: center; side: double; width: 4;`);
+      this.text.setAttribute("text", `value: ${this.data.text}; side: double;`);
       this.text.setAttribute("geometry", `primitive: plane; height: auto; width: 0.75;`);
       this.text.setAttribute("material", "color: #807e7e;");
       this.text.setAttribute("billboard", "onlyY: true;");
@@ -86,13 +86,13 @@
       this.el.setObject3D("mesh", this.mesh);
 
       this.text = document.createElement("a-entity");
-      this.text.setAttribute("text", "value: Time; align: center; width: 4;");
+      this.text.setAttribute("text", "value: Time;");
       this.text.setAttribute("rotation", "0, 0, 0");
       this.text.setAttribute("geometry", "primitive: plane; height: auto; width: 1;");
       this.text.setAttribute("material", "color: #807e7e;");
 
       this.text2 = document.createElement("a-entity");
-      this.text2.setAttribute("text", "value: Time; align: center; width: 4;");
+      this.text2.setAttribute("text", "value: Time;");
       this.text2.setAttribute("rotation", "0, 180, 0");
       this.text2.setAttribute("geometry", "primitive: plane; height: auto; width: 1;");
       this.text2.setAttribute("material", "color: #807e7e;");
@@ -110,8 +110,8 @@
 
       hours = hours ? hours : 12;
 
-      this.text.setAttribute("text", `value: ${hours}:${minutes} ${ampm}; align: center; width: 4;`);
-      this.text2.setAttribute("text", `value: ${hours}:${minutes} ${ampm}; align: center; width: 4;`);
+      this.text.setAttribute("text", `value: ${hours}:${minutes} ${ampm};`);
+      this.text2.setAttribute("text", `value: ${hours}:${minutes} ${ampm};`);
     }
   });
 
@@ -477,73 +477,12 @@
       },
   });
 
-  const MIC_PRESENCE_VOLUME_THRESHOLD$1 = 0.00001;
-
-  const SPEECH_TIME_PER_TICK$1 = 10; // every speech tick = 10ms of realtime
-  const MIN_SPEECH_TIME_FOR_EVENT$1 = 100; // 0.1s realtime
-  const MAX_SPEECH_TIME_FOR_EVENT$1 = 5000; // 5s realtime
-  const CONTINUOUS_SPEECH_LENIENCY_TIME$1 = 100; // 0.1s realtime
-
-  AFRAME.registerComponent("socialvr-halo", {
-      init: function () {
-          this.geometry = new THREE.TorusGeometry(0.05, 0.01, 8, 16);
-          this.material = new THREE.MeshStandardMaterial({ color: "#FF6782" });
-
-          this.mesh = new THREE.Mesh(this.geometry, this.material);
-          this.mesh.rotateX(THREE.Math.degToRad(90));
-
-          this.el.setObject3D("mesh", this.mesh);
-
-          // Audio
-          this.localAudioAnalyser = this.el.sceneEl.systems["local-audio-analyser"];
-          this.playerInfo = APP.componentRegistry["player-info"][0];
-
-          this.continuousSpeechTime = 0;
-          this.continuousSpeechLeniencyTime = 0;
-      },
-
-      tock: function (time, delta) {
-          const muted = this.playerInfo.data.muted;
-          const speaking = !muted && this.localAudioAnalyser.volume > MIC_PRESENCE_VOLUME_THRESHOLD$1;
-
-          if (speaking) {
-              if (this.continuousSpeechTime === 0) ;
-
-              this.continuousSpeechTime += SPEECH_TIME_PER_TICK$1;
-              this.continuousSpeechLeniencyTime = CONTINUOUS_SPEECH_LENIENCY_TIME$1;
-
-              if (this.continuousSpeechTime <= MAX_SPEECH_TIME_FOR_EVENT$1) {
-                  // Size up
-                  console.log("Size up");
-              } else {
-                  alert("limit reached");
-              }
-          } else {
-              if (this.continuousSpeechLeniencyTime > 0) {
-                  this.continuousSpeechLeniencyTime -= SPEECH_TIME_PER_TICK$1;
-              }
-              if (this.continuousSpeechLeniencyTime <= 0 && this.continuousSpeechTime >= MIN_SPEECH_TIME_FOR_EVENT$1) ;
-          }
-
-          /** 
-          if (!this.data.target) { return; }
-          if (!NAF.utils.isMine(this.el)) { return; }
-
-          const scale = 0.1 * (delta / 1000);
-
-          this.mesh.scale.addScalar(scale);
-          this.mesh.scale.set(this.mesh.scale.x, this.mesh.scale.y, 1);
-          this.mesh.matrixAutoUpdate = true;
-          */
-      }
-  });
-
   AFRAME.registerComponent("socialvr-world-mover", {
       init: function () {
           this.moving = false;
           this.destinations = [];
           this.currentDestination = 0;
-          this.direction = new window.APP.utils.THREE.Vector3(0, 0, 0);
+          this.direction = new THREE.Vector3(0, 0, 0);
           this.speed = 1;
           this.lastCheck = 0;
 
@@ -579,10 +518,9 @@
 
           // Load environment
           window.APP.utils.GLTFModelPlus
-              .loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-5.glb")
+              .loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-7.glb")
               .then((model) => {
-                  this.el.setObject3D("mesh", window.APP.utils.threeUtils.cloneObject3D(model.scene, true));
-                  this.el.setAttribute("matrix-auto-update", "");
+                  this.el.setObject3D("mesh", model.scene);
               })
               .finally(() => {
                   // Disable original sky
@@ -651,9 +589,11 @@
                   if (this.el.object3D.position.distanceToSquared(target) >= 1) {
                       this.direction.multiplyScalar(this.speed / this.direction.length() * (delta / 1000));
 
-                      this.el.object3D.position.x += this.direction.x;
-                      this.el.object3D.position.y += this.direction.y;
-                      this.el.object3D.position.z += this.direction.z;
+                      this.el.setAttribute("position", { 
+                          x: this.el.object3D.position.x + this.direction.x, 
+                          y: this.el.object3D.position.y + this.direction.y, 
+                          z: this.el.object3D.position.z + this.direction.z, 
+                      });
                   } else {
                       if (isNaN(this.lastCheck) || time >= this.lastCheck) {
                           this.lastCheck = time + 100;
@@ -712,16 +652,6 @@
       _stop: function () {
           this.stop(null, null, {});
           NAF.connection.broadcastDataGuaranteed("stopMovingWorld", {});
-      }
-  });
-
-  AFRAME.registerComponent("socialvr-eye-laser", {
-      init: function () {
-          this.geometry = new THREE.CylinderGeometry(0.1, 0.1, 100, 3, 3);
-          this.material = new THREE.MeshStandardMaterial({ color: "#FF6782" });
-          this.mesh = new THREE.Mesh(this.geometry, this.material);
-          this.mesh.rotateX(THREE.Math.degToRad(90));
-          this.el.setObject3D("mesh", this.mesh);
       }
   });
 
@@ -1167,7 +1097,7 @@
   const ORB_GROWTH_PER_TICK = (MAX_ORB_SIZE - MIN_ORB_SIZE) / ((MAX_SPEECH_TIME_FOR_EVENT - MIN_SPEECH_TIME_FOR_EVENT) / SPEECH_TIME_PER_TICK);
 
   AFRAME.registerComponent("socialvr-speech", {
-    init() {
+    init: function () {
       this.localAudioAnalyser = this.el.sceneEl.systems["local-audio-analyser"];
       this.playerInfo = APP.componentRegistry["player-info"][0];
 
@@ -1187,7 +1117,7 @@
       this.system.register(this.el);
     },
 
-    remove() {
+    remove: function () {
       this.el.removeEventListener("clearSpeechEvent", this.clearSpeech.bind(this));
 
       NAF.connection.unsubscribeToDataChannel("startSpeech");
@@ -1197,7 +1127,7 @@
       this.system.unregister();
     },
 
-    tick(t, dt) {
+    tick: function (t, dt) {
       // TODO: more elegant solution?
       if (this.el.getAttribute("visible")) {
         this.el.play();
@@ -1243,9 +1173,8 @@
 
       for (const activeOrb of Object.values(this.activeSpeechOrbs)) {
         // grow each active speech orb by ORB_GROWTH_PER_TICK
-        const size = parseFloat(activeOrb.getAttribute("height")) + ORB_GROWTH_PER_TICK;
-        activeOrb.setAttribute("height", size);
-        activeOrb.setAttribute("radius", 0.1);
+        activeOrb.object3D.scale.add(new THREE.Vector3(0, ORB_GROWTH_PER_TICK * 10, 0));
+        activeOrb.matrixNeedsUpdate = true;
     
         // move its center upward by half of the growth amount,
         // to keep the bottom position fixed at the "now" plane
@@ -1255,7 +1184,7 @@
       }
     },
 
-    _startSpeech(senderId, dataType, data, targetId) { 
+    _startSpeech: function (senderId, dataType, data, targetId) { 
       // if no already-active speech orb for this speaker, spawn one
       const activeOrb = this.activeSpeechOrbs[data.speaker];
       if (activeOrb) {
@@ -1279,7 +1208,7 @@
       newOrb.object3D.position.copy(orbPos);
     },
 
-    doStopSpeech(speechTime) {
+    doStopSpeech: function (speechTime) {
       const orbSize = this.scale(speechTime, MIN_SPEECH_TIME_FOR_EVENT, MAX_SPEECH_TIME_FOR_EVENT, MIN_ORB_SIZE, MAX_ORB_SIZE);
       const eventData = {
         size: orbSize,
@@ -1290,7 +1219,7 @@
       NAF.connection.broadcastData("stopSpeech", eventData); // networked
     },
 
-    _stopSpeech(senderId, dataType, data, targetId) {
+    _stopSpeech: function (senderId, dataType, data, targetId) {
       const activeOrb = this.activeSpeechOrbs[data.speaker];
       if (activeOrb) {
         activeOrb.classList.add("finished");
@@ -1301,22 +1230,22 @@
       }
     },
 
-    scale(num, oldLower, oldUpper, newLower, newUpper) {
+    scale: function (num, oldLower, oldUpper, newLower, newUpper) {
       const oldRange = oldUpper - oldLower;
       const newRange = newUpper - newLower;
       return ((num - oldLower) / oldRange) * newRange + newLower;
     },
 
-    getPlayerInfo(sessionID) {
+    getPlayerInfo: function (sessionID) {
       const playerInfos = APP.componentRegistry["player-info"];
       return playerInfos.find(pi => pi.playerSessionId === sessionID);
     },
 
-    sessionIDToColor(sessionID) {
+    sessionIDToColor: function (sessionID) {
       return "#" + sessionID.substring(0, 6); // just use first 6 chars lol
     },
     
-    playerInfoToColor(playerInfo) {
+    playerInfoToColor: function (playerInfo) {
       // keys are "Avatar listing sid"s from Approved Avatars admin tab
       const colorsByAvatar = {
         WUvZgGK: "lightskyblue",
@@ -1336,17 +1265,15 @@
       return this.sessionIDToColor(playerInfo.playerSessionId);
     },
 
-    spawnOrb(size, color) {
-      color = color || "yellow";
+    spawnOrb: function (size, in_color) {
+      const geometry = new THREE.CylinderGeometry(0.1, 0.1, size);
+      const material = new THREE.MeshStandardMaterial({ color: in_color || "yellow" });
+      const mesh = new THREE.Mesh(geometry, material);
     
       // create, color, position, and scale the orb
-      const orb = document.createElement("a-cylinder");
+      const orb = document.createElement("a-entity");
       orb.classList.add("speechOrb");
-      orb.setAttribute("segments-height", 1);
-      orb.setAttribute("segments-radial", 6);
-      orb.setAttribute("radius", 1);
-      orb.setAttribute("height", size);
-      orb.setAttribute("color", color);
+      orb.setObject3D("mesh", mesh);
     
       // add the orb to the scene
       this.el.appendChild(orb);
@@ -1357,13 +1284,13 @@
       return orb;
     },
 
-    _clearSpeech(senderId, dataType, data, targetId) {
+    _clearSpeech: function (senderId, dataType, data, targetId) {
       for (const finishedOrb of document.querySelectorAll(".speechOrb.finished")) {
         finishedOrb.parentNode.removeChild(finishedOrb);
       }
     },
 
-    clearSpeech() {
+    clearSpeech: function () {
       this._clearSpeech(null, null, {}, null);
       NAF.connection.broadcastData("clearSpeech", {});
     }
@@ -1568,12 +1495,13 @@
       enableFeatureCB: function () {
           this.features.CONVERSATION_BALANCE.enabled = true;
 
-          const vis = document.createElement("a-sphere");
-          vis.setAttribute("socialvr-speech", "");
-          vis.setAttribute("position", "0 0 0");
-          window.APP.scene.appendChild(vis);
+          const cb = document.createElement("a-entity");
+          cb.setAttribute("socialvr-speech", "");
+          cb.setAttribute("position", "0 1 0");
+          APP.scene.appendChild(cb);
 
-          this.features.CONVERSATION_BALANCE.elements.push(vis);
+          this.features.CONVERSATION_BALANCE.elements.push(cb);
+          console.log("[SocialVR]: Coversation Balance Enabled");
       },
 
       _enableFeatureCB: function () {
@@ -1605,111 +1533,7 @@
       _enableFeatureHalo: function () {
           this.enableFeatureHalo(null, null, {});
           NAF.connection.broadcastDataGuaranteed("enableFeatureHalo", {});
-      },
-
-      enableFeatureBarge: function () {
-          // Button
-          let button = document.createElement("a-entity");
-          let position = document.querySelector(".startButton").object3D.position.add(new THREE.Vector3(0, 0.5, 0));
-
-          button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.3; color: #C576F6; phaseID: 1");
-          button.setAttribute("position", position);
-          window.APP.scene.appendChild(button);
-
-          this.features.BARGE.elements.push(button);
-
-          // Button
-          button = document.createElement("a-entity");
-          position = document.querySelector(".CompleteButton_phase1").object3D.position.add(new THREE.Vector3(0, 0.5, 0));
-
-          button.setAttribute("socialvr-barge-button", "text: Next Task; radius: 0.3; color: #C576F6; phaseID: 2");
-          button.setAttribute("position", position);
-          window.APP.scene.appendChild(button);
-
-          this.features.BARGE.elements.push(button);
-
-          // Button
-          button = document.createElement("a-entity");
-          position = document.querySelector(".CompleteButton_phase2").object3D.position.add(new THREE.Vector3(0, 0.5, 0));
-
-          button.setAttribute("socialvr-barge-button", "text: Next Task; radius: 0.3; color: #C576F6; phaseID: 3");
-          button.setAttribute("position", position);
-          window.APP.scene.appendChild(button);
-
-          this.features.BARGE.elements.push(button);
-
-          // Button
-          button = document.createElement("a-entity");
-          position = document.querySelector(".CompleteButton_phase3").object3D.position.add(new THREE.Vector3(0, 0.5, 0));
-
-          button.setAttribute("socialvr-barge-button", "text: Complete; radius: 0.3; color: #C576F6; phaseID: 4");
-          button.setAttribute("position", position);
-          window.APP.scene.appendChild(button);
-
-          this.features.BARGE.elements.push(button);
-
-          // Clock
-          const clock = document.createElement("a-entity");
-          clock.setAttribute("radius", 0.1);
-          clock.setAttribute("socialvr-barge-clock", "");
-          clock.setAttribute("position", document.querySelector(".clock-placeholder").object3D.position);
-          window.APP.scene.appendChild(clock);
-
-          this.features.BARGE.elements.push(clock);
-
-          // Ranking Slots
-          for (let index = 1; index <= 3; index++) {
-              const slot = document.createElement("a-entity");
-              slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
-              slot.setAttribute("socialvr-barge-slot", `type: knowledge; rank: ${4 - index}`);
-              document.querySelector(".knowledgeFrame_phase1").appendChild(slot);
-
-              this.features.BARGE.elements.push(slot);
-          }
-
-          for (let index = 1; index <= 3; index++) {
-              const slot = document.createElement("a-entity");
-              slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
-              slot.setAttribute("socialvr-barge-slot", `type: abilities; rank: ${4 - index}`);
-              document.querySelector(".KSA_ranking_frameglb_1_phase1").appendChild(slot);
-
-              this.features.BARGE.elements.push(slot);
-          }
-
-          for (let index = 1; index <= 3; index++) {
-              const slot = document.createElement("a-entity");
-              slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
-              slot.setAttribute("socialvr-barge-slot", `type: skills; rank: ${4 - index}`);
-              document.querySelector(".KSA_ranking_frameglb_phase1").appendChild(slot);
-
-              this.features.BARGE.elements.push(slot);
-          }
-
-          // Canidate Slot
-          const slot = document.createElement("a-entity");
-          slot.setAttribute("socialvr-barge-slot", `type: canidate; rank: 1; width: 0.5; height: 1; depth: 1;`);
-          document.querySelector(".candidate_frameglb_phase3").appendChild(slot);
-
-          this.features.BARGE.elements.push(slot);
-
-          // World Mover
-          const worldMover = document.createElement("a-entity");
-          worldMover.setAttribute("socialvr-world-mover", "");
-          window.APP.scene.appendChild(worldMover);
-
-          this.features.BARGE.elements.push(worldMover);
-
-          // Data Logger
-          const dataLogger = document.createElement("a-entity");
-          dataLogger.setAttribute("socialvr-barge-data", "");
-          window.APP.scene.appendChild(dataLogger);
-
-          this.features.BARGE.elements.push(dataLogger);
-      },
-
-      _enableFeatureBarge: function () {
-          console.log("");
-      },
+      }
   });
 
   const STATE_OFF = 0;
@@ -1758,17 +1582,17 @@
           this.el.setObject3D("mesh", this.mesh);
           this.el.setAttribute("tags", "singleActionButton: true");
           this.el.setAttribute("is-remote-hover-target", "");
+          this.el.setAttribute("css-class", "interactable");
           this.el.setAttribute("hoverable-visuals", "");
           this.el.setAttribute("billboard", "onlyY: true;");
-          this.el.classList.add("interactable");
 
-          this.image = document.createElement("a-image");
-          this.image.setAttribute("position", `0 ${this.data.radius + 0.01} 0`);
-          this.image.setAttribute("rotation", "90 180 0");
-          this.image.setAttribute("height", `${this.data.radius}`);
-          this.image.setAttribute("width", `${this.data.radius}`);
-          this.image.setAttribute("src", `${this.data.icon}`);
-          this.el.appendChild(this.image);
+          //this.icon_image = document.createElement("a-image");
+          //this.icon_image.setAttribute("position", `0 ${this.data.radius + 0.01} 0`);
+          //this.icon_image.setAttribute("rotation", "90 180 0");
+          //this.icon_image.setAttribute("height", `${this.data.radius}`);
+          //this.icon_image.setAttribute("width", `${this.data.radius}`);
+          //this.icon_image.setAttribute("src", `${this.data.icon}`);
+          //this.el.appendChild(this.icon_image);
 
           this.onClick = this.onClick.bind(this);
           this.el.object3D.addEventListener("interact", this.onClick);
@@ -1835,48 +1659,112 @@
       }
   });
 
-  window.APP.scene.addEventListener("environment-scene-loaded", () => {
-    const dashboard = document.createElement("a-entity");
+  APP.scene.addEventListener("environment-scene-loaded", () => {
+    if (document.querySelector(".barge")) {
+      // Button
+      let button = document.createElement("a-entity");
+      let position = document.querySelector(".startButton").object3D.position.add(new THREE.Vector3(0, 0.5, 0));
 
-    dashboard.setAttribute("socialvr-toolbox-dashboard", "");
-    dashboard.setAttribute("position", new THREE.Vector3(0, 1.2, 0));
-    window.APP.scene.appendChild(dashboard);
+      button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.3; color: #C576F6; phaseID: 1");
+      button.setAttribute("position", position);
+      window.APP.scene.appendChild(button);
 
-    window.APP.hubChannel.presence.onJoin(() => {
-      if (dashboard.components["socialvr-toolbox-dashboard"].features.EMOJI.enabled) {
-        dashboard.components["socialvr-toolbox-dashboard"].initEmoji();
+      // Button
+      button = document.createElement("a-entity");
+      position = document.querySelector(".CompleteButton_phase1").object3D.position.add(new THREE.Vector3(0, 0.5, 0));
+
+      button.setAttribute("socialvr-barge-button", "text: Next Task; radius: 0.3; color: #C576F6; phaseID: 2");
+      button.setAttribute("position", position);
+      window.APP.scene.appendChild(button);
+
+      // Button
+      button = document.createElement("a-entity");
+      position = document.querySelector(".CompleteButton_phase2").object3D.position.add(new THREE.Vector3(0, 0.5, 0));
+
+      button.setAttribute("socialvr-barge-button", "text: Next Task; radius: 0.3; color: #C576F6; phaseID: 3");
+      button.setAttribute("position", position);
+      window.APP.scene.appendChild(button);
+
+      // Button
+      button = document.createElement("a-entity");
+      position = document.querySelector(".CompleteButton_phase3").object3D.position.add(new THREE.Vector3(0, 0.5, 0));
+
+      button.setAttribute("socialvr-barge-button", "text: Complete; radius: 0.3; color: #C576F6; phaseID: 4");
+      button.setAttribute("position", position);
+      window.APP.scene.appendChild(button);
+
+      // Clock
+      const clock = document.createElement("a-entity");
+      clock.setAttribute("radius", 0.1);
+      clock.setAttribute("socialvr-barge-clock", "");
+      clock.setAttribute("position", document.querySelector(".clock-placeholder").object3D.position);
+      window.APP.scene.appendChild(clock);
+
+      // Ranking Slots
+      for (let index = 1; index <= 3; index++) {
+        const slot = document.createElement("a-entity");
+        slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
+        slot.setAttribute("socialvr-barge-slot", `type: knowledge; rank: ${4 - index}`);
+        document.querySelector(".knowledgeFrame_phase1").appendChild(slot);
       }
 
-      if (dashboard.components["socialvr-toolbox-dashboard"].features.HALO.enabled) {
-        dashboard.components["socialvr-toolbox-dashboard"].initHalos();
+      for (let index = 1; index <= 3; index++) {
+        const slot = document.createElement("a-entity");
+        slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
+        slot.setAttribute("socialvr-barge-slot", `type: abilities; rank: ${4 - index}`);
+        document.querySelector(".KSA_ranking_frameglb_1_phase1").appendChild(slot);
       }
 
-      // Eye laser
-      APP.componentRegistry["player-info"].forEach((playerInfo) => {
-        /*       
-          if (!playerInfo.socialVREyeLaser) {
-            const laser = document.createElement("a-entity");
-            laser.setAttribute("socialvr-eye-laser", "");
-            laser.setAttribute("position", "0 1.75 0");
-    
-            playerInfo.el.appendChild(laser);
-            playerInfo.socialVREyeLaser = true;
-          } 
-        */
+      for (let index = 1; index <= 3; index++) {
+        const slot = document.createElement("a-entity");
+        slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
+        slot.setAttribute("socialvr-barge-slot", `type: skills; rank: ${4 - index}`);
+        document.querySelector(".KSA_ranking_frameglb_phase1").appendChild(slot);
+      }
+
+      // Canidate Slot
+      const slot = document.createElement("a-entity");
+      slot.setAttribute("socialvr-barge-slot", `type: canidate; rank: 1; width: 0.5; height: 1; depth: 1;`);
+      document.querySelector(".candidate_frameglb_phase3").appendChild(slot);
+
+      // World Mover
+      const worldMover = document.createElement("a-entity");
+      worldMover.setAttribute("socialvr-world-mover", "");
+      window.APP.scene.appendChild(worldMover);
+
+      // Data Logger
+      const dataLogger = document.createElement("a-entity");
+      dataLogger.setAttribute("socialvr-barge-data", "");
+      window.APP.scene.appendChild(dataLogger);
+
+      // Backup command
+      window.logBargeData = () => {
+        window.APP.scene.emit("generateDataEvent");
+      };
+
+      // Changes camera inspection system to show background, regardless of user preferences.
+      window.APP.scene.systems["hubs-systems"].cameraSystem.lightsEnabled = true;
+    } else {
+      // Dashboard
+      const dashboard = document.createElement("a-entity");
+
+      dashboard.setAttribute("socialvr-toolbox-dashboard", "");
+      dashboard.setAttribute("position", "0 1.2 0");
+      APP.scene.appendChild(dashboard);
+
+      APP.hubChannel.presence.onJoin(() => {
+        if (dashboard.components["socialvr-toolbox-dashboard"].features.EMOJI.enabled) {
+          dashboard.components["socialvr-toolbox-dashboard"].initEmoji();
+        }
+
+        if (dashboard.components["socialvr-toolbox-dashboard"].features.HALO.enabled) {
+          dashboard.components["socialvr-toolbox-dashboard"].initHalos();
+        }
       });
-    });
-
-    // Backup command
-    window.logBargeData = () => {
-      window.APP.scene.emit("generateDataEvent");
-    };
-
-    // Changes camera inspection system to show background, regardless of user preferences.
-    const cameraSystem = window.APP.scene.systems["hubs-systems"].cameraSystem;
-    cameraSystem.lightsEnabled = true;
+    }
   }, { once: true });
 
-  window.APP.scene.addEventListener("object_spawned", (e) => {
+  APP.scene.addEventListener("object_spawned", (e) => {
     const floaties = document.querySelectorAll("[floaty-object]");
 
     floaties.forEach((floaty) => {

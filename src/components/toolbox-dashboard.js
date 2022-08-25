@@ -181,12 +181,13 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
     enableFeatureCB: function () {
         this.features.CONVERSATION_BALANCE.enabled = true;
 
-        const vis = document.createElement("a-sphere");
-        vis.setAttribute("socialvr-speech", "");
-        vis.setAttribute("position", "0 0 0");
-        window.APP.scene.appendChild(vis);
+        const cb = document.createElement("a-entity");
+        cb.setAttribute("socialvr-speech", "");
+        cb.setAttribute("position", "0 1 0");
+        APP.scene.appendChild(cb);
 
-        this.features.CONVERSATION_BALANCE.elements.push(vis);
+        this.features.CONVERSATION_BALANCE.elements.push(cb);
+        console.log("[SocialVR]: Coversation Balance Enabled");
     },
 
     _enableFeatureCB: function () {
@@ -218,109 +219,5 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
     _enableFeatureHalo: function () {
         this.enableFeatureHalo(null, null, {});
         NAF.connection.broadcastDataGuaranteed("enableFeatureHalo", {});
-    },
-
-    enableFeatureBarge: function () {
-        // Button
-        let button = document.createElement("a-entity");
-        let position = document.querySelector(".startButton").object3D.position.add(new THREE.Vector3(0, 0.5, 0))
-
-        button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.3; color: #C576F6; phaseID: 1");
-        button.setAttribute("position", position);
-        window.APP.scene.appendChild(button);
-
-        this.features.BARGE.elements.push(button);
-
-        // Button
-        button = document.createElement("a-entity");
-        position = document.querySelector(".CompleteButton_phase1").object3D.position.add(new THREE.Vector3(0, 0.5, 0))
-
-        button.setAttribute("socialvr-barge-button", "text: Next Task; radius: 0.3; color: #C576F6; phaseID: 2");
-        button.setAttribute("position", position);
-        window.APP.scene.appendChild(button);
-
-        this.features.BARGE.elements.push(button);
-
-        // Button
-        button = document.createElement("a-entity");
-        position = document.querySelector(".CompleteButton_phase2").object3D.position.add(new THREE.Vector3(0, 0.5, 0))
-
-        button.setAttribute("socialvr-barge-button", "text: Next Task; radius: 0.3; color: #C576F6; phaseID: 3");
-        button.setAttribute("position", position);
-        window.APP.scene.appendChild(button);
-
-        this.features.BARGE.elements.push(button);
-
-        // Button
-        button = document.createElement("a-entity");
-        position = document.querySelector(".CompleteButton_phase3").object3D.position.add(new THREE.Vector3(0, 0.5, 0))
-
-        button.setAttribute("socialvr-barge-button", "text: Complete; radius: 0.3; color: #C576F6; phaseID: 4");
-        button.setAttribute("position", position);
-        window.APP.scene.appendChild(button);
-
-        this.features.BARGE.elements.push(button);
-
-        // Clock
-        const clock = document.createElement("a-entity");
-        clock.setAttribute("radius", 0.1);
-        clock.setAttribute("socialvr-barge-clock", "");
-        clock.setAttribute("position", document.querySelector(".clock-placeholder").object3D.position);
-        window.APP.scene.appendChild(clock);
-
-        this.features.BARGE.elements.push(clock);
-
-        // Ranking Slots
-        for (let index = 1; index <= 3; index++) {
-            const slot = document.createElement("a-entity");
-            slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
-            slot.setAttribute("socialvr-barge-slot", `type: knowledge; rank: ${4 - index}`);
-            document.querySelector(".knowledgeFrame_phase1").appendChild(slot);
-
-            this.features.BARGE.elements.push(slot);
-        }
-
-        for (let index = 1; index <= 3; index++) {
-            const slot = document.createElement("a-entity");
-            slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
-            slot.setAttribute("socialvr-barge-slot", `type: abilities; rank: ${4 - index}`);
-            document.querySelector(".KSA_ranking_frameglb_1_phase1").appendChild(slot);
-
-            this.features.BARGE.elements.push(slot);
-        }
-
-        for (let index = 1; index <= 3; index++) {
-            const slot = document.createElement("a-entity");
-            slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
-            slot.setAttribute("socialvr-barge-slot", `type: skills; rank: ${4 - index}`);
-            document.querySelector(".KSA_ranking_frameglb_phase1").appendChild(slot);
-
-            this.features.BARGE.elements.push(slot);
-        }
-
-        // Canidate Slot
-        const slot = document.createElement("a-entity");
-        slot.setAttribute("socialvr-barge-slot", `type: canidate; rank: 1; width: 0.5; height: 1; depth: 1;`);
-        document.querySelector(".candidate_frameglb_phase3").appendChild(slot);
-
-        this.features.BARGE.elements.push(slot);
-
-        // World Mover
-        const worldMover = document.createElement("a-entity");
-        worldMover.setAttribute("socialvr-world-mover", "");
-        window.APP.scene.appendChild(worldMover);
-
-        this.features.BARGE.elements.push(worldMover);
-
-        // Data Logger
-        const dataLogger = document.createElement("a-entity");
-        dataLogger.setAttribute("socialvr-barge-data", "");
-        window.APP.scene.appendChild(dataLogger);
-
-        this.features.BARGE.elements.push(dataLogger);
-    },
-
-    _enableFeatureBarge: function () {
-        console.log("")
-    },
+    }
 });

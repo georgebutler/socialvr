@@ -15,7 +15,7 @@ const SPEECH_ORB_LIFETIME = 1000 * 60 * 5; // 5mins realtime
 const ORB_GROWTH_PER_TICK = (MAX_ORB_SIZE - MIN_ORB_SIZE) / ((MAX_SPEECH_TIME_FOR_EVENT - MIN_SPEECH_TIME_FOR_EVENT) / SPEECH_TIME_PER_TICK);
 
 AFRAME.registerComponent("socialvr-speech", {
-  init() {
+  init: function () {
     this.localAudioAnalyser = this.el.sceneEl.systems["local-audio-analyser"];
     this.playerInfo = APP.componentRegistry["player-info"][0];
 
@@ -35,7 +35,7 @@ AFRAME.registerComponent("socialvr-speech", {
     this.system.register(this.el);
   },
 
-  remove() {
+  remove: function () {
     this.el.removeEventListener("clearSpeechEvent", this.clearSpeech.bind(this));
 
     NAF.connection.unsubscribeToDataChannel("startSpeech");
@@ -45,7 +45,7 @@ AFRAME.registerComponent("socialvr-speech", {
     this.system.unregister();
   },
 
-  tick(t, dt) {
+  tick: function (t, dt) {
     // TODO: more elegant solution?
     if (this.el.getAttribute("visible")) {
       this.el.play();
@@ -91,9 +91,8 @@ AFRAME.registerComponent("socialvr-speech", {
 
     for (const activeOrb of Object.values(this.activeSpeechOrbs)) {
       // grow each active speech orb by ORB_GROWTH_PER_TICK
-      const size = parseFloat(activeOrb.getAttribute("height")) + ORB_GROWTH_PER_TICK;
-      activeOrb.setAttribute("height", size);
-      activeOrb.setAttribute("radius", 0.1);
+      activeOrb.object3D.scale.add(new THREE.Vector3(0, ORB_GROWTH_PER_TICK * 10, 0));
+      activeOrb.matrixNeedsUpdate = true;
   
       // move its center upward by half of the growth amount,
       // to keep the bottom position fixed at the "now" plane
@@ -103,7 +102,7 @@ AFRAME.registerComponent("socialvr-speech", {
     }
   },
 
-  _startSpeech(senderId, dataType, data, targetId) { 
+  _startSpeech: function (senderId, dataType, data, targetId) { 
     // if no already-active speech orb for this speaker, spawn one
     const activeOrb = this.activeSpeechOrbs[data.speaker];
     if (activeOrb) {
@@ -127,7 +126,7 @@ AFRAME.registerComponent("socialvr-speech", {
     newOrb.object3D.position.copy(orbPos);
   },
 
-  doStopSpeech(speechTime) {
+  doStopSpeech: function (speechTime) {
     const orbSize = this.scale(speechTime, MIN_SPEECH_TIME_FOR_EVENT, MAX_SPEECH_TIME_FOR_EVENT, MIN_ORB_SIZE, MAX_ORB_SIZE);
     const eventData = {
       size: orbSize,
@@ -138,7 +137,7 @@ AFRAME.registerComponent("socialvr-speech", {
     NAF.connection.broadcastData("stopSpeech", eventData); // networked
   },
 
-  _stopSpeech(senderId, dataType, data, targetId) {
+  _stopSpeech: function (senderId, dataType, data, targetId) {
     const activeOrb = this.activeSpeechOrbs[data.speaker];
     if (activeOrb) {
       activeOrb.classList.add("finished");
@@ -149,22 +148,22 @@ AFRAME.registerComponent("socialvr-speech", {
     }
   },
 
-  scale(num, oldLower, oldUpper, newLower, newUpper) {
+  scale: function (num, oldLower, oldUpper, newLower, newUpper) {
     const oldRange = oldUpper - oldLower;
     const newRange = newUpper - newLower;
     return ((num - oldLower) / oldRange) * newRange + newLower;
   },
 
-  getPlayerInfo(sessionID) {
+  getPlayerInfo: function (sessionID) {
     const playerInfos = APP.componentRegistry["player-info"];
     return playerInfos.find(pi => pi.playerSessionId === sessionID);
   },
 
-  sessionIDToColor(sessionID) {
+  sessionIDToColor: function (sessionID) {
     return "#" + sessionID.substring(0, 6); // just use first 6 chars lol
   },
   
-  playerInfoToColor(playerInfo) {
+  playerInfoToColor: function (playerInfo) {
     // keys are "Avatar listing sid"s from Approved Avatars admin tab
     const colorsByAvatar = {
       WUvZgGK: "lightskyblue",
@@ -184,17 +183,15 @@ AFRAME.registerComponent("socialvr-speech", {
     return this.sessionIDToColor(playerInfo.playerSessionId);
   },
 
-  spawnOrb(size, color) {
-    color = color || "yellow";
+  spawnOrb: function (size, in_color) {
+    const geometry = new THREE.CylinderGeometry(0.1, 0.1, size);
+    const material = new THREE.MeshStandardMaterial({ color: in_color || "yellow" });
+    const mesh = new THREE.Mesh(geometry, material);
   
     // create, color, position, and scale the orb
-    const orb = document.createElement("a-cylinder");
+    const orb = document.createElement("a-entity");
     orb.classList.add("speechOrb");
-    orb.setAttribute("segments-height", 1);
-    orb.setAttribute("segments-radial", 6);
-    orb.setAttribute("radius", 1);
-    orb.setAttribute("height", size);
-    orb.setAttribute("color", color);
+    orb.setObject3D("mesh", mesh);
   
     // add the orb to the scene
     this.el.appendChild(orb);
@@ -205,13 +202,13 @@ AFRAME.registerComponent("socialvr-speech", {
     return orb;
   },
 
-  _clearSpeech(senderId, dataType, data, targetId) {
+  _clearSpeech: function (senderId, dataType, data, targetId) {
     for (const finishedOrb of document.querySelectorAll(".speechOrb.finished")) {
       finishedOrb.parentNode.removeChild(finishedOrb);
     }
   },
 
-  clearSpeech() {
+  clearSpeech: function () {
     this._clearSpeech(null, null, {}, null);
     NAF.connection.broadcastData("clearSpeech", {});
   }

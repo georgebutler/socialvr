@@ -44,17 +44,17 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
         this.el.setObject3D("mesh", this.mesh);
         this.el.setAttribute("tags", "singleActionButton: true");
         this.el.setAttribute("is-remote-hover-target", "");
+        this.el.setAttribute("css-class", "interactable");
         this.el.setAttribute("hoverable-visuals", "");
         this.el.setAttribute("billboard", "onlyY: true;");
-        this.el.classList.add("interactable");
 
-        this.image = document.createElement("a-image");
-        this.image.setAttribute("position", `0 ${this.data.radius + 0.01} 0`);
-        this.image.setAttribute("rotation", "90 180 0");
-        this.image.setAttribute("height", `${this.data.radius}`);
-        this.image.setAttribute("width", `${this.data.radius}`);
-        this.image.setAttribute("src", `${this.data.icon}`);
-        this.el.appendChild(this.image);
+        //this.icon_image = document.createElement("a-image");
+        //this.icon_image.setAttribute("position", `0 ${this.data.radius + 0.01} 0`);
+        //this.icon_image.setAttribute("rotation", "90 180 0");
+        //this.icon_image.setAttribute("height", `${this.data.radius}`);
+        //this.icon_image.setAttribute("width", `${this.data.radius}`);
+        //this.icon_image.setAttribute("src", `${this.data.icon}`);
+        //this.el.appendChild(this.icon_image);
 
         this.onClick = this.onClick.bind(this);
         this.el.object3D.addEventListener("interact", this.onClick);
