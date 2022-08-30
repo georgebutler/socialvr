@@ -9,7 +9,9 @@ AFRAME.registerComponent("socialvr-emoji-target", {
         console.log("[Social VR] Emoji Target - Initialized");
 
         this.el.setAttribute("tags", "singleActionButton: true");
+        this.el.setAttribute("is-remote-hover-target", "");
         this.el.setAttribute("css-class", "interactable");
+        this.el.setAttribute("hoverable-visuals", "");
 
         // hover state visual
         let hoverVisModel = window.APP.utils.emojis[0].model;
@@ -75,29 +77,29 @@ AFRAME.registerComponent("socialvr-emoji-target", {
 
             // Rainbow
 
-            let model = new URL("https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/Rainbow.glb", window.location).href;
-            let particleEmitterConfig = {
-              src: new URL("https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0000_Rainbow.png", window.location).href,
-              resolve: false,
-              particleCount: 20,
-              startSize: 0.01,
-              endSize: 0.2,
-              sizeRandomness: 0.05,
-              lifetime: 1,
-              lifetimeRandomness: 0.2,
-              ageRandomness: 1,
-              startVelocity: { x: 0, y: 0, z: 0 },
-              endVelocity: { x: 0, y: -2, z: 0 },
-              startOpacity: 1,
-              middleOpacity: 1,
-              endOpacity: 0
-            };
+            // let model = new URL("https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/Rainbow.glb", window.location).href;
+            // let particleEmitterConfig = {
+            //   src: new URL("https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0000_Rainbow.png", window.location).href,
+            //   resolve: false,
+            //   particleCount: 20,
+            //   startSize: 0.01,
+            //   endSize: 0.2,
+            //   sizeRandomness: 0.05,
+            //   lifetime: 1,
+            //   lifetimeRandomness: 0.2,
+            //   ageRandomness: 1,
+            //   startVelocity: { x: 0, y: 0, z: 0 },
+            //   endVelocity: { x: 0, y: -2, z: 0 },
+            //   startOpacity: 1,
+            //   middleOpacity: 1,
+            //   endOpacity: 0
+            // };
 
-            let button = window.APP.utils.addMedia(model, "#static-media", null, null, false, false, false, {}, false, this.system.hudAnchor).entity;
-            button.object3D.position.copy(new THREE.Vector3(0, buttonY, hudZ));
-            button.object3D.scale.copy(new THREE.Vector3(hudScale, hudScale, hudScale));
-            button.setAttribute("socialvr-emoji-button", { model: model, particleEmitterConfig: particleEmitterConfig, target: this.el });
-            button.className = "socialvr-emoji-button";
+            // let button = window.APP.utils.addMedia(model, "#static-media", null, null, false, false, false, {}, false, this.system.hudAnchor).entity;
+            // button.object3D.position.copy(new THREE.Vector3(0, buttonY, hudZ));
+            // button.object3D.scale.copy(new THREE.Vector3(hudScale, hudScale, hudScale));
+            // button.setAttribute("socialvr-emoji-button", { model: model, particleEmitterConfig: particleEmitterConfig, target: this.el });
+            // button.className = "socialvr-emoji-button";
 
             // Poop
 

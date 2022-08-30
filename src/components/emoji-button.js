@@ -17,9 +17,11 @@ AFRAME.registerComponent("socialvr-emoji-button", {
         console.log("[Social VR] Emoji Button Component - Initialized");
 
         this.el.setAttribute("tags", "singleActionButton: true");
+        this.el.setAttribute("is-remote-hover-target", "");
         this.el.setAttribute("css-class", "interactable");
-        this.el.object3D.addEventListener("interact", this.onClick.bind(this));
+        this.el.setAttribute("hoverable-visuals", "");
 
+        this.el.object3D.addEventListener("interact", this.onClick.bind(this));
         this.system.registerEmoji(this.el);
     },
 
