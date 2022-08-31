@@ -19,6 +19,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
                 icon: "../assets/images/1F4AC_color.png",
                 enabled: false,
                 showButton: true,
+                button_positon: new THREE.Vector3(-11.01, 1.2, 2.25),
                 elements: []
             },
             EMOJI: {
@@ -28,6 +29,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
                 icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/icons/toggle.png",
                 enabled: false,
                 showButton: true,
+                button_positon: new THREE.Vector3(-8.4, 1.2, -7.6),
                 elements: []
             },
             BUILDINGKIT: {
@@ -37,6 +39,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
                 icon: "../assets/images/1F48C_color.png",
                 enabled: false,
                 showButton: false,
+                button_positon: new THREE.Vector3(-11.01, -2.25, 1.17),
                 elements: []
             },
             BARGE: {
@@ -45,6 +48,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
                 icon: "../assets/images/26F5_color.png",
                 enabled: false,
                 showButton: false,
+                button_positon: new THREE.Vector3(-11.01, -2.25, 1.17),
                 elements: []
             },
             HALO: {
@@ -53,6 +57,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
                 icon: "../assets/images/1F607_color.png",
                 enabled: false,
                 showButton: false,
+                button_positon: new THREE.Vector3(-11.01, -2.25, 1.17),
                 elements: []
             }
         }
@@ -75,6 +80,21 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
         this.createButtons();
     },
 
+    createButtons: function () {
+        Object.keys(this.features).forEach(key => {
+            let feature = this.features[key];
+
+            if (feature.showButton) {
+                let button = document.createElement("a-entity");
+
+                button.setAttribute("socialvr-toolbox-dashboard-button", `icon: ${feature.icon}; radius: 0.1; color: ${feature.color}; emissiveColor: ${feature.emissiveColor}; featureName: ${feature.name};`);
+                button.setAttribute("position", feature.button_positon);
+                window.APP.scene.appendChild(button);
+            }
+        });
+    },
+
+    /*
     createButtons: function () {
         let featureCount = 0;
 
@@ -108,6 +128,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
             }
         });
     },
+    */
 
     initEmoji: function () {
         APP.componentRegistry["player-info"].forEach((playerInfo) => {
@@ -183,7 +204,8 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
 
         const cb = document.createElement("a-entity");
         cb.setAttribute("socialvr-speech", "");
-        cb.setAttribute("position", "0 1 0");
+        cb.setAttribute("position", "-12.9 1.2 2.2");
+        cb.object3D.position.set(-12.9, 1.2, 2.2);
         APP.scene.appendChild(cb);
 
         this.features.CONVERSATION_BALANCE.elements.push(cb);

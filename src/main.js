@@ -112,7 +112,6 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
     const dashboard = document.createElement("a-entity");
 
     dashboard.setAttribute("socialvr-toolbox-dashboard", "");
-    dashboard.setAttribute("position", "0 1.2 0");
     APP.scene.appendChild(dashboard);
 
     APP.hubChannel.presence.onJoin(() => {

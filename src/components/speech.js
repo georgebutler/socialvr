@@ -23,6 +23,12 @@ AFRAME.registerComponent("socialvr-speech", {
     this.continuousSpeechTime = 0;
     this.continuousSpeechLeniencyTime = 0;
 
+    // Mesh
+    //this.geometry = new THREE.SphereGeometry(0.05, 16, 8);
+    //this.material = new THREE.MeshStandardMaterial({ color: "#FF6782" });
+    //this.mesh = new THREE.Mesh(this.geometry, this.material);
+    //this.el.setObject3D("mesh", this.mesh);
+
     // Client
     this.el.addEventListener("clearSpeechEvent", this.clearSpeech.bind(this));
 
@@ -114,13 +120,13 @@ AFRAME.registerComponent("socialvr-speech", {
   
     // position the orb relative to the player and the center of the scene
     const centerObj = this.el;
-    const centerPos = centerObj ? centerObj.object3D.position.clone() : new THREE.Vector3(...ORB_CONTAINER_POS);
+    const centerPos = centerObj ? new THREE.Vector3() : new THREE.Vector3(...ORB_CONTAINER_POS);
     //centerPos.y = 1.5;
     centerPos.y = 0.5;
     const playerPos = speakerInfo.el.object3D.position.clone();
     //playerPos.y = 1.5;
     playerPos.y = 0.5;
-    const offset = new THREE.Vector3().subVectors(playerPos, centerPos).normalize();
+    const offset = new THREE.Vector3().subVectors(playerPos, this.el.object3D.position).normalize();
     const orbPos = new THREE.Vector3().addVectors(centerPos, offset);
 
     newOrb.object3D.position.copy(orbPos);

@@ -1112,6 +1112,12 @@
       this.continuousSpeechTime = 0;
       this.continuousSpeechLeniencyTime = 0;
 
+      // Mesh
+      //this.geometry = new THREE.SphereGeometry(0.05, 16, 8);
+      //this.material = new THREE.MeshStandardMaterial({ color: "#FF6782" });
+      //this.mesh = new THREE.Mesh(this.geometry, this.material);
+      //this.el.setObject3D("mesh", this.mesh);
+
       // Client
       this.el.addEventListener("clearSpeechEvent", this.clearSpeech.bind(this));
 
@@ -1203,13 +1209,13 @@
     
       // position the orb relative to the player and the center of the scene
       const centerObj = this.el;
-      const centerPos = centerObj ? centerObj.object3D.position.clone() : new THREE.Vector3(...ORB_CONTAINER_POS);
+      const centerPos = centerObj ? new THREE.Vector3() : new THREE.Vector3(...ORB_CONTAINER_POS);
       //centerPos.y = 1.5;
       centerPos.y = 0.5;
       const playerPos = speakerInfo.el.object3D.position.clone();
       //playerPos.y = 1.5;
       playerPos.y = 0.5;
-      const offset = new THREE.Vector3().subVectors(playerPos, centerPos).normalize();
+      const offset = new THREE.Vector3().subVectors(playerPos, this.el.object3D.position).normalize();
       const orbPos = new THREE.Vector3().addVectors(centerPos, offset);
 
       newOrb.object3D.position.copy(orbPos);
@@ -1340,6 +1346,7 @@
                   icon: "../assets/images/1F4AC_color.png",
                   enabled: false,
                   showButton: true,
+                  button_positon: new THREE.Vector3(-11.01, 1.2, 2.25),
                   elements: []
               },
               EMOJI: {
@@ -1349,6 +1356,7 @@
                   icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/icons/toggle.png",
                   enabled: false,
                   showButton: true,
+                  button_positon: new THREE.Vector3(-8.4, 1.2, -7.6),
                   elements: []
               },
               BUILDINGKIT: {
@@ -1358,6 +1366,7 @@
                   icon: "../assets/images/1F48C_color.png",
                   enabled: false,
                   showButton: false,
+                  button_positon: new THREE.Vector3(-11.01, -2.25, 1.17),
                   elements: []
               },
               BARGE: {
@@ -1366,6 +1375,7 @@
                   icon: "../assets/images/26F5_color.png",
                   enabled: false,
                   showButton: false,
+                  button_positon: new THREE.Vector3(-11.01, -2.25, 1.17),
                   elements: []
               },
               HALO: {
@@ -1374,6 +1384,7 @@
                   icon: "../assets/images/1F607_color.png",
                   enabled: false,
                   showButton: false,
+                  button_positon: new THREE.Vector3(-11.01, -2.25, 1.17),
                   elements: []
               }
           };
@@ -1397,6 +1408,21 @@
       },
 
       createButtons: function () {
+          Object.keys(this.features).forEach(key => {
+              let feature = this.features[key];
+
+              if (feature.showButton) {
+                  let button = document.createElement("a-entity");
+
+                  button.setAttribute("socialvr-toolbox-dashboard-button", `icon: ${feature.icon}; radius: 0.1; color: ${feature.color}; emissiveColor: ${feature.emissiveColor}; featureName: ${feature.name};`);
+                  button.setAttribute("position", feature.button_positon);
+                  window.APP.scene.appendChild(button);
+              }
+          });
+      },
+
+      /*
+      createButtons: function () {
           let featureCount = 0;
 
           // TODO: Maybe use a filter to avoid another loop? Not sure if it matters.
@@ -1404,9 +1430,9 @@
               let feature = this.features[key];
 
               if (feature.showButton) {
-                  featureCount++;
+                  featureCount++
               }
-          });
+          })
 
           const r = 0.5;
           let step = Math.PI * 2 / featureCount;
@@ -1429,6 +1455,7 @@
               }
           });
       },
+      */
 
       initEmoji: function () {
           APP.componentRegistry["player-info"].forEach((playerInfo) => {
@@ -1504,7 +1531,8 @@
 
           const cb = document.createElement("a-entity");
           cb.setAttribute("socialvr-speech", "");
-          cb.setAttribute("position", "0 1 0");
+          cb.setAttribute("position", "-12.9 1.2 2.2");
+          cb.object3D.position.set(-12.9, 1.2, 2.2);
           APP.scene.appendChild(cb);
 
           this.features.CONVERSATION_BALANCE.elements.push(cb);
@@ -1756,7 +1784,6 @@
       const dashboard = document.createElement("a-entity");
 
       dashboard.setAttribute("socialvr-toolbox-dashboard", "");
-      dashboard.setAttribute("position", "0 1.2 0");
       APP.scene.appendChild(dashboard);
 
       APP.hubChannel.presence.onJoin(() => {
