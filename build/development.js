@@ -1463,21 +1463,31 @@
     playerInfoToColor: function (playerInfo) {
       // keys are "Avatar listing sid"s from Approved Avatars admin tab
       const colorsByAvatar = {
-        "4rtlr6I": "#87cefa",
-        WPYjPmv: "#fa8eef",
+        "4rtlr6I": "#46C6FE",
+        WPYjPmv: "#E05CBB",
         "1S9JzDB": "#ff0000",
-        jZWyDGm: "#b1d07d",
+        jZWyDGm: "#43C53B",
         II9rXJD: "#fce903",
         HrP4pCf: "#5a005a",
         sEj4i7J: "#fc9303",
         vm3cTy7: "#020894",
-        Mih5HF7: "#222222"
+        Mih5HF7: "#222222",
+        U2E2EZi: "#8137D2",
+        xb4PVBE: "#F8F447",
+        Mqpw3tx: "#C73B3B",
+        RczWQgy: "#353533",
+        bs7pLac: "#23375C",
+        "4r1KpVk": "#FFB041"
       };
       
       const avatarURL = playerInfo.data.avatarSrc;
+
       for (const avatarSID of Object.keys(colorsByAvatar)) {
-        if (avatarURL.includes(avatarSID)) return colorsByAvatar[avatarSID];
+        if (avatarURL.includes(avatarSID)) {
+          return colorsByAvatar[avatarSID];
+        }
       }
+
       return this.sessionIDToColor(playerInfo.playerSessionId);
     },
 
