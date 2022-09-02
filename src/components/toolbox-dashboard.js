@@ -14,8 +14,8 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
         this.features = {
             CONVERSATION_BALANCE: {
                 name: "cb",
-                color: "#fff182",
-                emissiveColor: "#807100",
+                color: "#6BDE18",
+                emissiveColor: "#FF4444",
                 icon: "../assets/images/1F4AC_color.png",
                 enabled: false,
                 showButton: true,
@@ -24,8 +24,8 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
             },
             EMOJI: {
                 name: "emoji",
-                color: "#c4a3e6",
-                emissiveColor: "#8000ff",
+                color: "#6BDE18",
+                emissiveColor: "#FF4444",
                 icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/icons/toggle.png",
                 enabled: false,
                 showButton: true,
@@ -34,8 +34,8 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
             },
             BUILDINGKIT: {
                 name: "buildingkit",
-                color: "#91c7ff",
-                emissiveColor: "#002f61",
+                color: "#6BDE18",
+                emissiveColor: "#FF4444",
                 icon: "../assets/images/1F48C_color.png",
                 enabled: false,
                 showButton: false,
@@ -44,7 +44,8 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
             },
             BARGE: {
                 name: "barge",
-                color: "#FF0000",
+                color: "#6BDE18",
+                emissiveColor: "#FF4444",
                 icon: "../assets/images/26F5_color.png",
                 enabled: false,
                 showButton: false,
@@ -53,7 +54,8 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
             },
             HALO: {
                 name: "halo",
-                color: "#0000FF",
+                color: "#6BDE18",
+                emissiveColor: "#FF4444",
                 icon: "../assets/images/1F607_color.png",
                 enabled: false,
                 showButton: false,

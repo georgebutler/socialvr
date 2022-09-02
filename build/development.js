@@ -532,7 +532,8 @@
           window.APP.utils.GLTFModelPlus
               .loadModel(this.data.modelURL)
               .then((model) => {
-                  this.el.setObject3D("mesh", model.scene);
+                  const mesh = window.APP.utils.cloneObject3D(model.scene);
+                  this.el.setObject3D("mesh", mesh);
               })
               .finally(() => {
                   if (this.data.overrideSky) {
@@ -857,11 +858,19 @@
                 endOpacity: 0
               };
 
+              /*
               let button = window.APP.utils.addMedia(model, "#static-media", null, null, false, false, false, {}, false, this.system.hudAnchor).entity;
               button.object3D.position.copy(new THREE.Vector3(x, buttonY, hudZ));
               button.object3D.scale.copy(new THREE.Vector3(hudScale, hudScale, hudScale));
               button.setAttribute("socialvr-emoji-button", { model: model, particleEmitterConfig: particleEmitterConfig, target: this.el });
               button.className = "socialvr-emoji-button";
+              */
+
+              let button = document.createElement("a-entity");
+              button.setAttribute("socialvr-emoji-button", { model: model, particleEmitterConfig: particleEmitterConfig, target: this.el });
+              button.object3D.position.copy(new THREE.Vector3(x, buttonY, hudZ));
+              button.object3D.scale.copy(new THREE.Vector3(hudScale, hudScale, hudScale));
+              this.system.hudAnchor.appendChild(button);
 
               x += hudSpacing;
 
@@ -1139,13 +1148,42 @@
       init: function () {
           console.log("[Social VR] Emoji Button Component - Initialized");
 
-          this.el.setAttribute("tags", "singleActionButton: true");
-          this.el.setAttribute("is-remote-hover-target", "");
-          this.el.setAttribute("css-class", "interactable");
-          this.el.setAttribute("hoverable-visuals", "");
+          window.APP.utils.GLTFModelPlus
+              .loadModel(this.data.model)
+              .then((model) => {
+                  this.geometry = new THREE.CircleGeometry(0.4, 16);
+                  this.material = new THREE.MeshStandardMaterial({
+                      color: 0x333333,
+                      toneMapped: false,
+                      depthTest: false,
+                      depthWrite: false
+                  });
 
-          this.el.object3D.addEventListener("interact", this.onClick.bind(this));
-          this.system.registerEmoji(this.el);
+                  this.bg = new THREE.Mesh(this.geometry, this.material);
+                  this.el.setObject3D("background", this.bg);
+
+                  const mesh = window.APP.utils.cloneObject3D(model.scene);
+                  mesh.scale.set(1, 1, 1);
+                  mesh.matrixNeedsUpdate = true;
+                  this.el.setObject3D("mesh", mesh);
+                  this.el.object3D.traverse(x => {
+                      if (x.material) {
+                          x.material.depthTest = false;
+                          x.material.depthWrite = false;
+                      }
+                  });
+
+                  this.el.setAttribute("tags", "singleActionButton: true");
+                  this.el.setAttribute("is-remote-hover-target", "");
+                  this.el.setAttribute("css-class", "interactable");
+                  this.el.setAttribute("hoverable-visuals", "");
+
+                  this.el.object3D.addEventListener("interact", this.onClick.bind(this));
+                  this.system.registerEmoji(this.el);
+              })
+              .catch((e) => {
+                  console.error(e);
+              });
       },
 
       remove: function () {
@@ -1154,7 +1192,6 @@
 
       onClick: function () {
           sendEmoji(this.data.model, this.data.particleEmitterConfig, this.data.target);
-
           this.el.sceneEl.systems["socialvr-emoji-button"].unregister();
       }
   });
@@ -1507,7 +1544,7 @@
 
     spawnOrb: function (size, in_color) {
       const geometry = new THREE.CylinderGeometry(0.1, 0.1, size);
-      const material = new THREE.MeshStandardMaterial({ color: in_color || "yellow" });
+      const material = new THREE.MeshStandardMaterial({ color: in_color || "yellow", toneMapped: false });
       const mesh = new THREE.Mesh(geometry, material);
     
       // create, color, position, and scale the orb
@@ -1568,8 +1605,8 @@
           this.features = {
               CONVERSATION_BALANCE: {
                   name: "cb",
-                  color: "#fff182",
-                  emissiveColor: "#807100",
+                  color: "#6BDE18",
+                  emissiveColor: "#FF4444",
                   icon: "../assets/images/1F4AC_color.png",
                   enabled: false,
                   showButton: true,
@@ -1578,8 +1615,8 @@
               },
               EMOJI: {
                   name: "emoji",
-                  color: "#c4a3e6",
-                  emissiveColor: "#8000ff",
+                  color: "#6BDE18",
+                  emissiveColor: "#FF4444",
                   icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/icons/toggle.png",
                   enabled: false,
                   showButton: true,
@@ -1588,8 +1625,8 @@
               },
               BUILDINGKIT: {
                   name: "buildingkit",
-                  color: "#91c7ff",
-                  emissiveColor: "#002f61",
+                  color: "#6BDE18",
+                  emissiveColor: "#FF4444",
                   icon: "../assets/images/1F48C_color.png",
                   enabled: false,
                   showButton: false,
@@ -1598,7 +1635,8 @@
               },
               BARGE: {
                   name: "barge",
-                  color: "#FF0000",
+                  color: "#6BDE18",
+                  emissiveColor: "#FF4444",
                   icon: "../assets/images/26F5_color.png",
                   enabled: false,
                   showButton: false,
@@ -1607,7 +1645,8 @@
               },
               HALO: {
                   name: "halo",
-                  color: "#0000FF",
+                  color: "#6BDE18",
+                  emissiveColor: "#FF4444",
                   icon: "../assets/images/1F607_color.png",
                   enabled: false,
                   showButton: false,
@@ -1831,11 +1870,13 @@
               color: this.data.color,
               emissive: this.data.emissiveColor,
               roughness: 1,
+              toneMapped: false,
           });
           this.material_on = new THREE.MeshStandardMaterial({
               color: this.data.color,
               emissive: this.data.color,
               roughness: 1,
+              toneMapped: false,
           });
 
           this.state = STATE_OFF;

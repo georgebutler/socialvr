@@ -97,11 +97,19 @@ AFRAME.registerComponent("socialvr-emoji-target", {
               endOpacity: 0
             };
 
+            /*
             let button = window.APP.utils.addMedia(model, "#static-media", null, null, false, false, false, {}, false, this.system.hudAnchor).entity;
             button.object3D.position.copy(new THREE.Vector3(x, buttonY, hudZ));
             button.object3D.scale.copy(new THREE.Vector3(hudScale, hudScale, hudScale));
             button.setAttribute("socialvr-emoji-button", { model: model, particleEmitterConfig: particleEmitterConfig, target: this.el });
             button.className = "socialvr-emoji-button";
+            */
+
+            let button = document.createElement("a-entity");
+            button.setAttribute("socialvr-emoji-button", { model: model, particleEmitterConfig: particleEmitterConfig, target: this.el });
+            button.object3D.position.copy(new THREE.Vector3(x, buttonY, hudZ));
+            button.object3D.scale.copy(new THREE.Vector3(hudScale, hudScale, hudScale));
+            this.system.hudAnchor.appendChild(button);
 
             x += hudSpacing;
 

@@ -202,7 +202,7 @@ AFRAME.registerComponent("socialvr-speech", {
 
   spawnOrb: function (size, in_color) {
     const geometry = new THREE.CylinderGeometry(0.1, 0.1, size);
-    const material = new THREE.MeshStandardMaterial({ color: in_color || "yellow" });
+    const material = new THREE.MeshStandardMaterial({ color: in_color || "yellow", toneMapped: false });
     const mesh = new THREE.Mesh(geometry, material);
   
     // create, color, position, and scale the orb
