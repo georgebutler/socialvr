@@ -92,7 +92,7 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
 
     // World Mover
     const worldMover = document.createElement("a-entity");
-    worldMover.setAttribute("socialvr-world-mover", "");
+    worldMover.setAttribute("socialvr-world-mover", "overrideSky: true");
     window.APP.scene.appendChild(worldMover);
 
     // Data Logger
@@ -107,7 +107,22 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
 
     // Changes camera inspection system to show background, regardless of user preferences.
     window.APP.scene.systems["hubs-systems"].cameraSystem.lightsEnabled = true;
-  } else {
+  }
+  else if (document.querySelector(".workshopbargeglb")) {
+    // Button
+    let button = document.createElement("a-entity");
+    let position = new THREE.Vector3(0, 0.5, 0);
+
+    button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.3; color: #C576F6; eventName: startMovingWorld");
+    button.setAttribute("position", position);
+    window.APP.scene.appendChild(button);
+
+    // World Mover
+    const worldMover = document.createElement("a-entity");
+    worldMover.setAttribute("socialvr-world-mover", "modelURL: https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-6.glb");
+    window.APP.scene.appendChild(worldMover);
+  } 
+  else {
     // Dashboard
     const dashboard = document.createElement("a-entity");
 

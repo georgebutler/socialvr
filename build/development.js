@@ -478,6 +478,17 @@
   });
 
   AFRAME.registerComponent("socialvr-world-mover", {
+      schema: {
+          overrideSky: {
+              type: 'boolean',
+              default: false
+          },
+          modelURL: {
+              type: 'string',
+              default: "https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-7.glb"
+          }
+      },
+
       init: function () {
           this.moving = false;
           this.destinations = [];
@@ -493,7 +504,8 @@
               if (waypoint) {
                   this.destinations.push(waypoint.object3D.position.negate());
 
-                  console.log(`Waypoint [${i}]: ${waypoint.object3D.position}`);
+                  console.log(`Waypoint [${i}]`);
+                  console.log(waypoint.object3D.position);
               }
           }
 
@@ -518,34 +530,35 @@
 
           // Load environment
           window.APP.utils.GLTFModelPlus
-              .loadModel("https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-7.glb")
+              .loadModel(this.data.modelURL)
               .then((model) => {
                   this.el.setObject3D("mesh", model.scene);
               })
               .finally(() => {
-                  // Disable original sky
-                  const skybox = document.querySelector('[skybox=""]');
+                  if (this.data.overrideSky) {
+                      // Disable original sky
+                      const skybox = document.querySelector('[skybox=""]');
 
-                  if (skybox) {
-                      skybox.removeObject3D("mesh");
-                  }
+                      if (skybox) {
+                          skybox.removeObject3D("mesh");
+                      }
 
-                  // Create sky
-                  const sky = document.createElement("a-entity");
-                  const geometry = new THREE.SphereGeometry(8192, 8, 8);
-                  const material = new THREE.ShaderMaterial({
-                      side: THREE.BackSide,
-                      transparent: false,
-                      fog: false,
-                      uniforms: {
-                          color1: {
-                              value: new THREE.Color(0x87CEEB)
+                      // Create sky
+                      const sky = document.createElement("a-entity");
+                      const geometry = new THREE.SphereGeometry(8192, 8, 8);
+                      const material = new THREE.ShaderMaterial({
+                          side: THREE.BackSide,
+                          transparent: false,
+                          fog: false,
+                          uniforms: {
+                              color1: {
+                                  value: new THREE.Color(0x87CEEB)
+                              },
+                              color2: {
+                                  value: new THREE.Color(0xF0FFFF)
+                              }
                           },
-                          color2: {
-                              value: new THREE.Color(0xF0FFFF)
-                          }
-                      },
-                      vertexShader: `
+                          vertexShader: `
                         varying vec2 vUv;
                     
                         void main() {
@@ -553,7 +566,7 @@
                           gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
                         }
                       `,
-                      fragmentShader: `
+                          fragmentShader: `
                         uniform vec3 color1;
                         uniform vec3 color2;
                       
@@ -564,10 +577,11 @@
                           gl_FragColor = vec4(mix(color1, color2, vUv.y), 1.0);
                         }
                       `
-                  });
+                      });
 
-                  sky.setObject3D("mesh", new THREE.Mesh(geometry, material));
-                  this.el.sceneEl.appendChild(sky);
+                      sky.setObject3D("mesh", new THREE.Mesh(geometry, material));
+                      this.el.sceneEl.appendChild(sky);
+                  }
               })
               .catch((e) => {
                   console.error(e);
@@ -589,10 +603,10 @@
                   if (this.el.object3D.position.distanceToSquared(target) >= 1) {
                       this.direction.multiplyScalar(this.speed / this.direction.length() * (delta / 1000));
 
-                      this.el.setAttribute("position", { 
-                          x: this.el.object3D.position.x + this.direction.x, 
-                          y: this.el.object3D.position.y + this.direction.y, 
-                          z: this.el.object3D.position.z + this.direction.z, 
+                      this.el.setAttribute("position", {
+                          x: this.el.object3D.position.x + this.direction.x,
+                          y: this.el.object3D.position.y + this.direction.y,
+                          z: this.el.object3D.position.z + this.direction.z,
                       });
                   } else {
                       if (isNaN(this.lastCheck) || time >= this.lastCheck) {
@@ -1977,7 +1991,7 @@
 
       // World Mover
       const worldMover = document.createElement("a-entity");
-      worldMover.setAttribute("socialvr-world-mover", "");
+      worldMover.setAttribute("socialvr-world-mover", "overrideSky: true");
       window.APP.scene.appendChild(worldMover);
 
       // Data Logger
@@ -1992,7 +2006,22 @@
 
       // Changes camera inspection system to show background, regardless of user preferences.
       window.APP.scene.systems["hubs-systems"].cameraSystem.lightsEnabled = true;
-    } else {
+    }
+    else if (document.querySelector(".workshopbargeglb")) {
+      // Button
+      let button = document.createElement("a-entity");
+      let position = new THREE.Vector3(0, 0.5, 0);
+
+      button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.3; color: #C576F6; eventName: startMovingWorld");
+      button.setAttribute("position", position);
+      window.APP.scene.appendChild(button);
+
+      // World Mover
+      const worldMover = document.createElement("a-entity");
+      worldMover.setAttribute("socialvr-world-mover", "modelURL: https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-6.glb");
+      window.APP.scene.appendChild(worldMover);
+    } 
+    else {
       // Dashboard
       const dashboard = document.createElement("a-entity");
 
