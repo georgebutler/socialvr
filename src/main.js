@@ -111,15 +111,15 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
   else if (document.querySelector(".workshopbargeglb")) {
     // Button
     let button = document.createElement("a-entity");
-    let position = new THREE.Vector3(0, 0.5, 0);
+    let position = new THREE.Vector3(0, 0.65, 0);
 
-    button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.3; color: #C576F6; eventName: startMovingWorld");
+    button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.1; color: #C576F6; eventName: startMovingWorld");
     button.setAttribute("position", position);
     window.APP.scene.appendChild(button);
 
     // World Mover
     const worldMover = document.createElement("a-entity");
-    worldMover.setAttribute("socialvr-world-mover", "modelURL: https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-6.glb");
+    worldMover.setAttribute("socialvr-world-mover", "modelURL: https://statuesque-rugelach-4185bd.netlify.app/assets/meeting-hall-1.glb");
     window.APP.scene.appendChild(worldMover);
   } 
   else {
