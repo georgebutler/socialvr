@@ -1,0 +1,3838 @@
+{
+    "version": 9,
+    "root": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+    "metadata": {
+        "name": "Barge Master for Export 4-19-22",
+        "creatorAttribution": "",
+        "allowRemixing": false,
+        "allowPromotion": false
+    },
+    "entities": {
+        "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC": {
+            "name": "Barge Master for Export 4-19-22",
+            "components": [
+                {
+                    "name": "fog",
+                    "props": {
+                        "type": "disabled",
+                        "color": "#ffffff",
+                        "near": 0.0025,
+                        "far": 1000,
+                        "density": 0.0025
+                    }
+                },
+                {
+                    "name": "background",
+                    "props": {
+                        "color": "#aaaaaa"
+                    }
+                },
+                {
+                    "name": "audio-settings",
+                    "props": {
+                        "overrideAudioSettings": false,
+                        "avatarDistanceModel": "inverse",
+                        "avatarRolloffFactor": 2,
+                        "avatarRefDistance": 1,
+                        "avatarMaxDistance": 10000,
+                        "mediaVolume": 0.5,
+                        "mediaDistanceModel": "inverse",
+                        "mediaRolloffFactor": 1,
+                        "mediaRefDistance": 1,
+                        "mediaMaxDistance": 10000,
+                        "mediaConeInnerAngle": 360,
+                        "mediaConeOuterAngle": 0,
+                        "mediaConeOuterGain": 0
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {}
+                    }
+                }
+            ]
+        },
+        "E8D3129B-68BF-473F-92B9-6DAEC83514BB": {
+            "name": "Skybox",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 1,
+                            "y": 1,
+                            "z": 1
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "skybox",
+                    "props": {
+                        "turbidity": 6.09,
+                        "rayleigh": 0.82,
+                        "luminance": 1.055,
+                        "mieCoefficient": 0.043,
+                        "mieDirectionalG": 0.8,
+                        "inclination": 0.10471975511965978,
+                        "azimuth": 0.2333333333333333,
+                        "distance": 8000
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 0
+        },
+        "D8061EA5-F0C4-4452-ADFE-B179E2F20CB1": {
+            "name": "Directional Light",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": -1,
+                            "y": 3,
+                            "z": 0
+                        },
+                        "rotation": {
+                            "x": 1.0256860445560714,
+                            "y": 0.3490658503988659,
+                            "z": -0.4417643021697627
+                        },
+                        "scale": {
+                            "x": 0.9999999999999996,
+                            "y": 0.9999999999999998,
+                            "z": 0.9999999999999997
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "directional-light",
+                    "props": {
+                        "color": "#ffffff",
+                        "intensity": 3,
+                        "castShadow": true,
+                        "shadowMapResolution": [
+                            1024,
+                            1024
+                        ],
+                        "shadowBias": -0.000030000000000000004,
+                        "shadowRadius": 1
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 1
+        },
+        "2D490729-384D-49AF-A755-9D6F70D56325": {
+            "name": "Floor Plan",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 0,
+                            "y": 0.005,
+                            "z": 0
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 1,
+                            "y": 1,
+                            "z": 1
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "floor-plan",
+                    "props": {
+                        "autoCellSize": false,
+                        "cellSize": 0.1200000000000001,
+                        "cellHeight": 0.1,
+                        "agentHeight": 1.7,
+                        "agentRadius": 0.19999999999999996,
+                        "agentMaxClimb": 0.5,
+                        "agentMaxSlope": 60,
+                        "regionMinSize": 4,
+                        "maxTriangles": 1000,
+                        "forceTrimesh": false,
+                        "navMeshMode": "automatic",
+                        "navMeshSrc": ""
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 2
+        },
+        "81FA9F1C-012B-4BB6-8DB8-FCD66FFAAFA0": {
+            "name": "Ground Plane",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 0.5,
+                            "y": 0.2020000000008878,
+                            "z": -7
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 1,
+                            "y": 1,
+                            "z": 1
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "ground-plane",
+                    "props": {
+                        "color": "#5de336"
+                    }
+                },
+                {
+                    "name": "shadow",
+                    "props": {
+                        "receive": true
+                    }
+                },
+                {
+                    "name": "walkable",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 3
+        },
+        "BA0FA2ED-451E-4B64-9A85-91D99A0CFFA1": {
+            "name": "Scene Preview Camera",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 0,
+                            "y": 5,
+                            "z": 10
+                        },
+                        "rotation": {
+                            "x": -0.4636476090008061,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 1,
+                            "y": 0.9999999999999999,
+                            "z": 0.9999999999999999
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "scene-preview-camera",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 4
+        },
+        "C8ABBA42-56A1-46CA-ABFA-93EF67FDC15B": {
+            "name": "Spawner",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": -2.4363070659909183,
+                            "y": 1.3200000000000003,
+                            "z": -1.0601923788646683
+                        },
+                        "rotation": {
+                            "x": -3.141592653589793,
+                            "y": 2.2204460492503126e-16,
+                            "z": -3.141592653589793
+                        },
+                        "scale": {
+                            "x": 1.5000000000000002,
+                            "y": 1.5000000000000002,
+                            "z": 1.5000000000000002
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "spawner",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/b3c3e9a6-edde-4001-80b3-cd4a0760f94d.glb",
+                        "applyGravity": false
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 5
+        },
+        "968C9816-36C7-4416-9BF8-85C8CC7D2228": {
+            "name": "Spawner",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": -2.385922308261582,
+                            "y": 1.3200000000000003,
+                            "z": -2.3474613391789285
+                        },
+                        "rotation": {
+                            "x": -3.141592653589793,
+                            "y": 1.4802973661668753e-16,
+                            "z": -3.141592653589793
+                        },
+                        "scale": {
+                            "x": 1.5,
+                            "y": 1.5000000000000002,
+                            "z": 1.5
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "spawner",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/333f6a91-fe9e-4fc9-afb2-6fc3e0e7c82e.glb",
+                        "applyGravity": false
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 6
+        },
+        "FAA01686-5DB4-4F0B-A6B4-09FF4D58D9C1": {
+            "name": "Spawner",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": -2.3371143170299744,
+                            "y": 1.3200000000000003,
+                            "z": -4.951999259807437
+                        },
+                        "rotation": {
+                            "x": -3.141592653589793,
+                            "y": 1.480297366166875e-16,
+                            "z": -3.141592653589793
+                        },
+                        "scale": {
+                            "x": 1.5000000000000004,
+                            "y": 1.5000000000000002,
+                            "z": 1.5000000000000004
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "spawner",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/0a805033-fc12-4d09-80f9-3932bed0f86d.glb",
+                        "applyGravity": false
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 7
+        },
+        "F98F0E01-DBBD-435B-B1B3-E355FB0E400D": {
+            "name": "Spawner",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": -2.3874990747592717,
+                            "y": 1.3200000000000003,
+                            "z": -3.6647302994932103
+                        },
+                        "rotation": {
+                            "x": -3.141592653589793,
+                            "y": 1.480297366166875e-16,
+                            "z": -3.141592653589793
+                        },
+                        "scale": {
+                            "x": 1.5000000000000004,
+                            "y": 1.5000000000000002,
+                            "z": 1.5000000000000004
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "spawner",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/aa913fae-5e5e-4c67-b023-1405e8cd71f6.glb",
+                        "applyGravity": false
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 8
+        },
+        "A9C615F5-3C37-465D-A3FA-6B3BB5F74C41": {
+            "name": "Phase1v2.jpg",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": -0.7900000000000063,
+                            "y": 1.1000000000000003,
+                            "z": -9.809999999999972
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": -0.5235987755982988,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 1.9999999999999958,
+                            "y": 1.999999999999933,
+                            "z": 1.9999999999999967
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "image",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/c78c9738-44d9-42b6-9394-7fbc9db717fa.jpg",
+                        "controls": true,
+                        "alphaMode": "opaque",
+                        "alphaCutoff": 0.5,
+                        "projection": "flat"
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 9
+        },
+        "482FEF41-1B9A-4852-9E0D-32AE33D764AF": {
+            "name": "phase1_sign.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": -4.059999999999994,
+                            "y": 0.5,
+                            "z": -11.370000000000001
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": -0.5235987755982994,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 0.49999999999999917,
+                            "y": 0.5,
+                            "z": 0.49999999999999917
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "gltf-model",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/570557bb-b5d5-4199-bd36-495c7e0496ff.glb",
+                        "attribution": {
+                            "title": "phase1_sign"
+                        }
+                    }
+                },
+                {
+                    "name": "shadow",
+                    "props": {
+                        "cast": false,
+                        "receive": false
+                    }
+                },
+                {
+                    "name": "collidable",
+                    "props": {}
+                },
+                {
+                    "name": "combine",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 10
+        },
+        "AB112685-5001-43C2-AC6C-8F600E7ED635": {
+            "name": "phase2_sign.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 11.079999999999998,
+                            "y": 0.5,
+                            "z": -2.03
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0.08726646259971854,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 0.49999999999999967,
+                            "y": 0.5,
+                            "z": 0.49999999999999967
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "gltf-model",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/8b4e9bfe-f820-4317-a9b1-bdf74a04336c.glb",
+                        "attribution": {
+                            "title": "phase2_sign"
+                        }
+                    }
+                },
+                {
+                    "name": "shadow",
+                    "props": {
+                        "cast": false,
+                        "receive": false
+                    }
+                },
+                {
+                    "name": "collidable",
+                    "props": {}
+                },
+                {
+                    "name": "combine",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 11
+        },
+        "D3A1DA6D-0E7F-4ED2-AE63-BC96DA48E04E": {
+            "name": "phase3_sign.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": -3.8000000000000007,
+                            "y": 0.5,
+                            "z": 5.7
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": -1.308996938995751,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 0.49999999999999983,
+                            "y": 0.5,
+                            "z": 0.49999999999999983
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "gltf-model",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/f5abadc2-9cce-46c7-8712-b286e6eac5ca.glb",
+                        "attribution": {
+                            "title": "phase3_sign"
+                        }
+                    }
+                },
+                {
+                    "name": "shadow",
+                    "props": {
+                        "cast": false,
+                        "receive": false
+                    }
+                },
+                {
+                    "name": "collidable",
+                    "props": {}
+                },
+                {
+                    "name": "combine",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 12
+        },
+        "EED20559-29DC-43C7-83DE-DF080BDFBD39": {
+            "name": "trough_3.1 phase1",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 3.2299999999999485,
+                            "y": 0.49999999999999994,
+                            "z": -4.789999999999982
+                        },
+                        "rotation": {
+                            "x": -5.916456789157572e-31,
+                            "y": 1.047197551196596,
+                            "z": -3.8285686989269415e-16
+                        },
+                        "scale": {
+                            "x": 0.2772000000000005,
+                            "y": 0.2772000000000004,
+                            "z": 0.13860000000000025
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "gltf-model",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/06018c31-4bf6-485b-af2f-765f17cd550a.glb",
+                        "attribution": {
+                            "title": "trough_3"
+                        }
+                    }
+                },
+                {
+                    "name": "shadow",
+                    "props": {
+                        "cast": false,
+                        "receive": false
+                    }
+                },
+                {
+                    "name": "collidable",
+                    "props": {}
+                },
+                {
+                    "name": "walkable",
+                    "props": {}
+                },
+                {
+                    "name": "combine",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 13
+        },
+        "C3BC9256-ED50-400A-9FEA-D055CFE25ABE": {
+            "name": "trough_3 phase1",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 5.849999999999948,
+                            "y": 0.5999999999999999,
+                            "z": -3.219999999999981
+                        },
+                        "rotation": {
+                            "x": -5.916456789157572e-31,
+                            "y": 1.047197551196596,
+                            "z": -3.8285686989269415e-16
+                        },
+                        "scale": {
+                            "x": 0.2772000000000005,
+                            "y": 0.2772000000000004,
+                            "z": 0.13860000000000025
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "gltf-model",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/06018c31-4bf6-485b-af2f-765f17cd550a.glb",
+                        "attribution": {
+                            "title": "trough_3"
+                        }
+                    }
+                },
+                {
+                    "name": "shadow",
+                    "props": {
+                        "cast": false,
+                        "receive": false
+                    }
+                },
+                {
+                    "name": "collidable",
+                    "props": {}
+                },
+                {
+                    "name": "walkable",
+                    "props": {}
+                },
+                {
+                    "name": "combine",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 14
+        },
+        "8468DAD7-1E8E-4AD7-9882-4F6D47164A25": {
+            "name": "trough_3.2 phase1",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": -0.1300000000000514,
+                            "y": 0.49999999999999994,
+                            "z": -6.759999999999978
+                        },
+                        "rotation": {
+                            "x": -5.916456789157572e-31,
+                            "y": 1.047197551196596,
+                            "z": -3.8285686989269415e-16
+                        },
+                        "scale": {
+                            "x": 0.2772000000000005,
+                            "y": 0.2772000000000004,
+                            "z": 0.13860000000000025
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "gltf-model",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/06018c31-4bf6-485b-af2f-765f17cd550a.glb",
+                        "attribution": {
+                            "title": "trough_3"
+                        }
+                    }
+                },
+                {
+                    "name": "shadow",
+                    "props": {
+                        "cast": false,
+                        "receive": false
+                    }
+                },
+                {
+                    "name": "collidable",
+                    "props": {}
+                },
+                {
+                    "name": "walkable",
+                    "props": {}
+                },
+                {
+                    "name": "combine",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 15
+        },
+        "64A0D6CE-DD69-4E25-9667-38E8D0D796F7": {
+            "name": "ksa_ranking_troughs phase1",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 3.9999999999999476,
+                            "y": -0.20000000000000012,
+                            "z": -1.999999999999979
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 0.9999999999999998,
+                            "y": 1,
+                            "z": 0.9999999999999998
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "group",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 16
+        },
+        "EFD3C7DF-5885-4354-B600-8B4B733D6F21": {
+            "name": "KSARankingFrames ",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 3.999999999999999,
+                            "y": -0.5,
+                            "z": -1.9999999999999998
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 0.9999999999999998,
+                            "y": 1,
+                            "z": 0.9999999999999998
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "group",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 17
+        },
+        "D9D1FAEE-148B-4C73-8AEF-167A64503B4F": {
+            "name": "podiums phase2",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 3.999999999999999,
+                            "y": -0.5,
+                            "z": -1.9999999999999998
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 0.9999999999999998,
+                            "y": 1,
+                            "z": 0.9999999999999998
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "group",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 18
+        },
+        "3BF4C8A9-5F87-44A4-8506-DF1C045193C8": {
+            "name": "Candidate Summaries",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 0.8621531632693936,
+                            "y": -0.5,
+                            "z": -2.6646728291955055
+                        },
+                        "rotation": {
+                            "x": -3.141592653589793,
+                            "y": 1.0646508437165247,
+                            "z": 3.141592653589793
+                        },
+                        "scale": {
+                            "x": 1.000000000000008,
+                            "y": 1,
+                            "z": 1.000000000000008
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "group",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 19
+        },
+        "B6FBD829-8510-438C-976A-0D8E2EA52ABD": {
+            "name": "phaseInstructions",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 3.999999999999999,
+                            "y": -0.5,
+                            "z": -1.9999999999999998
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 0.9999999999999998,
+                            "y": 1,
+                            "z": 0.9999999999999998
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "group",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 20
+        },
+        "55BB8699-1347-408B-87D0-E41B77F66BB6": {
+            "name": "Phase2v2.jpg",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 9.009999999999994,
+                            "y": 1.1000000000000003,
+                            "z": -0.5500000000000012
+                        },
+                        "rotation": {
+                            "x": 3.141592653589793,
+                            "y": -0.5235987755982986,
+                            "z": 3.141592653589793
+                        },
+                        "scale": {
+                            "x": 2.0000000000000115,
+                            "y": 2.0000000000000004,
+                            "z": 2.0000000000000115
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "image",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/7e27276d-5f7a-48f1-9b10-2641306d06d6.jpg",
+                        "controls": true,
+                        "alphaMode": "opaque",
+                        "alphaCutoff": 0.5,
+                        "projection": "flat"
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 21
+        },
+        "E335658A-CB40-4499-8A7E-28037EFE70FE": {
+            "name": "Phase3v2.jpg",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": -4.099999999999994,
+                            "y": 1.2000000000000006,
+                            "z": 3.725746413540906
+                        },
+                        "rotation": {
+                            "x": 1.6407156042244635e-17,
+                            "y": 1.5707963267948966,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 1.9999999999999987,
+                            "y": 1.9999999999999996,
+                            "z": 1.9999999999999987
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "image",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/f620165a-26ce-4b75-b086-32465a322d73.jpg",
+                        "controls": true,
+                        "alphaMode": "opaque",
+                        "alphaCutoff": 0.5,
+                        "projection": "flat"
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 22
+        },
+        "E18D43F8-D096-4F80-B548-2B944411637D": {
+            "name": "Introductionv2.jpg",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": -1.970000000000002,
+                            "y": 1.1000000000000003,
+                            "z": -7.1099999999999834
+                        },
+                        "rotation": {
+                            "x": 3.141592653589793,
+                            "y": -1.2252211349000142,
+                            "z": 3.141592653589793
+                        },
+                        "scale": {
+                            "x": 2.000000000000005,
+                            "y": 2,
+                            "z": 2.000000000000005
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "image",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/1aecb635-4678-4dc6-a6e5-b0163d340f17.jpg",
+                        "controls": true,
+                        "alphaMode": "opaque",
+                        "alphaCutoff": 0.5,
+                        "projection": "flat"
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 23
+        },
+        "9C6EE4DC-8BFC-442D-8245-1022D6297EEB": {
+            "name": "candidate_frame.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": -3.6999999999999407,
+                            "y": 1.3000000000000003,
+                            "z": -5.299999999999972
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 1.4802973661668773e-16,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 1.499999999999998,
+                            "y": 1.5000000000000002,
+                            "z": 1.499999999999998
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "gltf-model",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/a3f8cf15-9430-49fd-9f3f-33b2a8d2deaf.glb",
+                        "attribution": {
+                            "title": "candidate_frame"
+                        }
+                    }
+                },
+                {
+                    "name": "shadow",
+                    "props": {
+                        "cast": false,
+                        "receive": false
+                    }
+                },
+                {
+                    "name": "collidable",
+                    "props": {}
+                },
+                {
+                    "name": "combine",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 24
+        },
+        "E376A433-2284-4C01-B3F0-155F8907F649": {
+            "name": "Team1",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 3.999999999999999,
+                            "y": -0.5,
+                            "z": -1.9999999999999998
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 0.9999999999999998,
+                            "y": 1,
+                            "z": 0.9999999999999998
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "group",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 25
+        },
+        "37BD0492-D726-4A33-975C-D445EF27A5A0": {
+            "name": "Team2",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 3.999999999999999,
+                            "y": -0.5,
+                            "z": -1.9999999999999998
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 0.9999999999999998,
+                            "y": 1,
+                            "z": 0.9999999999999998
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "group",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 26
+        },
+        "45EE80EE-14A6-4CAF-AB9D-D2DF0C4D5429": {
+            "name": "Team3",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 3.999999999999999,
+                            "y": -0.5,
+                            "z": -1.9999999999999998
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 0.9999999999999998,
+                            "y": 1,
+                            "z": 0.9999999999999998
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "group",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 27
+        },
+        "2A0BF124-7346-4E83-A89C-78EF2972E493": {
+            "name": "KSA_ranking_frame.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 6.789999999999896,
+                            "y": 1.400000000000001,
+                            "z": -5.539999999999961
+                        },
+                        "rotation": {
+                            "x": -3.141592653589793,
+                            "y": -1.0471975722700222,
+                            "z": -3.141592653589793
+                        },
+                        "scale": {
+                            "x": 0.49999999999999994,
+                            "y": 0.5,
+                            "z": 0.49999999999999994
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "gltf-model",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/3f1ce9c1-babc-4d09-a25b-aa9db7ad352e.glb",
+                        "attribution": {
+                            "title": "KSA_ranking_frame"
+                        }
+                    }
+                },
+                {
+                    "name": "shadow",
+                    "props": {
+                        "cast": false,
+                        "receive": false
+                    }
+                },
+                {
+                    "name": "collidable",
+                    "props": {}
+                },
+                {
+                    "name": "combine",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 28
+        },
+        "A5400DCC-D70E-4AF4-8B2C-4BC5FA1DA841": {
+            "name": "KSA_ranking_frame.glb 1",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 4.339999999999924,
+                            "y": 1.400000000000001,
+                            "z": -6.929999999999934
+                        },
+                        "rotation": {
+                            "x": -3.141592653589793,
+                            "y": -1.0471975722700222,
+                            "z": -3.141592653589793
+                        },
+                        "scale": {
+                            "x": 0.5000000000000007,
+                            "y": 0.5,
+                            "z": 0.5000000000000007
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "gltf-model",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/bf39f8f6-a998-4145-83c6-2abf5dfd2fe1.glb",
+                        "attribution": {
+                            "title": "KSA_ranking_frame"
+                        }
+                    }
+                },
+                {
+                    "name": "shadow",
+                    "props": {
+                        "cast": false,
+                        "receive": false
+                    }
+                },
+                {
+                    "name": "collidable",
+                    "props": {}
+                },
+                {
+                    "name": "combine",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 29
+        },
+        "9E632834-47B0-4E9B-AF81-ABDA44090089": {
+            "name": "KSA_ranking_frame.glb 2",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 1.8899999999999313,
+                            "y": 1.400000000000001,
+                            "z": -8.289999999999889
+                        },
+                        "rotation": {
+                            "x": -3.141592653589793,
+                            "y": -1.0471975722700222,
+                            "z": -3.141592653589793
+                        },
+                        "scale": {
+                            "x": 0.49999999999999994,
+                            "y": 0.5,
+                            "z": 0.49999999999999994
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "gltf-model",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/75e5f836-9dbc-46df-831a-b6b20bf35da0.glb",
+                        "attribution": {
+                            "title": "KSA_ranking_frame"
+                        }
+                    }
+                },
+                {
+                    "name": "shadow",
+                    "props": {
+                        "cast": false,
+                        "receive": false
+                    }
+                },
+                {
+                    "name": "collidable",
+                    "props": {}
+                },
+                {
+                    "name": "combine",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 30
+        },
+        "914F03E5-83AD-4BCC-B950-05114F881B89": {
+            "name": "ReferencesT1CA.jpg.jpg",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 6.96,
+                            "y": 1.8999999999999997,
+                            "z": 0.11999999999999947
+                        },
+                        "rotation": {
+                            "x": 6.889585735359771e-17,
+                            "y": -1.0122909661567128,
+                            "z": 4.4163475377071788e-16
+                        },
+                        "scale": {
+                            "x": 0.5000000000000001,
+                            "y": 0.4999999999999945,
+                            "z": 0.4999999999999992
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "image",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/a00adbd7-167d-4dac-8902-7d806da26ea3.jpg",
+                        "controls": true,
+                        "alphaMode": "opaque",
+                        "alphaCutoff": 0.5,
+                        "projection": "flat"
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 31
+        },
+        "0E8671DF-6CD2-48A0-A722-32B7E28A2684": {
+            "name": "ReferencesT1CB.jpg",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 6.970000000000001,
+                            "y": 1.91,
+                            "z": 0.5699999999999994
+                        },
+                        "rotation": {
+                            "x": 3.141592653589793,
+                            "y": -1.0122909661567112,
+                            "z": 3.141592653589793
+                        },
+                        "scale": {
+                            "x": 0.5000000000000043,
+                            "y": 0.4999999999999708,
+                            "z": 0.5000000000000082
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "image",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/73e3dac5-597f-4e18-992c-e8702d8c8a8c.jpg",
+                        "controls": true,
+                        "alphaMode": "opaque",
+                        "alphaCutoff": 0.5,
+                        "projection": "flat"
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 32
+        },
+        "D52A14E9-7978-4F87-B194-66457A0FDEFB": {
+            "name": "ReferencesT1CC.jpg",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 6.630000000000001,
+                            "y": 1.9,
+                            "z": 0.77
+                        },
+                        "rotation": {
+                            "x": -3.141592653589793,
+                            "y": 3.247075178398492e-33,
+                            "z": -3.141592653589793
+                        },
+                        "scale": {
+                            "x": 0.49999999999998623,
+                            "y": 0.5,
+                            "z": 0.49999999999998623
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "image",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/5596ceb9-724d-4109-be59-fabf6177f973.jpg",
+                        "controls": true,
+                        "alphaMode": "opaque",
+                        "alphaCutoff": 0.5,
+                        "projection": "flat"
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 33
+        },
+        "039EB18C-5AB4-48B6-8D7A-6A2F2047B2CA": {
+            "name": "ReferencesT1CD.jpg.jpg",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 6.1899999999999995,
+                            "y": 1.9,
+                            "z": 0.5299999999999997
+                        },
+                        "rotation": {
+                            "x": 3.141592653589793,
+                            "y": 1.0122909661567132,
+                            "z": 3.141592653589793
+                        },
+                        "scale": {
+                            "x": 0.5000000000000115,
+                            "y": 0.49999999999999223,
+                            "z": 0.5000000000000128
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "image",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/ecf557c3-3d86-410e-895b-bc65021114fe.jpg",
+                        "controls": true,
+                        "alphaMode": "opaque",
+                        "alphaCutoff": 0.5,
+                        "projection": "flat"
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 34
+        },
+        "6166C5E5-10FF-4A99-81F9-B0DFE27DCFBD": {
+            "name": "podium_yellow.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 6.58,
+                            "y": 0.5,
+                            "z": 0.3599999999999999
+                        },
+                        "rotation": {
+                            "x": -3.141592653589793,
+                            "y": -0.5235987755982946,
+                            "z": -3.141592653589793
+                        },
+                        "scale": {
+                            "x": 1.0000000000000002,
+                            "y": 1,
+                            "z": 1.0000000000000002
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "gltf-model",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/437857e2-7104-45a3-a23f-921d292f96ee.glb",
+                        "attribution": {
+                            "title": "podium_yellow"
+                        }
+                    }
+                },
+                {
+                    "name": "shadow",
+                    "props": {
+                        "cast": false,
+                        "receive": false
+                    }
+                },
+                {
+                    "name": "collidable",
+                    "props": {}
+                },
+                {
+                    "name": "combine",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 35
+        },
+        "68C3F8F0-C2A5-46FA-8EF3-DA3A7B4E2D60": {
+            "name": "ReferencesT2CA.jpg",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 4.4399999999999995,
+                            "y": 1.8900000000000001,
+                            "z": 1.5700000000000005
+                        },
+                        "rotation": {
+                            "x": 8.158507188549758e-17,
+                            "y": -1.0122909661567068,
+                            "z": 1.1555031886973419e-16
+                        },
+                        "scale": {
+                            "x": 0.49999999999999795,
+                            "y": 0.49999999999999867,
+                            "z": 0.4999999999999999
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "image",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/35ae9ddb-d813-4d48-a446-c183a6eb8de8.jpg",
+                        "controls": true,
+                        "alphaMode": "opaque",
+                        "alphaCutoff": 0.5,
+                        "projection": "flat"
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 36
+        },
+        "F9C1E771-9EDF-4305-A992-3597ADFA4584": {
+            "name": "ReferencesT2CB.jpg",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 4.47,
+                            "y": 1.85,
+                            "z": 2.0200000000000005
+                        },
+                        "rotation": {
+                            "x": 3.141592653589793,
+                            "y": -1.0122909661567112,
+                            "z": 3.141592653589793
+                        },
+                        "scale": {
+                            "x": 0.5000000000000002,
+                            "y": 0.4999999999999998,
+                            "z": 0.5000000000000001
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "image",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/81563cce-de17-4bb2-8c72-b2aed4748dd3.jpg",
+                        "controls": true,
+                        "alphaMode": "opaque",
+                        "alphaCutoff": 0.5,
+                        "projection": "flat"
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 37
+        },
+        "4D203752-CC0D-463A-8BF7-AF92CAE49392": {
+            "name": "ReferencesT2CC.jpg",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 4.1499999999999995,
+                            "y": 1.83,
+                            "z": 2.2400000000000007
+                        },
+                        "rotation": {
+                            "x": 3.141592653589793,
+                            "y": 3.053113317719151e-16,
+                            "z": 3.141592653589793
+                        },
+                        "scale": {
+                            "x": 0.5000000000000063,
+                            "y": 0.49999999999999517,
+                            "z": 0.5000000000000031
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "image",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/f5c973bb-7caa-464d-b2c1-af307591bbe1.jpg",
+                        "controls": true,
+                        "alphaMode": "opaque",
+                        "alphaCutoff": 0.5,
+                        "projection": "flat"
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 38
+        },
+        "BC8C7554-6097-4DBE-B048-950355DD4575": {
+            "name": "ReferencesT2CD.jpg.jpg",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 3.769999999999999,
+                            "y": 1.9000000000000004,
+                            "z": 2.0300000000000002
+                        },
+                        "rotation": {
+                            "x": 3.141592653589793,
+                            "y": 1.0122909661567157,
+                            "z": 3.1415926535897927
+                        },
+                        "scale": {
+                            "x": 0.5000000000000051,
+                            "y": 0.4999999999999987,
+                            "z": 0.5000000000000072
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "image",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/c8f348e1-5bf2-4cf4-8d57-35c3ad622383.jpg",
+                        "controls": true,
+                        "alphaMode": "opaque",
+                        "alphaCutoff": 0.5,
+                        "projection": "flat"
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 39
+        },
+        "AF46C621-1841-4F4A-BE6F-F56EE9DBDB96": {
+            "name": "podium_white.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 4.1,
+                            "y": 0.5,
+                            "z": 1.8200000000000003
+                        },
+                        "rotation": {
+                            "x": -3.141592653589793,
+                            "y": -0.5951572749300624,
+                            "z": -3.141592653589793
+                        },
+                        "scale": {
+                            "x": 0.9999999999999987,
+                            "y": 1,
+                            "z": 0.9999999999999987
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "gltf-model",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/98ee5325-f9d9-4e23-b7c9-ced6c4b207f8.glb",
+                        "attribution": {
+                            "title": "podium_white"
+                        }
+                    }
+                },
+                {
+                    "name": "shadow",
+                    "props": {
+                        "cast": false,
+                        "receive": false
+                    }
+                },
+                {
+                    "name": "collidable",
+                    "props": {}
+                },
+                {
+                    "name": "combine",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 40
+        },
+        "766C2B80-CAB0-46B2-9749-7C773193BE5F": {
+            "name": "ReferencesT3CA.jpg",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 1.4899999999999998,
+                            "y": 1.9300000000000002,
+                            "z": 3.1199999999999997
+                        },
+                        "rotation": {
+                            "x": 8.158507188550913e-17,
+                            "y": -1.0122909661567097,
+                            "z": 1.1555031886974402e-16
+                        },
+                        "scale": {
+                            "x": 0.4999999999999994,
+                            "y": 0.4999999999999995,
+                            "z": 0.4999999999999993
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "image",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/d7f34667-ee15-4e0c-84e2-058c7ea5f6d5.jpg",
+                        "controls": true,
+                        "alphaMode": "opaque",
+                        "alphaCutoff": 0.5,
+                        "projection": "flat"
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 41
+        },
+        "9103FCD4-7CE2-4AC5-964B-F3B3FE11172E": {
+            "name": "ReferencesT3CB.jpg",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 1.5699999999999998,
+                            "y": 1.9100000000000001,
+                            "z": 3.56
+                        },
+                        "rotation": {
+                            "x": 3.141592653589793,
+                            "y": -1.0122909661567112,
+                            "z": 3.141592653589793
+                        },
+                        "scale": {
+                            "x": 0.5000000000000039,
+                            "y": 0.49999999999999833,
+                            "z": 0.500000000000006
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "image",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/eeba7b5b-94e0-426a-aa6b-0ef189791ab4.jpg",
+                        "controls": true,
+                        "alphaMode": "opaque",
+                        "alphaCutoff": 0.5,
+                        "projection": "flat"
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 42
+        },
+        "5AFA8473-3582-4550-94F0-AD4DE69D8656": {
+            "name": "ReferencesT3CC.jpg",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 1.21,
+                            "y": 1.9,
+                            "z": 3.7800000000000002
+                        },
+                        "rotation": {
+                            "x": 3.141592653589793,
+                            "y": 1.1102230246251192e-16,
+                            "z": 3.141592653589793
+                        },
+                        "scale": {
+                            "x": 0.5000000000000169,
+                            "y": 0.4999999999999978,
+                            "z": 0.5000000000000169
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "image",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/c84646f4-156a-438d-a2df-2600a1f4dc39.jpg",
+                        "controls": true,
+                        "alphaMode": "opaque",
+                        "alphaCutoff": 0.5,
+                        "projection": "flat"
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 43
+        },
+        "DAA9C981-730B-466D-9AA5-8B1DBF954F6C": {
+            "name": "ReferencesT3CD.jpg.jpg",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 0.7800000000000009,
+                            "y": 1.8399999999999999,
+                            "z": 3.4899999999999998
+                        },
+                        "rotation": {
+                            "x": 3.141592653589793,
+                            "y": 1.0122909661567125,
+                            "z": 3.1415926535897927
+                        },
+                        "scale": {
+                            "x": 0.5000000000000159,
+                            "y": 0.4999999999999958,
+                            "z": 0.500000000000016
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "image",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/a3430f18-ae08-4cd4-9d37-767cba1e43e2.jpg",
+                        "controls": true,
+                        "alphaMode": "opaque",
+                        "alphaCutoff": 0.5,
+                        "projection": "flat"
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 44
+        },
+        "60DB3AB5-AA61-4AC9-A3DA-A5C1134C4B2C": {
+            "name": "podium_black.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 1.1999999999999997,
+                            "y": 0.5,
+                            "z": 3.4000000000000004
+                        },
+                        "rotation": {
+                            "x": -3.141592653589793,
+                            "y": -0.6736970912698118,
+                            "z": -3.141592653589793
+                        },
+                        "scale": {
+                            "x": 1,
+                            "y": 1,
+                            "z": 1
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "gltf-model",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/9bfa272a-8c5d-4198-96b6-648b891d8ff2.glb",
+                        "attribution": {
+                            "title": "podium_black"
+                        }
+                    }
+                },
+                {
+                    "name": "shadow",
+                    "props": {
+                        "cast": false,
+                        "receive": false
+                    }
+                },
+                {
+                    "name": "collidable",
+                    "props": {}
+                },
+                {
+                    "name": "combine",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 45
+        },
+        "DEAAB49E-58FD-4169-8EFF-5C79795AD358": {
+            "name": "Geography_ranked_block.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 0.05999999999994854,
+                            "y": 1.2999999999999998,
+                            "z": -6.629999999999979
+                        },
+                        "rotation": {
+                            "x": 1.5707963267948963,
+                            "y": 0,
+                            "z": 1.5707963267948963
+                        },
+                        "scale": {
+                            "x": 0.10000000000000006,
+                            "y": 0.10000000000000006,
+                            "z": 0.10000000000000009
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "spawner",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/ae06eebb-9fc4-4310-a4dd-5286ebcb3ffd.glb",
+                        "applyGravity": false
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 46
+        },
+        "93E64023-7A68-460C-9969-41A028542A56": {
+            "name": "Customer_service_ranked_block.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": -0.3381327121472708,
+                            "y": 1.2999999999999998,
+                            "z": -7.0099999999999785
+                        },
+                        "rotation": {
+                            "x": 1.5707963267948963,
+                            "y": 5.551115123125783e-17,
+                            "z": 1.5707963267948963
+                        },
+                        "scale": {
+                            "x": 0.10000000000000037,
+                            "y": 0.10000000000000006,
+                            "z": 0.1000000000000004
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "spawner",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/1c852441-a9a5-468b-b567-65a9b3f80006.glb",
+                        "applyGravity": false
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 47
+        },
+        "F14BC783-A389-446C-9E7C-E9CFE7EEA0B1": {
+            "name": "physical_dexterity_ranked_block.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 2.929999999999948,
+                            "y": 1.3399999999999999,
+                            "z": -5.099999999999987
+                        },
+                        "rotation": {
+                            "x": 1.5707963267948963,
+                            "y": 0,
+                            "z": 1.5707963267948963
+                        },
+                        "scale": {
+                            "x": 0.10000000000000116,
+                            "y": 0.09999999999999848,
+                            "z": 0.10000000000000066
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "spawner",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/baa69f70-0418-4175-a160-507e4bdc8443.glb",
+                        "applyGravity": false
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 48
+        },
+        "11B99AAF-DBFA-4E94-B5E4-E681ADC8877F": {
+            "name": "auditory_attention_ranked_block.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 2.7399999999999487,
+                            "y": 1.3399999999999999,
+                            "z": -5.239999999999984
+                        },
+                        "rotation": {
+                            "x": 1.5707963267948963,
+                            "y": 0,
+                            "z": 1.5707963267948963
+                        },
+                        "scale": {
+                            "x": 0.09999999999999996,
+                            "y": 0.1,
+                            "z": 0.09999999999999994
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "spawner",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/1a2ed09b-f5c7-4945-8d1a-a1413cb3394a.glb",
+                        "applyGravity": false
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 49
+        },
+        "D62E929E-9877-441A-99D2-E9DDED63B501": {
+            "name": "operations_ranked_block.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 5.879999999999948,
+                            "y": 1.2999999999999998,
+                            "z": -3.319999999999979
+                        },
+                        "rotation": {
+                            "x": 1.5707963267948963,
+                            "y": 0,
+                            "z": 1.5707963267948963
+                        },
+                        "scale": {
+                            "x": 0.10000000000000006,
+                            "y": 0.10000000000000007,
+                            "z": 0.10000000000000009
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "spawner",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/5cc9e433-ec52-428d-b744-e5d40049e151.glb",
+                        "applyGravity": false
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 50
+        },
+        "C575FFFE-6F03-4BC5-9B1E-9DD74A4806CB": {
+            "name": "Public_safety_ranked_block.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 0.3899999999999486,
+                            "y": 1.2999999999999998,
+                            "z": -6.572102446175301
+                        },
+                        "rotation": {
+                            "x": 1.5707963267948961,
+                            "y": -1.1102230246251565e-16,
+                            "z": 1.5707963267948963
+                        },
+                        "scale": {
+                            "x": 0.10000000000000021,
+                            "y": 0.10000000000000006,
+                            "z": 0.10000000000000024
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "spawner",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/5b19b8ed-32f7-4669-b42c-0b871659bb97.glb",
+                        "applyGravity": false
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 51
+        },
+        "5D69110D-A7C8-4AA9-8F49-7F69ED301934": {
+            "name": "Transportation_ranked_block.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": -0.7400000000000517,
+                            "y": 1.2999999999999998,
+                            "z": -7.129999999999979
+                        },
+                        "rotation": {
+                            "x": 1.5707963267948963,
+                            "y": 0,
+                            "z": 1.5707963267948963
+                        },
+                        "scale": {
+                            "x": 0.10000000000000006,
+                            "y": 0.10000000000000026,
+                            "z": 0.10000000000000028
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "spawner",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/16cf08c7-315e-41fb-a2b1-08602faef8d4.glb",
+                        "applyGravity": false
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 52
+        },
+        "2DAD2F85-EA24-4E4D-ABC0-BC509745DF6F": {
+            "name": "visual_attention_ranked_block",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 3.189999999999948,
+                            "y": 1.3399999999999999,
+                            "z": -4.989999999999988
+                        },
+                        "rotation": {
+                            "x": 1.5707963267948963,
+                            "y": 0,
+                            "z": 1.5707963267948963
+                        },
+                        "scale": {
+                            "x": 0.10000000000000006,
+                            "y": 0.10000000000000006,
+                            "z": 0.10000000000000009
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "spawner",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/9e44c094-6cee-4cd4-be42-129e873e4408.glb",
+                        "applyGravity": false
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 53
+        },
+        "FCAC0B71-7060-43A9-A6B6-05B706127245": {
+            "name": "troubleshooting_ranked_block.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 5.589999999999948,
+                            "y": 1.2999999999999998,
+                            "z": -3.5899999999999794
+                        },
+                        "rotation": {
+                            "x": 1.5707963267948963,
+                            "y": 0,
+                            "z": 1.5707963267948963
+                        },
+                        "scale": {
+                            "x": 0.10000000000000006,
+                            "y": 0.10000000000000005,
+                            "z": 0.1000000000000001
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "spawner",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/13c0b66c-f392-4d2e-bc83-0001c8f12caf.glb",
+                        "applyGravity": false
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 54
+        },
+        "06CCE7C9-3167-42B4-8016-48F091A964A5": {
+            "name": "systems_analysis_ranked_block.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 6.409999999999949,
+                            "y": 1.2999999999999998,
+                            "z": -3.099999999999979
+                        },
+                        "rotation": {
+                            "x": 1.5707963267948961,
+                            "y": -5.551115123125783e-17,
+                            "z": 1.5707963267948963
+                        },
+                        "scale": {
+                            "x": 0.0902648599330672,
+                            "y": 0.08922221755063825,
+                            "z": 0.09203659578411014
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "spawner",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/2ad03466-e33b-48cd-80eb-342f212be870.glb",
+                        "applyGravity": false
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 55
+        },
+        "0E53DE0E-82BC-4173-8598-B8ABDF263ACE": {
+            "name": "time_management_ranked_block.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 5.739999999999949,
+                            "y": 1.2999999999999998,
+                            "z": -3.399999999999979
+                        },
+                        "rotation": {
+                            "x": 1.5707963267948963,
+                            "y": 0,
+                            "z": 1.5707963267948963
+                        },
+                        "scale": {
+                            "x": 0.10000000000000006,
+                            "y": 0.10000000000000006,
+                            "z": 0.10000000000000009
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "spawner",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/db4a4fbf-7ccf-483a-afe2-380cee5e24d9.glb",
+                        "applyGravity": false
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 56
+        },
+        "E8250573-A1F5-4DB5-86BD-C834564CF90F": {
+            "name": "problem_sensitivity_ranked_block.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 3.4399999999999484,
+                            "y": 1.3399999999999999,
+                            "z": -4.809999999999983
+                        },
+                        "rotation": {
+                            "x": 1.5707963267948963,
+                            "y": 0,
+                            "z": 1.5707963267948963
+                        },
+                        "scale": {
+                            "x": 0.10000000000000006,
+                            "y": 0.10000000000000005,
+                            "z": 0.10000000000000007
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "spawner",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/6841869e-9cac-4cb0-9b3d-af04f316880a.glb",
+                        "applyGravity": false
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 57
+        },
+        "6373F6BA-0EFD-4739-83A3-A747DF407055": {
+            "name": "crit_decision_making_ranked_block.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 6.269999999999948,
+                            "y": 1.2999999999999998,
+                            "z": -3.109999999999979
+                        },
+                        "rotation": {
+                            "x": 1.5707963267948963,
+                            "y": 0,
+                            "z": 1.5707963267948963
+                        },
+                        "scale": {
+                            "x": 0.10000000000000007,
+                            "y": 0.10000000000000006,
+                            "z": 0.1000000000000001
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "spawner",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/f730c483-084e-4d72-896c-9beee800e0da.glb",
+                        "applyGravity": false
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 58
+        },
+        "F97F4C51-7DB1-48C3-AA2F-466FDB4230EA": {
+            "name": "mental_reasoning_ranked_block.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 3.8799999999999484,
+                            "y": 1.2999999999999998,
+                            "z": -4.529999999999996
+                        },
+                        "rotation": {
+                            "x": 1.5707963267948963,
+                            "y": 0,
+                            "z": 1.5707963267948963
+                        },
+                        "scale": {
+                            "x": 0.10000000000000007,
+                            "y": 0.10000000000000006,
+                            "z": 0.1000000000000001
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "spawner",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/62ff8ac3-c2d0-4e9e-9440-c1f0c8c6c77f.glb",
+                        "applyGravity": false
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 59
+        },
+        "A56868A2-7842-46A7-AD3E-1291C075898D": {
+            "name": "oral_writ_comm_ranked_block.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 6.009999999999948,
+                            "y": 1.2999999999999998,
+                            "z": -3.239999999999979
+                        },
+                        "rotation": {
+                            "x": 1.5707963267948961,
+                            "y": -1.1102230246251565e-16,
+                            "z": 1.5707963267948963
+                        },
+                        "scale": {
+                            "x": 0.10000000000000007,
+                            "y": 0.10000000000000006,
+                            "z": 0.10000000000000012
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "spawner",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/a64ad1c3-dc8a-45f4-9b04-0217c0594c05.glb",
+                        "applyGravity": false
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 60
+        },
+        "A31BC483-CE06-41DE-88FF-CBE9848D92F3": {
+            "name": "coordination_ranked_block.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 6.139999999999949,
+                            "y": 1.2999999999999998,
+                            "z": -3.159999999999979
+                        },
+                        "rotation": {
+                            "x": 1.5707963267948963,
+                            "y": 0,
+                            "z": 1.5707963267948963
+                        },
+                        "scale": {
+                            "x": 0.1000000000000004,
+                            "y": 0.1000000000000003,
+                            "z": 0.1000000000000006
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "spawner",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/760aa9ae-5622-4fa7-8972-0dc251bea580.glb",
+                        "applyGravity": false
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 61
+        },
+        "8BA9AA1D-3F85-40DA-8F87-5363FCBEBDE8": {
+            "name": "concentration_ranked_block.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 3.6799999999999486,
+                            "y": 1.2999999999999998,
+                            "z": -4.64999999999998
+                        },
+                        "rotation": {
+                            "x": 1.5707963267948963,
+                            "y": 0,
+                            "z": 1.5707963267948963
+                        },
+                        "scale": {
+                            "x": 0.10000000000000007,
+                            "y": 0.10000000000000005,
+                            "z": 0.1000000000000001
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "spawner",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/7b4d91c6-faa3-454a-8681-c07f8fce9966.glb",
+                        "applyGravity": false
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 62
+        },
+        "F2F9523A-DDDC-4A27-9660-49E54062CE2C": {
+            "name": "ksa_rankingblocks",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 3.9999999999999476,
+                            "y": -0.20000000000000012,
+                            "z": -1.999999999999979
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 0.9999999999999998,
+                            "y": 1,
+                            "z": 0.9999999999999998
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "group",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 63
+        },
+        "A36ECCB3-089A-4DD2-AAA1-D46C75C0107F": {
+            "name": "startButton",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": -3.1100000000000003,
+                            "y": 0.7000000000000002,
+                            "z": -10.8
+                        },
+                        "rotation": {
+                            "x": -3.141592653589793,
+                            "y": 0.17453292519943378,
+                            "z": -3.141592653589793
+                        },
+                        "scale": {
+                            "x": 0.19999999999999996,
+                            "y": 0.19999999999999996,
+                            "z": 0.19999999999999996
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "gltf-model",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/5b7f2f87-9767-4cf1-afc3-6916806198b8.glb",
+                        "attribution": {
+                            "title": "startButton"
+                        }
+                    }
+                },
+                {
+                    "name": "shadow",
+                    "props": {
+                        "cast": false,
+                        "receive": false
+                    }
+                },
+                {
+                    "name": "collidable",
+                    "props": {}
+                },
+                {
+                    "name": "combine",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 64
+        },
+        "C02C8E28-7B58-4599-B7EA-05D126AD56F4": {
+            "name": "phase1CompleteButton",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 9.4,
+                            "y": 0.7,
+                            "z": -3.81
+                        },
+                        "rotation": {
+                            "x": -3.141592653589793,
+                            "y": -0.5979498017332576,
+                            "z": -3.141592653589793
+                        },
+                        "scale": {
+                            "x": 0.19999999999999993,
+                            "y": 0.19999999999999996,
+                            "z": 0.19999999999999993
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "gltf-model",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/5b7f2f87-9767-4cf1-afc3-6916806198b8.glb",
+                        "attribution": {
+                            "title": "phase1CompleteButton"
+                        }
+                    }
+                },
+                {
+                    "name": "shadow",
+                    "props": {
+                        "cast": false,
+                        "receive": false
+                    }
+                },
+                {
+                    "name": "collidable",
+                    "props": {}
+                },
+                {
+                    "name": "combine",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 65
+        },
+        "8AA745ED-7A46-4432-A6A2-2BFC4A07098C": {
+            "name": "phase2CompleteButton",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": -0.8300000000000001,
+                            "y": 0.7,
+                            "z": 4.3599999999999985
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0.8686503687175785,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 0.19999999999999993,
+                            "y": 0.19999999999999996,
+                            "z": 0.19999999999999993
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "gltf-model",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/5b7f2f87-9767-4cf1-afc3-6916806198b8.glb",
+                        "attribution": {
+                            "title": "phase2CompleteButton"
+                        }
+                    }
+                },
+                {
+                    "name": "shadow",
+                    "props": {
+                        "cast": false,
+                        "receive": false
+                    }
+                },
+                {
+                    "name": "collidable",
+                    "props": {}
+                },
+                {
+                    "name": "combine",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 66
+        },
+        "0970FB61-41A9-461F-8E20-63BBBC42B9FC": {
+            "name": "phaseButtons",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 3.999999999999999,
+                            "y": -0.5,
+                            "z": -1.9999999999999998
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 0.9999999999999998,
+                            "y": 1,
+                            "z": 0.9999999999999998
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "group",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 67
+        },
+        "103112D2-73CC-4ACE-B5E6-6794C79FF883": {
+            "name": "button_on_pedestal_v2.glb",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": -4.059999999999999,
+                            "y": 0.7200000000000001,
+                            "z": -6.499999999999579
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 1.3877787807814462e-16,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 0.19999999999999993,
+                            "y": 0.19999999999999996,
+                            "z": 0.19999999999999993
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "gltf-model",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/5b7f2f87-9767-4cf1-afc3-6916806198b8.glb",
+                        "attribution": {
+                            "title": "button_on_pedestal_v2"
+                        }
+                    }
+                },
+                {
+                    "name": "shadow",
+                    "props": {
+                        "cast": false,
+                        "receive": false
+                    }
+                },
+                {
+                    "name": "collidable",
+                    "props": {}
+                },
+                {
+                    "name": "combine",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 68
+        },
+        "E110BD03-4B71-4089-B153-5DFFD44FA8D0": {
+            "name": "JobDescriptionAndPlaceHere-01.jpg",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": -1.799999999999999,
+                            "y": 1.3000000000000003,
+                            "z": 0.8000000000000035
+                        },
+                        "rotation": {
+                            "x": -2.2852220378722596e-16,
+                            "y": -1.5707963057214724,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 1.4999999999999982,
+                            "y": 1.5000000000000002,
+                            "z": 1.4999999999999982
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "image",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/dd5efad6-ad7d-4798-906d-3160188c9edd.jpg",
+                        "controls": true,
+                        "alphaMode": "opaque",
+                        "alphaCutoff": 0.5,
+                        "projection": "flat"
+                    }
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 69
+        },
+        "6D2D00AE-28AC-4422-81E2-8F2ED61507D9": {
+            "name": "barge-model",
+            "components": [
+                {
+                    "name": "transform",
+                    "props": {
+                        "position": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": -0.5235987755982988,
+                            "z": 0
+                        },
+                        "scale": {
+                            "x": 0.6000000000000001,
+                            "y": 0.6000000000000001,
+                            "z": 0.6000000000000001
+                        }
+                    }
+                },
+                {
+                    "name": "visible",
+                    "props": {
+                        "visible": true
+                    }
+                },
+                {
+                    "name": "editor-settings",
+                    "props": {
+                        "enabled": true,
+                        "modifiedProperties": {},
+                        "enabledProperties": {}
+                    }
+                },
+                {
+                    "name": "gltf-model",
+                    "props": {
+                        "src": "https://hubscloud-assets.socialsuperpowers.net/files/fe7a27a7-9859-4e9f-81ed-90a75b8403ef.glb",
+                        "attribution": {
+                            "title": "barge-model"
+                        }
+                    }
+                },
+                {
+                    "name": "shadow",
+                    "props": {
+                        "cast": false,
+                        "receive": false
+                    }
+                },
+                {
+                    "name": "collidable",
+                    "props": {}
+                },
+                {
+                    "name": "walkable",
+                    "props": {}
+                },
+                {
+                    "name": "combine",
+                    "props": {}
+                }
+            ],
+            "parent": "2266BED7-6CC4-48A6-95DD-9BCD3CF9EAFC",
+            "index": 70
+        }
+    }
+}
