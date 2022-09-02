@@ -172,21 +172,21 @@ AFRAME.registerComponent("socialvr-speech", {
   playerInfoToColor: function (playerInfo) {
     // keys are "Avatar listing sid"s from Approved Avatars admin tab
     const colorsByAvatar = {
-      "4rtlr6I": "#46C6FE",
-      WPYjPmv: "#E05CBB",
+      "4rtlr6I": "#B8FFFF",
+      WPYjPmv: "#FFD0FF",
       "1S9JzDB": "#ff0000",
-      jZWyDGm: "#43C53B",
+      jZWyDGm: "#C7FFD5",
       II9rXJD: "#fce903",
       HrP4pCf: "#5a005a",
       sEj4i7J: "#fc9303",
       vm3cTy7: "#020894",
       Mih5HF7: "#222222",
-      U2E2EZi: "#8137D2",
-      xb4PVBE: "#F8F447",
-      Mqpw3tx: "#C73B3B",
-      RczWQgy: "#353533",
-      bs7pLac: "#23375C",
-      "4r1KpVk": "#FFB041"
+      U2E2EZi: "#C6A1FF",
+      xb4PVBE: "#FFFFB8",
+      Mqpw3tx: "#F1A1A1",
+      RczWQgy: "#4D4D4D",
+      bs7pLac: "#A7C7FB",
+      "4r1KpVk": "#FFEF9B"
     };
     
     const avatarURL = playerInfo.data.avatarSrc;
