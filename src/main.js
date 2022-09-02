@@ -2,15 +2,28 @@ import "./components/barge-button";
 import "./components/barge-clock";
 import "./components/barge-slot";
 import "./components/barge-data";
+
+//import "./components/halo";
 import "./components/world-mover";
-import "./components/halo";
+//import "./components/eye-laser";
 
-const FEATURE_BARGE = true;
-const FEATURE_HALO = false;
+import "./components/emoji";
+import "./components/emoji-target";
+import "./components/emoji-button";
+import "./components/emoji-cancel-button";
+import "./components/emoji-audio";
 
-// Barge
-window.APP.scene.addEventListener("environment-scene-loaded", () => {
-  if (FEATURE_BARGE) {
+import "./systems/emoji-target";
+import "./systems/emoji-button";
+
+import "./components/speech";
+import "./systems/speech";
+
+import "./components/toolbox-dashboard";
+import "./components/toolbox-dashboard-button";
+
+APP.scene.addEventListener("environment-scene-loaded", () => {
+  if (document.querySelector(".barge")) {
     // Button
     let button = document.createElement("a-entity");
     let position = document.querySelector(".startButton").object3D.position.add(new THREE.Vector3(0, 0.5, 0))
@@ -79,7 +92,7 @@ window.APP.scene.addEventListener("environment-scene-loaded", () => {
 
     // World Mover
     const worldMover = document.createElement("a-entity");
-    worldMover.setAttribute("socialvr-world-mover", "");
+    worldMover.setAttribute("socialvr-world-mover", "overrideSky: true");
     window.APP.scene.appendChild(worldMover);
 
     // Data Logger
@@ -87,39 +100,55 @@ window.APP.scene.addEventListener("environment-scene-loaded", () => {
     dataLogger.setAttribute("socialvr-barge-data", "");
     window.APP.scene.appendChild(dataLogger);
 
-    // Override command
+    // Backup command
     window.logBargeData = () => {
       window.APP.scene.emit("generateDataEvent");
     }
 
     // Changes camera inspection system to show background, regardless of user preferences.
-    const cameraSystem = window.APP.scene.systems["hubs-systems"].cameraSystem;
-    cameraSystem.lightsEnabled = true;
+    window.APP.scene.systems["hubs-systems"].cameraSystem.lightsEnabled = true;
+  }
+  else if (document.querySelector(".workshopbargeglb")) {
+    // Button
+    let button = document.createElement("a-entity");
+    let position = new THREE.Vector3(0, 0.65, 0);
 
-    // Disable floaty physics
-    window.APP.scene.addEventListener("object_spawned", (e) => {
-      const floaties = document.querySelectorAll("[floaty-object]");
+    button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.1; color: #C576F6; eventName: startMovingWorld");
+    button.setAttribute("position", position);
+    window.APP.scene.appendChild(button);
 
-      floaties.forEach((floaty) => {
-        floaty.setAttribute("floaty-object", {
-          reduceAngularFloat: true,
-          autoLockOnRelease: true,
-          gravitySpeedLimit: 0
-        });
-      });
+    // World Mover
+    const worldMover = document.createElement("a-entity");
+    worldMover.setAttribute("socialvr-world-mover", "modelURL: https://statuesque-rugelach-4185bd.netlify.app/assets/meeting-hall-1.glb");
+    window.APP.scene.appendChild(worldMover);
+  } 
+  else {
+    // Dashboard
+    const dashboard = document.createElement("a-entity");
+
+    dashboard.setAttribute("socialvr-toolbox-dashboard", "");
+    APP.scene.appendChild(dashboard);
+
+    APP.hubChannel.presence.onJoin(() => {
+      if (dashboard.components["socialvr-toolbox-dashboard"].features.EMOJI.enabled) {
+        dashboard.components["socialvr-toolbox-dashboard"].initEmoji();
+      }
+
+      if (dashboard.components["socialvr-toolbox-dashboard"].features.HALO.enabled) {
+        dashboard.components["socialvr-toolbox-dashboard"].initHalos();
+      }
     });
   }
 }, { once: true });
 
-// Halo
-window.APP.hubChannel.presence.onJoin(() => {
-  if (FEATURE_HALO) {
-    APP.componentRegistry["player-info"].forEach((playerInfo) => {
-      if (!playerInfo.socialVRHalo) {
-        // TODO: replace with API Call
-        console.log('attending')
-        console.log(playerInfo)
-      }
-    })
-  }
+APP.scene.addEventListener("object_spawned", (e) => {
+  const floaties = document.querySelectorAll("[floaty-object]");
+
+  floaties.forEach((floaty) => {
+    floaty.setAttribute("floaty-object", {
+      reduceAngularFloat: true,
+      autoLockOnRelease: true,
+      gravitySpeedLimit: 0
+    });
+  });
 });
