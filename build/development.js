@@ -485,7 +485,7 @@
           },
           modelURL: {
               type: 'string',
-              default: "https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-7.glb"
+              default: "https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-8.glb"
           }
       },
 
