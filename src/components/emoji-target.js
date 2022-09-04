@@ -21,6 +21,8 @@ AFRAME.registerComponent("socialvr-emoji-target", {
       .then((model) => {
         this.hoverVisual.setAttribute("billboard", { onlyY: true });
         this.hoverVisual.setObject3D("mesh", window.APP.utils.cloneObject3D(model.scene));
+        this.hoverVisual.object3D.scale.set(0.25, 0.25, 0.25);
+        this.hoverVisual.object3D.matrixNeedsUpdate = true;
         this.hoverVisual.object3D.visible = false;
       })
       .catch((e) => {
@@ -29,7 +31,6 @@ AFRAME.registerComponent("socialvr-emoji-target", {
   },
 
   onHover: function () {
-    this.hoverVisual.object3D.scale.set(0.25, 0.25, 0.25);
     this.hoverVisual.object3D.visible = true;
   },
 
