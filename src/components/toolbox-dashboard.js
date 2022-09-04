@@ -135,27 +135,24 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
     initEmoji: function () {
         APP.componentRegistry["player-info"].forEach((playerInfo) => {
             if (!playerInfo.socialVREmoji) {
-                playerInfo.el.setAttribute("socialvr-emoji-target", "name", playerInfo.displayName);
+                const emojiTarget = document.createElement("a-entity");
+                emojiTarget.setAttribute("socialvr-emoji-target", "");
+
+                playerInfo.el.appendChild(emojiTarget);
                 playerInfo.socialVREmoji = true;
+
+                this.features.EMOJI.elements.push(emojiTarget);
             }
         });
-
-        const emojiAudio = document.createElement("a-entity");
-        emojiAudio.setAttribute("socialvr-emoji-audio", "");
-        window.APP.scene.appendChild(emojiAudio);
-
-        this.features.EMOJI.elements.push(emojiAudio);
     },
 
     initHalos: function () {
         APP.componentRegistry["player-info"].forEach((playerInfo) => {
             if (!playerInfo.socialVRHalo) {
                 const halo = document.createElement("a-entity");
-
                 halo.setAttribute("socialvr-halo", "");
                 halo.setAttribute("position", "0 1.75 0");
 
-                // hack but it works.
                 playerInfo.el.appendChild(halo);
                 playerInfo.socialVRHalo = true;
 
@@ -183,7 +180,6 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
         });
 
         APP.componentRegistry["player-info"].forEach((playerInfo) => {
-            playerInfo.el.removeAttribute("socialvr-emoji-target");
             playerInfo.socialVREmoji = false;
         });
 

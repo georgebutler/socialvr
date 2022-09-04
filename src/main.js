@@ -1,24 +1,18 @@
+// Barge
 import "./components/barge-button";
 import "./components/barge-clock";
 import "./components/barge-slot";
 import "./components/barge-data";
-
-//import "./components/halo";
 import "./components/world-mover";
-//import "./components/eye-laser";
 
-import "./components/emoji";
+// Emoji
 import "./components/emoji-target";
-import "./components/emoji-button";
-import "./components/emoji-cancel-button";
-import "./components/emoji-audio";
 
-import "./systems/emoji-target";
-import "./systems/emoji-button";
-
+// Speech
 import "./components/speech";
 import "./systems/speech";
 
+// Toolbox
 import "./components/toolbox-dashboard";
 import "./components/toolbox-dashboard-button";
 
@@ -110,16 +104,25 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
   }
   else if (document.querySelector(".workshopbargeglb")) {
     // Button
-    let button = document.createElement("a-entity");
-    let position = new THREE.Vector3(0, 0.65, 0);
+    const button = document.createElement("a-entity");
 
-    button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.1; color: #C576F6; eventName: startMovingWorld");
-    button.setAttribute("position", position);
+    button.setAttribute("position", new THREE.Vector3(0, 0.65, 0));
+    button.setAttribute("socialvr-barge-button", {
+      text: "Start",
+      radius: 0.1,
+      color: 0xC576F6,
+      eventName: "startMovingWorld"
+    });
+
     window.APP.scene.appendChild(button);
 
     // World Mover
     const worldMover = document.createElement("a-entity");
-    worldMover.setAttribute("socialvr-world-mover", "modelURL: https://statuesque-rugelach-4185bd.netlify.app/assets/meeting-hall-2.glb");
+
+    worldMover.setAttribute("socialvr-world-mover", {
+      modelURL: "https://statuesque-rugelach-4185bd.netlify.app/assets/meeting-hall-2.glb"
+    });
+
     window.APP.scene.appendChild(worldMover);
   } 
   else {
