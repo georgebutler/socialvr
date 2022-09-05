@@ -751,7 +751,7 @@
             button.setAttribute("hoverable-visuals", "");
             button.setObject3D("mesh", window.APP.utils.cloneObject3D(model.scene));
             button.object3D.scale.set(0.25, 0.25, 0.25);
-            button.object3D.position.set((0.25 * index) - ((0.2 * emojis.length) / 2), 0, 0);
+            button.object3D.position.set((0.25 * index) - (((1 / emojis.length) * emojis.length) / 2), 0, 0);
             button.object3D.matrixNeedsUpdate = true;
             button.object3D.addEventListener("interact", this.sendEmoji.bind(this, emoji));
 
