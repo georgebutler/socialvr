@@ -138,7 +138,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
                 const emojiTarget = document.createElement("a-entity");
                 emojiTarget.setAttribute("socialvr-emoji-target", "");
 
-                playerInfo.el.appendChild(emojiTarget);
+                playerInfo.el.querySelector(".Spine").appendChild(emojiTarget);
                 playerInfo.socialVREmoji = true;
 
                 this.features.EMOJI.elements.push(emojiTarget);
