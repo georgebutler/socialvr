@@ -1,9 +1,49 @@
 const emojis = [
-  { icon: "", model: window.APP.utils.emojis[0].model, display_name: "Smile" },
-  { icon: "", model: window.APP.utils.emojis[1].model, display_name: "Laugh" },
-  { icon: "", model: window.APP.utils.emojis[2].model, display_name: "Clap" },
-  { icon: "", model: window.APP.utils.emojis[3].model, display_name: "Heart" },
-  { icon: "", model: window.APP.utils.emojis[4].model, display_name: "Wave" }
+  {
+    icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0000_Rainbow.png",
+    model: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/rainbow.glb",
+    id: "Rainbow"
+  },
+  {
+    icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0001_Star.png",
+    model: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/Star.glb",
+    id: "Star"
+  },
+  {
+    icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0006_Poop.png",
+    model: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/poo.glb",
+    id: "Poop"
+  },
+  {
+    icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0003_Dartt.png",
+    model: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/dart.glb",
+    id: "Dart"
+  },
+  {
+    icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0004_Flower.png",
+    model: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/flower.glb",
+    id: "Flower"
+  },
+  {
+    icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0005_Alarm.png",
+    model: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/alarmclock.glb",
+    id: "Alarm"
+  },
+  {
+    icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0007_Pizza.png",
+    model: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/pizza.glb",
+    id: "Pizza"
+  },
+  {
+    icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0008_Wine.png",
+    model: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/wine.glb",
+    id: "Wine"
+  },
+  {
+    icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0009_Coffee.png",
+    model: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/coffee.glb",
+    id: "Coffee"
+  },
 ];
 
 AFRAME.registerComponent("socialvr-emoji-target", {
@@ -24,6 +64,11 @@ AFRAME.registerComponent("socialvr-emoji-target", {
     this.el.object3D.addEventListener("hovered", this.onHover.bind(this));
     this.el.object3D.addEventListener("unhovered", this.onUnhover.bind(this));
     this.el.object3D.addEventListener("interact", this.onClick.bind(this));
+  },
+
+  remove: function () {
+    this.selectionPanel?.remove();
+    this.selectionPanel = null;
   },
 
   play: function () {
@@ -51,12 +96,41 @@ AFRAME.registerComponent("socialvr-emoji-target", {
   },
 
   sendEmoji: function (emoji) {
-    alert(emoji.display_name);
-    this.selectionPanel.parentEl.removeChild(this.selectionPanel);
+    const { entity } = window.APP.utils.addMedia(new URL(emoji.model, window.location).href, "#interactable-emoji");
+    const particleEmitterConfig = {
+      src: new URL(emoji.icon, window.location).href,
+      resolve: false,
+      particleCount: 20,
+      startSize: 0.01,
+      endSize: 0.2,
+      sizeRandomness: 0.05,
+      lifetime: 1,
+      lifetimeRandomness: 0.2,
+      ageRandomness: 1,
+      startVelocity: { x: 0, y: 1, z: 0 },
+      endVelocity: { x: 0, y: 0.25, z: 0 },
+      startOpacity: 1,
+      middleOpacity: 1,
+      endOpacity: 0
+    }
+
+    entity.setAttribute("offset-relative-to", {
+      target: "#avatar-pov-node",
+      offset: { x: 0, y: 0, z: -1.5 }
+    });
+
+    entity.addEventListener("model-loaded", () => {
+      entity.querySelector(".particle-emitter").setAttribute("particle-emitter", particleEmitterConfig);
+      entity.setAttribute("emoji", { particleEmitterConfig: particleEmitterConfig });
+    });
+
+    this.selectionPanel?.remove();
+    this.selectionPanel = null;
   },
 
   onClick: function () {
-    this.selectionPanel?.parentEl.removeChild(this.selectionPanel);
+    this.selectionPanel?.remove();
+    this.selectionPanel = null;
 
     this.selectionPanel = document.createElement("a-entity");
     this.selectionPanel.setObject3D("mesh", new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.1), new THREE.MeshBasicMaterial({ visible: false })));
@@ -69,7 +143,7 @@ AFRAME.registerComponent("socialvr-emoji-target", {
 
     emojis.forEach((emoji, index) => {
       window.APP.utils.GLTFModelPlus
-        .loadModel(emoji.model)
+        .loadModel(new URL(emoji.model, window.location).href)
         .then((model) => {
           const button = document.createElement("a-entity");
           button.setAttribute("billboard", "");
