@@ -801,6 +801,7 @@
       entity.addEventListener("model-loaded", () => {
         entity.querySelector(".particle-emitter").setAttribute("particle-emitter", particleEmitterConfig);
         entity.setAttribute("emoji", { particleEmitterConfig: particleEmitterConfig });
+        entity.removeAttribute("owned-object-cleanup-timeout");
       });
 
       this.activeEmoji = entity;

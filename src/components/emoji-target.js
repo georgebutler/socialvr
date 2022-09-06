@@ -115,7 +115,7 @@ AFRAME.registerComponent("socialvr-emoji-target", {
       lifetimeRandomness: 0.2,
       ageRandomness: 1,
       startVelocity: { x: 0, y: 1, z: 0 },
-      endVelocity: { x: 0, y: 0.25, z: 0 },
+      endVelocity: { x: 0, y: -2, z: 0 },
       startOpacity: 1,
       middleOpacity: 1,
       endOpacity: 0
@@ -129,6 +129,7 @@ AFRAME.registerComponent("socialvr-emoji-target", {
     entity.addEventListener("model-loaded", () => {
       entity.querySelector(".particle-emitter").setAttribute("particle-emitter", particleEmitterConfig);
       entity.setAttribute("emoji", { particleEmitterConfig: particleEmitterConfig });
+      entity.removeAttribute("owned-object-cleanup-timeout");
     });
 
     this.activeEmoji = entity;
