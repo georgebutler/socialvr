@@ -67,6 +67,7 @@ AFRAME.registerComponent("socialvr-emoji-target", {
   },
 
   remove: function () {
+    this.activeEmoji?.remove();
     this.selectionPanel?.remove();
     this.selectionPanel = null;
   },
@@ -85,6 +86,12 @@ AFRAME.registerComponent("socialvr-emoji-target", {
       .catch((e) => {
         console.error(e);
       });
+  },
+
+  tick: function(t, dt) {
+    if (this.activeEmoji) {
+      this.activeEmoji.object3D.position.set(0, 4, 0);
+    }
   },
 
   onHover: function () {
@@ -112,7 +119,7 @@ AFRAME.registerComponent("socialvr-emoji-target", {
       startOpacity: 1,
       middleOpacity: 1,
       endOpacity: 0
-    }
+    };
 
     entity.setAttribute("offset-relative-to", {
       target: "#avatar-pov-node",
@@ -124,6 +131,7 @@ AFRAME.registerComponent("socialvr-emoji-target", {
       entity.setAttribute("emoji", { particleEmitterConfig: particleEmitterConfig });
     });
 
+    this.activeEmoji = entity;
     this.selectionPanel?.remove();
     this.selectionPanel = null;
   },

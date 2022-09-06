@@ -739,6 +739,7 @@
     },
 
     remove: function () {
+      this.activeEmoji?.remove();
       this.selectionPanel?.remove();
       this.selectionPanel = null;
     },
@@ -757,6 +758,12 @@
         .catch((e) => {
           console.error(e);
         });
+    },
+
+    tick: function(t, dt) {
+      if (this.activeEmoji) {
+        this.activeEmoji.object3D.position.set(0, 4, 0);
+      }
     },
 
     onHover: function () {
@@ -796,6 +803,7 @@
         entity.setAttribute("emoji", { particleEmitterConfig: particleEmitterConfig });
       });
 
+      this.activeEmoji = entity;
       this.selectionPanel?.remove();
       this.selectionPanel = null;
     },
@@ -1116,7 +1124,7 @@
                   icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/icons/toggle.png",
                   enabled: false,
                   showButton: true,
-                  button_positon: new THREE.Vector3(-8.4, 1.2, -7.6),
+                  button_positon: new THREE.Vector3(-8.43, 1.2, -7.565),
                   elements: []
               },
               BUILDINGKIT: {
