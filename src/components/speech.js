@@ -184,9 +184,9 @@ AFRAME.registerComponent("socialvr-speech", {
       U2E2EZi: 0x7700f4,
       xb4PVBE: 0xffff00,
       Mqpw3tx: 0xf30000,
-      RczWQgy: 0x0a0a0a,
+      RczWQgy: 0x000000,
       bs7pLac: 0x010188,
-      "4r1KpVk": 0xff8a00
+      "4r1KpVk": 0xff5c00
     };
 
     const avatarURL = playerInfo.data.avatarSrc;
