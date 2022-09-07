@@ -718,6 +718,23 @@
     },
   ];
 
+  AFRAME.registerComponent("socialvr-emoji", {
+    schema: {
+      targetEl: {
+        type: "selector",
+        default: null
+      }
+    },
+
+    tick: function (t, dt) {
+      console.log(this.data.targetEl.object3D.position);
+
+      if (this.data.targetEl) {
+        this.el.setAttribute("position", `${this.data.targetEl.object3D.position.x, this.data.targetEl.object3D.position.y, this.data.targetEl.object3D.position.z}`);
+      }
+    }
+  });
+
   AFRAME.registerComponent("socialvr-emoji-target", {
     init: function () {
       NAF.utils.getNetworkedEntity(this.el).then(networkedEl => {
@@ -736,9 +753,6 @@
       this.el.object3D.addEventListener("hovered", this.onHover.bind(this));
       this.el.object3D.addEventListener("unhovered", this.onUnhover.bind(this));
       this.el.object3D.addEventListener("interact", this.onClick.bind(this));
-
-      this.el.sceneEl.addEventListener("sendEmoji", (e) => { this._sendEmoji.call(this); });
-      NAF.connection.subscribeToDataChannel("sendEmoji", this.sendEmoji.bind(this));
     },
 
     remove: function () {
@@ -799,15 +813,15 @@
         entity.querySelector(".particle-emitter").setAttribute("particle-emitter", particleEmitterConfig);
         entity.setAttribute("emoji", { particleEmitterConfig: particleEmitterConfig });
         entity.removeAttribute("owned-object-cleanup-timeout");
-        entity.classList.remove("interactable");
+        entity.setAttribute("socialvr-emoji", {
+          targetEl: this.el
+        });
 
         this.selectionPanel?.remove();
         this.selectionPanel = null;
       });
     },
 
-    // TODO: ADD PARAMS TO BROADCAST
-    // TODO: Try setting position attribute
     _sendEmoji: function () {
       this.sendEmoji(null, null, {});
       NAF.connection.broadcastDataGuaranteed("sendEmoji", {});
@@ -1023,21 +1037,21 @@
     // keys are "Avatar listing sid"s from Approved Avatars admin tab
     playerInfoToColor: function (playerInfo) {
       const colorsByAvatar = {
-        "4rtlr6I": 0xB8FFFF,
-        WPYjPmv: 0xFFD0FF,
+        "4rtlr6I": 0x67d3fe,
+        WPYjPmv: 0xe580ca,
         "1S9JzDB": 0xff0000,
-        jZWyDGm: 0xC7FFD5,
+        jZWyDGm: 0x53cb4d,
         II9rXJD: 0xfce903,
         HrP4pCf: 0x5a005a,
         sEj4i7J: 0xfc9303,
         vm3cTy7: 0x020894,
         Mih5HF7: 0x222222,
-        U2E2EZi: 0xC6A1FF,
-        xb4PVBE: 0xFFFFB8,
-        Mqpw3tx: 0xF1A1A1,
-        RczWQgy: 0x4D4D4D,
-        bs7pLac: 0xA7C7FB,
-        "4r1KpVk": 0xFFEF9B
+        U2E2EZi: 0x9752e0,
+        xb4PVBE: 0xeded78,
+        Mqpw3tx: 0xdd8888,
+        RczWQgy: 0x363734,
+        bs7pLac: 0x526cad,
+        "4r1KpVk": 0xfdae4e
       };
 
       const avatarURL = playerInfo.data.avatarSrc;
@@ -1106,7 +1120,7 @@
   AFRAME.registerComponent("socialvr-toolbox-dashboard", {
       init: function () {
           this.geometry = new THREE.SphereGeometry(0.02, 16, 8);
-          this.material = new THREE.MeshStandardMaterial({ color: "#FF6782" });
+          this.material = new THREE.MeshStandardMaterial({ color: 0xff6782 });
           this.mesh = new THREE.Mesh(this.geometry, this.material);
 
           this.el.setObject3D("mesh", this.mesh);

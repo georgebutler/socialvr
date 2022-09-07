@@ -1,11 +1,13 @@
-const COLOR_OFF = "#C0C0C0";
-const COLOR_ON = "#489610";
-const COLOR_HOVER = "#8FE054";
+const COLOR_ON = 0x03b300;
+const COLOR_OFF = 0xff0000;
+
+const COLOR_HOVER_ON_OFF = 0xff9999;
+const COLOR_HOVER_SELECTED = 0x9bff99;
 
 AFRAME.registerComponent("socialvr-toolbox-dashboard", {
     init: function () {
         this.geometry = new THREE.SphereGeometry(0.02, 16, 8);
-        this.material = new THREE.MeshStandardMaterial({ color: "#FF6782" });
+        this.material = new THREE.MeshStandardMaterial({ color: 0xff6782 });
         this.mesh = new THREE.Mesh(this.geometry, this.material);
 
         this.el.setObject3D("mesh", this.mesh);
