@@ -47,7 +47,7 @@ AFRAME.registerComponent("socialvr-speech", {
     NAF.connection.unsubscribeToDataChannel("startSpeech");
     NAF.connection.unsubscribeToDataChannel("stopSpeech");
     NAF.connection.unsubscribeToDataChannel("clearSpeech");
-    
+
     this.system.unregister();
   },
 
@@ -61,7 +61,7 @@ AFRAME.registerComponent("socialvr-speech", {
 
     const muted = this.playerInfo.data.muted;
     const speaking = !muted && this.localAudioAnalyser.volume > MIC_PRESENCE_VOLUME_THRESHOLD;
-  
+
     // maintain speech event state of local user, send events as needed
     if (speaking) {
       if (this.continuousSpeechTime === 0) {
@@ -87,7 +87,7 @@ AFRAME.registerComponent("socialvr-speech", {
         this.continuousSpeechTime = 0;
       }
     }
-  
+
     // update speech orb sizes and positions
     for (const finishedOrb of document.querySelectorAll(".speechOrb.finished")) {
       const pos = finishedOrb.getAttribute("position");
@@ -99,7 +99,7 @@ AFRAME.registerComponent("socialvr-speech", {
       // grow each active speech orb by ORB_GROWTH_PER_TICK
       activeOrb.object3D.scale.add(new THREE.Vector3(0, ORB_GROWTH_PER_TICK * 10, 0));
       activeOrb.matrixNeedsUpdate = true;
-  
+
       // move its center upward by half of the growth amount,
       // to keep the bottom position fixed at the "now" plane
       const pos = activeOrb.getAttribute("position");
@@ -108,7 +108,7 @@ AFRAME.registerComponent("socialvr-speech", {
     }
   },
 
-  _startSpeech: function (senderId, dataType, data, targetId) { 
+  _startSpeech: function (senderId, dataType, data, targetId) {
     // if no already-active speech orb for this speaker, spawn one
     const activeOrb = this.activeSpeechOrbs[data.speaker];
     if (activeOrb) {
@@ -117,7 +117,7 @@ AFRAME.registerComponent("socialvr-speech", {
     const speakerInfo = this.getPlayerInfo(data.speaker);
     const newOrb = this.spawnOrb(MIN_ORB_SIZE, this.playerInfoToColor(speakerInfo));
     this.activeSpeechOrbs[data.speaker] = newOrb;
-  
+
     // position the orb relative to the player and the center of the scene
     const centerObj = this.el;
     const centerPos = centerObj ? new THREE.Vector3() : new THREE.Vector3(...ORB_CONTAINER_POS);
@@ -168,27 +168,27 @@ AFRAME.registerComponent("socialvr-speech", {
   sessionIDToColor: function (sessionID) {
     return "#" + sessionID.substring(0, 6); // just use first 6 chars lol
   },
-  
+
+  // keys are "Avatar listing sid"s from Approved Avatars admin tab
   playerInfoToColor: function (playerInfo) {
-    // keys are "Avatar listing sid"s from Approved Avatars admin tab
     const colorsByAvatar = {
-      "4rtlr6I": "#B8FFFF",
-      WPYjPmv: "#FFD0FF",
-      "1S9JzDB": "#ff0000",
-      jZWyDGm: "#C7FFD5",
-      II9rXJD: "#fce903",
-      HrP4pCf: "#5a005a",
-      sEj4i7J: "#fc9303",
-      vm3cTy7: "#020894",
-      Mih5HF7: "#222222",
-      U2E2EZi: "#C6A1FF",
-      xb4PVBE: "#FFFFB8",
-      Mqpw3tx: "#F1A1A1",
-      RczWQgy: "#4D4D4D",
-      bs7pLac: "#A7C7FB",
-      "4r1KpVk": "#FFEF9B"
+      "4rtlr6I": 0xB8FFFF,
+      WPYjPmv: 0xFFD0FF,
+      "1S9JzDB": 0xff0000,
+      jZWyDGm: 0xC7FFD5,
+      II9rXJD: 0xfce903,
+      HrP4pCf: 0x5a005a,
+      sEj4i7J: 0xfc9303,
+      vm3cTy7: 0x020894,
+      Mih5HF7: 0x222222,
+      U2E2EZi: 0xC6A1FF,
+      xb4PVBE: 0xFFFFB8,
+      Mqpw3tx: 0xF1A1A1,
+      RczWQgy: 0x4D4D4D,
+      bs7pLac: 0xA7C7FB,
+      "4r1KpVk": 0xFFEF9B
     };
-    
+
     const avatarURL = playerInfo.data.avatarSrc;
 
     for (const avatarSID of Object.keys(colorsByAvatar)) {
@@ -202,20 +202,21 @@ AFRAME.registerComponent("socialvr-speech", {
 
   spawnOrb: function (size, in_color) {
     const geometry = new THREE.CylinderGeometry(0.1, 0.1, size);
-    const material = new THREE.MeshStandardMaterial({ color: in_color || "yellow", toneMapped: false });
-    const mesh = new THREE.Mesh(geometry, material);
-  
+    const material = new THREE.MeshBasicMaterial({
+      color: in_color || 0xffffff
+    });
+
     // create, color, position, and scale the orb
     const orb = document.createElement("a-entity");
     orb.classList.add("speechOrb");
-    orb.setObject3D("mesh", mesh);
-  
+    orb.setObject3D("mesh", new THREE.Mesh(geometry, material));
+
     // add the orb to the scene
     this.el.appendChild(orb);
-  
+
     // queue the orb for deletion later
     setTimeout(() => orb.remove(), SPEECH_ORB_LIFETIME);
-  
+
     return orb;
   },
 

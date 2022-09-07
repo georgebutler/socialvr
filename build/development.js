@@ -736,6 +736,9 @@
       this.el.object3D.addEventListener("hovered", this.onHover.bind(this));
       this.el.object3D.addEventListener("unhovered", this.onUnhover.bind(this));
       this.el.object3D.addEventListener("interact", this.onClick.bind(this));
+
+      this.el.sceneEl.addEventListener("sendEmoji", (e) => { this._sendEmoji.call(this); });
+      NAF.connection.subscribeToDataChannel("sendEmoji", this.sendEmoji.bind(this));
     },
 
     remove: function () {
@@ -760,12 +763,6 @@
         });
     },
 
-    tick: function(t, dt) {
-      if (this.activeEmoji) {
-        this.activeEmoji.object3D.position.set(0, 4, 0);
-      }
-    },
-
     onHover: function () {
       this.hoverVisual.object3D.visible = true;
     },
@@ -786,8 +783,8 @@
         lifetime: 1,
         lifetimeRandomness: 0.2,
         ageRandomness: 1,
-        startVelocity: { x: 0, y: 1, z: 0 },
-        endVelocity: { x: 0, y: 0.25, z: 0 },
+        startVelocity: { x: 0, y: 0, z: 0 },
+        endVelocity: { x: 0, y: -2, z: 0 },
         startOpacity: 1,
         middleOpacity: 1,
         endOpacity: 0
@@ -802,11 +799,18 @@
         entity.querySelector(".particle-emitter").setAttribute("particle-emitter", particleEmitterConfig);
         entity.setAttribute("emoji", { particleEmitterConfig: particleEmitterConfig });
         entity.removeAttribute("owned-object-cleanup-timeout");
-      });
+        entity.classList.remove("interactable");
 
-      this.activeEmoji = entity;
-      this.selectionPanel?.remove();
-      this.selectionPanel = null;
+        this.selectionPanel?.remove();
+        this.selectionPanel = null;
+      });
+    },
+
+    // TODO: ADD PARAMS TO BROADCAST
+    // TODO: Try setting position attribute
+    _sendEmoji: function () {
+      this.sendEmoji(null, null, {});
+      NAF.connection.broadcastDataGuaranteed("sendEmoji", {});
     },
 
     onClick: function () {
@@ -894,7 +898,7 @@
       NAF.connection.unsubscribeToDataChannel("startSpeech");
       NAF.connection.unsubscribeToDataChannel("stopSpeech");
       NAF.connection.unsubscribeToDataChannel("clearSpeech");
-      
+
       this.system.unregister();
     },
 
@@ -908,7 +912,7 @@
 
       const muted = this.playerInfo.data.muted;
       const speaking = !muted && this.localAudioAnalyser.volume > MIC_PRESENCE_VOLUME_THRESHOLD;
-    
+
       // maintain speech event state of local user, send events as needed
       if (speaking) {
         if (this.continuousSpeechTime === 0) {
@@ -934,7 +938,7 @@
           this.continuousSpeechTime = 0;
         }
       }
-    
+
       // update speech orb sizes and positions
       for (const finishedOrb of document.querySelectorAll(".speechOrb.finished")) {
         const pos = finishedOrb.getAttribute("position");
@@ -946,7 +950,7 @@
         // grow each active speech orb by ORB_GROWTH_PER_TICK
         activeOrb.object3D.scale.add(new THREE.Vector3(0, ORB_GROWTH_PER_TICK * 10, 0));
         activeOrb.matrixNeedsUpdate = true;
-    
+
         // move its center upward by half of the growth amount,
         // to keep the bottom position fixed at the "now" plane
         const pos = activeOrb.getAttribute("position");
@@ -955,7 +959,7 @@
       }
     },
 
-    _startSpeech: function (senderId, dataType, data, targetId) { 
+    _startSpeech: function (senderId, dataType, data, targetId) {
       // if no already-active speech orb for this speaker, spawn one
       const activeOrb = this.activeSpeechOrbs[data.speaker];
       if (activeOrb) {
@@ -964,7 +968,7 @@
       const speakerInfo = this.getPlayerInfo(data.speaker);
       const newOrb = this.spawnOrb(MIN_ORB_SIZE, this.playerInfoToColor(speakerInfo));
       this.activeSpeechOrbs[data.speaker] = newOrb;
-    
+
       // position the orb relative to the player and the center of the scene
       const centerObj = this.el;
       const centerPos = centerObj ? new THREE.Vector3() : new THREE.Vector3(...ORB_CONTAINER_POS);
@@ -1015,27 +1019,27 @@
     sessionIDToColor: function (sessionID) {
       return "#" + sessionID.substring(0, 6); // just use first 6 chars lol
     },
-    
+
+    // keys are "Avatar listing sid"s from Approved Avatars admin tab
     playerInfoToColor: function (playerInfo) {
-      // keys are "Avatar listing sid"s from Approved Avatars admin tab
       const colorsByAvatar = {
-        "4rtlr6I": "#B8FFFF",
-        WPYjPmv: "#FFD0FF",
-        "1S9JzDB": "#ff0000",
-        jZWyDGm: "#C7FFD5",
-        II9rXJD: "#fce903",
-        HrP4pCf: "#5a005a",
-        sEj4i7J: "#fc9303",
-        vm3cTy7: "#020894",
-        Mih5HF7: "#222222",
-        U2E2EZi: "#C6A1FF",
-        xb4PVBE: "#FFFFB8",
-        Mqpw3tx: "#F1A1A1",
-        RczWQgy: "#4D4D4D",
-        bs7pLac: "#A7C7FB",
-        "4r1KpVk": "#FFEF9B"
+        "4rtlr6I": 0xB8FFFF,
+        WPYjPmv: 0xFFD0FF,
+        "1S9JzDB": 0xff0000,
+        jZWyDGm: 0xC7FFD5,
+        II9rXJD: 0xfce903,
+        HrP4pCf: 0x5a005a,
+        sEj4i7J: 0xfc9303,
+        vm3cTy7: 0x020894,
+        Mih5HF7: 0x222222,
+        U2E2EZi: 0xC6A1FF,
+        xb4PVBE: 0xFFFFB8,
+        Mqpw3tx: 0xF1A1A1,
+        RczWQgy: 0x4D4D4D,
+        bs7pLac: 0xA7C7FB,
+        "4r1KpVk": 0xFFEF9B
       };
-      
+
       const avatarURL = playerInfo.data.avatarSrc;
 
       for (const avatarSID of Object.keys(colorsByAvatar)) {
@@ -1049,20 +1053,21 @@
 
     spawnOrb: function (size, in_color) {
       const geometry = new THREE.CylinderGeometry(0.1, 0.1, size);
-      const material = new THREE.MeshStandardMaterial({ color: in_color || "yellow", toneMapped: false });
-      const mesh = new THREE.Mesh(geometry, material);
-    
+      const material = new THREE.MeshBasicMaterial({
+        color: in_color || 0xffffff
+      });
+
       // create, color, position, and scale the orb
       const orb = document.createElement("a-entity");
       orb.classList.add("speechOrb");
-      orb.setObject3D("mesh", mesh);
-    
+      orb.setObject3D("mesh", new THREE.Mesh(geometry, material));
+
       // add the orb to the scene
       this.el.appendChild(orb);
-    
+
       // queue the orb for deletion later
       setTimeout(() => orb.remove(), SPEECH_ORB_LIFETIME);
-    
+
       return orb;
     },
 
