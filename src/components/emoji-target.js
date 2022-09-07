@@ -55,7 +55,7 @@ AFRAME.registerComponent("socialvr-emoji", {
   },
 
   tick: function (t, dt) {
-    console.log(this.data.targetEl.object3D.position);
+    console.log(this.data.targetEl.getAttribute("position"));
 
     if (this.data.targetEl) {
       this.el.setAttribute("position", `${this.data.targetEl.object3D.position.x, this.data.targetEl.object3D.position.y, this.data.targetEl.object3D.position.z}`);
@@ -142,7 +142,7 @@ AFRAME.registerComponent("socialvr-emoji-target", {
       entity.setAttribute("emoji", { particleEmitterConfig: particleEmitterConfig });
       entity.removeAttribute("owned-object-cleanup-timeout");
       entity.setAttribute("socialvr-emoji", {
-        targetEl: this.el
+        target: this.el.object3D
       });
 
       this.selectionPanel?.remove();
