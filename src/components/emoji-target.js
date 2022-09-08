@@ -57,6 +57,8 @@ AFRAME.registerComponent("socialvr-emoji-target", {
     this.hoverVisual = document.createElement("a-entity");
     this.el.appendChild(this.hoverVisual);
 
+    this.sentStartTime = performance.now();
+
     this.el.object3D.addEventListener("hovered", this.onHover.bind(this));
     this.el.object3D.addEventListener("unhovered", this.onUnhover.bind(this));
     this.el.object3D.addEventListener("interact", this.onClick.bind(this));
