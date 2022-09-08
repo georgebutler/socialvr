@@ -718,29 +718,8 @@
     },
   ];
 
-  AFRAME.registerComponent("socialvr-emoji", {
-    schema: {
-      targetEl: {
-        type: "selector",
-        default: null
-      }
-    },
-
-    tick: function (t, dt) {
-      console.log(this.data.targetEl.getAttribute("position"));
-
-      if (this.data.targetEl) {
-        this.el.setAttribute("position", `${this.data.targetEl.object3D.position.x, this.data.targetEl.object3D.position.y, this.data.targetEl.object3D.position.z}`);
-      }
-    }
-  });
-
   AFRAME.registerComponent("socialvr-emoji-target", {
     init: function () {
-      NAF.utils.getNetworkedEntity(this.el).then(networkedEl => {
-        this.owner = networkedEl.components.networked.data.owner;
-      });
-
       this.el.setAttribute("tags", "singleActionButton: true");
       this.el.setAttribute("is-remote-hover-target", "");
       // Required hack to make hover states work.
@@ -758,6 +737,8 @@
     remove: function () {
       this.activeEmoji?.remove();
       this.selectionPanel?.remove();
+
+      this.activeEmoji = null;
       this.selectionPanel = null;
     },
 
@@ -777,6 +758,16 @@
         });
     },
 
+    tick: function () {
+      if (this.activeEmoji) {
+        const destination = new THREE.Vector3();
+        this.el.object3D.getWorldPosition(destination);
+        destination.add(new THREE.Vector3(0, 1.8, 0));
+
+        this.activeEmoji.setAttribute("position", destination);
+      }
+    },
+
     onHover: function () {
       this.hoverVisual.object3D.visible = true;
     },
@@ -785,7 +776,7 @@
       this.hoverVisual.object3D.visible = false;
     },
 
-    sendEmoji: function (emoji) {
+    sendEmoji: function (emoji, destination) {
       const { entity } = window.APP.utils.addMedia(new URL(emoji.model, window.location).href, "#interactable-emoji");
       const particleEmitterConfig = {
         src: new URL(emoji.icon, window.location).href,
@@ -806,25 +797,21 @@
 
       entity.setAttribute("offset-relative-to", {
         target: "#avatar-pov-node",
-        offset: { x: 0, y: 0, z: -1.5 }
+        offset: { x: 0, y: 0, z: -1.5 },
+        selfDestruct: true
       });
 
       entity.addEventListener("model-loaded", () => {
         entity.querySelector(".particle-emitter").setAttribute("particle-emitter", particleEmitterConfig);
-        entity.setAttribute("emoji", { particleEmitterConfig: particleEmitterConfig });
-        entity.removeAttribute("owned-object-cleanup-timeout");
-        entity.setAttribute("socialvr-emoji", {
-          target: this.el.object3D
+        entity.setAttribute("emoji", { 
+          particleEmitterConfig: particleEmitterConfig 
         });
+        entity.removeAttribute("owned-object-cleanup-timeout");
 
+        this.activeEmoji = entity;
         this.selectionPanel?.remove();
         this.selectionPanel = null;
       });
-    },
-
-    _sendEmoji: function () {
-      this.sendEmoji(null, null, {});
-      NAF.connection.broadcastDataGuaranteed("sendEmoji", {});
     },
 
     onClick: function () {
