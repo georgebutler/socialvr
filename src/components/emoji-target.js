@@ -88,11 +88,27 @@ AFRAME.registerComponent("socialvr-emoji-target", {
 
   tick: function () {
     if (this.activeEmoji) {
+      const SPEED = 1;
+      const ARC = 1;
+
+      // Current Position
+      const current = this.activeEmoji.getAttribute("position");
+
+      // Destination
       const destination = new THREE.Vector3();
       this.el.object3D.getWorldPosition(destination);
-      destination.add(new THREE.Vector3(0, 1.8, 0));
+      destination.add(new THREE.Vector3(0, 1.75, 0));
 
-      this.activeEmoji.setAttribute("position", destination);
+      let pt1 = new THREE.Vector3().lerpVectors(current, destination, 0.33);
+      pt1.y += ARC;
+      let pt2 = new THREE.Vector3().lerpVectors(current, destination, 0.66);
+      pt2.y += ARC;
+
+      let curve = new THREE.CubicBezierCurve3(current, pt1, pt2, destination);
+      let totalTime = curve.getLength() * 1000 * SPEED;
+      let progress = (performance.now() - this.sentStartTime) / totalTime;
+
+      this.activeEmoji.setAttribute("position", curve.getPointAt(progress));
     }
   },
 
@@ -135,7 +151,12 @@ AFRAME.registerComponent("socialvr-emoji-target", {
         particleEmitterConfig: particleEmitterConfig 
       });
       entity.removeAttribute("owned-object-cleanup-timeout");
+      entity.setAttribute("billboard", {
+        onlyY: true
+      });
 
+      this.sentStartTime = performance.now();
+      this.activeEmoji?.remove();
       this.activeEmoji = entity;
       this.selectionPanel?.remove();
       this.selectionPanel = null;
