@@ -68,7 +68,7 @@ AFRAME.registerComponent("socialvr-speech", {
         // speech event started
         const eventData = { speaker: this.playerInfo.playerSessionId, speakerName: this.playerInfo.displayName };
         this._startSpeech(null, null, eventData, null); // local
-        NAF.connection.broadcastData("startSpeech", eventData); // networked
+        NAF.connection.broadcastDataGuaranteed("startSpeech", eventData); // networked
       }
       this.continuousSpeechTime += SPEECH_TIME_PER_TICK;
       this.continuousSpeechLeniencyTime = CONTINUOUS_SPEECH_LENIENCY_TIME;
@@ -140,7 +140,7 @@ AFRAME.registerComponent("socialvr-speech", {
       speakerName: this.playerInfo.displayName
     };
     this._stopSpeech(null, null, eventData, null); // local
-    NAF.connection.broadcastData("stopSpeech", eventData); // networked
+    NAF.connection.broadcastDataGuaranteed("stopSpeech", eventData); // networked
   },
 
   _stopSpeech: function (senderId, dataType, data, targetId) {
@@ -228,6 +228,6 @@ AFRAME.registerComponent("socialvr-speech", {
 
   clearSpeech: function () {
     this._clearSpeech(null, null, {}, null);
-    NAF.connection.broadcastData("clearSpeech", {});
+    NAF.connection.broadcastDataGuaranteed("clearSpeech", {});
   }
 });
