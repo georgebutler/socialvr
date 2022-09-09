@@ -46,6 +46,68 @@ const emojis = [
   },
 ];
 
+const vectorRequiresUpdate = epsilon => {
+  return () => {
+    let prev = null;
+
+    return curr => {
+      if (prev === null) {
+        prev = new THREE.Vector3(curr.x, curr.y, curr.z);
+        return true;
+      } else if (!NAF.utils.almostEqualVec3(prev, curr, epsilon)) {
+        prev.copy(curr);
+        return true;
+      }
+
+      return false;
+    };
+  };
+};
+
+APP.scene.addEventListener("environment-scene-loaded", () => {
+  let assets = document.querySelector("a-assets");
+	let newTemplate = document.createElement("template");
+	newTemplate.id = "interactable-ball-media";
+
+  // TODO: use this as reference
+	let parent = document.createElement("a-entity");
+  parent.setAttribute("set-xyz-order", "");
+  parent.setAttribute("matrix-auto-update", "");
+
+  let particles = document.createElement("a-entity");
+  particles.classList.add("particle-emitter");
+  particles.setAttribute("particle-emitter", "particleCount: 0");
+  particles.setAttribute("scale", "0.25 0.25 0.25");
+  particles.setAttribute("position", "0 0.25 -0.001");
+  parent.appendChild(particles);
+
+  newTemplate.content.appendChild(parent);
+  assets.appendChild(newTemplate);
+
+  NAF.schemas.add({
+    template: "#interactable-ball-media",
+    components: [
+      {
+        component: "position",
+        requiresNetworkUpdate: vectorRequiresUpdate(0.001)
+      },
+      {
+        component: "rotation",
+        requiresNetworkUpdate: vectorRequiresUpdate(0.5)
+      },
+      {
+        component: "scale",
+        requiresNetworkUpdate: vectorRequiresUpdate(0.001)
+      },
+      {
+        selector: ".particle-emitter",
+        component: "particle-emitter"
+      },
+      "media-loader",
+    ]
+  });
+}, { once: true });
+
 AFRAME.registerComponent("socialvr-emoji-target", {
   init: function () {
     this.el.setAttribute("tags", "singleActionButton: true");
@@ -88,7 +150,7 @@ AFRAME.registerComponent("socialvr-emoji-target", {
       });
   },
 
-  tick: function () {
+  tick: function (time, dt) {
     if (this.activeEmoji) {
       const SPEED = 1;
       const ARC = 1;
@@ -99,15 +161,15 @@ AFRAME.registerComponent("socialvr-emoji-target", {
       // Destination
       const destination = new THREE.Vector3();
       this.el.object3D.getWorldPosition(destination);
-      destination.add(new THREE.Vector3(0, 1.75, 0));
+      destination.add(new THREE.Vector3(0, 1, 0));
 
-      let pt1 = new THREE.Vector3().lerpVectors(current, destination, 0.33);
+      let pt1 = new THREE.Vector3().lerpVectors(current, destination, 1);
       pt1.y += ARC;
-      let pt2 = new THREE.Vector3().lerpVectors(current, destination, 0.66);
+      let pt2 = new THREE.Vector3().lerpVectors(current, destination, 0.9);
       pt2.y += ARC;
 
       let curve = new THREE.CubicBezierCurve3(current, pt1, pt2, destination);
-      let totalTime = curve.getLength() * 1000 * SPEED;
+      let totalTime = curve.getLength() * 6000 * SPEED;
       let progress = (performance.now() - this.sentStartTime) / totalTime;
 
       this.activeEmoji.setAttribute("position", curve.getPointAt(progress));
@@ -122,8 +184,8 @@ AFRAME.registerComponent("socialvr-emoji-target", {
     this.hoverVisual.object3D.visible = false;
   },
 
-  sendEmoji: function (emoji, destination) {
-    const { entity } = window.APP.utils.addMedia(new URL(emoji.model, window.location).href, "#interactable-emoji");
+  sendEmoji: function (emoji) {
+    const { entity } = window.APP.utils.addMedia(new URL(emoji.model, window.location).href, "#interactable-ball-media");
     const particleEmitterConfig = {
       src: new URL(emoji.icon, window.location).href,
       resolve: false,
@@ -143,16 +205,12 @@ AFRAME.registerComponent("socialvr-emoji-target", {
 
     entity.setAttribute("offset-relative-to", {
       target: "#avatar-pov-node",
-      offset: { x: 0, y: 0, z: -1.5 },
+      offset: { x: 0, y: 0, z: -0.5 },
       selfDestruct: true
     });
 
     entity.addEventListener("model-loaded", () => {
-      entity.querySelector(".particle-emitter").setAttribute("particle-emitter", particleEmitterConfig);
-      entity.setAttribute("emoji", { 
-        particleEmitterConfig: particleEmitterConfig 
-      });
-      entity.removeAttribute("owned-object-cleanup-timeout");
+      entity.setAttribute("particle-emitter", particleEmitterConfig);
       entity.setAttribute("billboard", {
         onlyY: true
       });

@@ -184,7 +184,7 @@ AFRAME.registerComponent("socialvr-speech", {
       U2E2EZi: 0x7700f4,
       xb4PVBE: 0xffff00,
       Mqpw3tx: 0xf30000,
-      RczWQgy: 0x000000,
+      RczWQgy: 0x111111,
       bs7pLac: 0x010188,
       "4r1KpVk": 0xff5c00
     };
