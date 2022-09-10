@@ -53,8 +53,7 @@ AFRAME.registerComponent("socialvr-world-mover", {
         window.APP.utils.GLTFModelPlus
             .loadModel(this.data.modelURL)
             .then((model) => {
-                const mesh = window.APP.utils.cloneObject3D(model.scene);
-                this.el.setObject3D("mesh", mesh);
+                this.el.setObject3D("mesh", window.APP.utils.cloneObject3D(model.scene));
             })
             .finally(() => {
                 if (this.data.overrideSky) {
