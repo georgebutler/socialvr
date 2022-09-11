@@ -1,6 +1,11 @@
 const STATE_OFF = 0
 const STATE_ON = 1
 
+const COLOR_ON = 0x029200;
+const COLOR_OFF = 0xf30000;
+const COLOR_HOVER_ON_OFF = 0xff9999;
+const COLOR_HOVER_SELECTED = 0x9bff99;
+
 AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
     schema: {
         icon: {
@@ -14,32 +19,16 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
         radius: {
             type: "number",
             default: 0.1
-        },
-        color: {
-            type: "color",
-            default: "#FFF"
-        },
-        emissiveColor: {
-            type: "color",
-            default: "#000"
         }
     },
 
     init: function () {
         this.geometry = new THREE.SphereGeometry(this.data.radius, 16, 8);
-        this.material_off = new THREE.MeshStandardMaterial({
-            color: this.data.color,
-            emissive: this.data.emissiveColor
-        });
-        this.material_on = new THREE.MeshStandardMaterial({
-            color: this.data.color,
-            emissive: this.data.color
-        });
+        this.material_off = new THREE.MeshStandardMaterial({ color: COLOR_OFF });
+        this.material_on = new THREE.MeshStandardMaterial({ color: COLOR_ON });
+        this.state = STATE_OFF;
 
-        this.state = STATE_OFF
-        this.mesh = new THREE.Mesh(this.geometry, this.material_off);
-
-        this.el.setObject3D("mesh", this.mesh);
+        this.el.setObject3D("mesh", new THREE.Mesh(this.geometry, this.material_off));
         this.el.setAttribute("tags", "singleActionButton: true");
         this.el.setAttribute("is-remote-hover-target", "");
         this.el.setAttribute("css-class", "interactable");

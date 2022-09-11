@@ -16,7 +16,49 @@ import "./systems/speech";
 import "./components/toolbox-dashboard";
 import "./components/toolbox-dashboard-button";
 
+const vectorRequiresUpdate = epsilon => {
+  return () => {
+    let prev = null;
+
+    return curr => {
+      if (prev === null) {
+        prev = new THREE.Vector3(curr.x, curr.y, curr.z);
+        return true;
+      } else if (!NAF.utils.almostEqualVec3(prev, curr, epsilon)) {
+        prev.copy(curr);
+        return true;
+      }
+
+      return false;
+    };
+  };
+}
+
+function initSchemas() {
+  // NAF Template
+  const assets = document.querySelector("a-assets");
+  const newTemplate = document.createElement("template");
+  newTemplate.id = "sent-emoji";
+
+  const newEntity = document.createElement("a-entity");
+  newEntity.setAttribute("billboard", "");
+
+  newTemplate.content.appendChild(newEntity);
+  assets.appendChild(newTemplate);
+
+  // NAF Schema
+  const schema = { ...NAF.schemas.schemaDict["#static-media"] }
+  schema.template = "#sent-emoji";
+  schema.components.push({ component: "position", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
+  schema.components.push({ component: "rotation", requiresNetworkUpdate: vectorRequiresUpdate(0.5) });
+  schema.components.push({ component: "scale", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
+  schema.components.push({ component: "billboard", property: "onlyY" });
+  NAF.schemas.add(schema);
+}
+
 APP.scene.addEventListener("environment-scene-loaded", () => {
+  initSchemas();
+
   if (document.querySelector(".barge")) {
     // Button
     let button = document.createElement("a-entity");
@@ -124,11 +166,14 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
     });
 
     window.APP.scene.appendChild(worldMover);
-  } 
+  }
   else {
+    // Ambient Light
+    APP.scene.object3D.add(new THREE.DirectionalLight());
+    APP.scene.object3D.add(new THREE.AmbientLight(0x404040, 0.95));
+
     // Dashboard
     const dashboard = document.createElement("a-entity");
-
     dashboard.setAttribute("socialvr-toolbox-dashboard", "");
     APP.scene.appendChild(dashboard);
 

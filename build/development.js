@@ -718,24 +718,8 @@
   ];
 
   const EMOJI_LIFETIME = 10;
-
-  const vectorRequiresUpdate = epsilon => {
-    return () => {
-      let prev = null;
-
-      return curr => {
-        if (prev === null) {
-          prev = new THREE.Vector3(curr.x, curr.y, curr.z);
-          return true;
-        } else if (!NAF.utils.almostEqualVec3(prev, curr, epsilon)) {
-          prev.copy(curr);
-          return true;
-        }
-
-        return false;
-      };
-    };
-  };
+  const EMOJI_SPEED = 1;
+  const EMOJI_ARC = 0.2;
 
   AFRAME.registerComponent("socialvr-emoji-target", {
     init: function () {
@@ -749,24 +733,6 @@
       this.el.appendChild(this.hoverVisual);
 
       this.activeEmojis = [];
-
-      // NAF Template
-      const assets = document.querySelector("a-assets");
-      const newTemplate = document.createElement("template");
-      newTemplate.id = "sent-emoji";
-
-      const newEntity = document.createElement("a-entity");
-      newEntity.setAttribute("body-helper", { type: "dynamic", mass: 1, collisionFilterGroup: 1, collisionFilterMask: 15 });
-
-      newTemplate.content.appendChild(newEntity);
-      assets.appendChild(newTemplate);
-
-      // NAF Schema
-      const schema = { ...NAF.schemas.schemaDict["#static-media"] };
-      schema.template = "#sent-emoji";
-      schema.components.push({ component: "position", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
-      schema.components.push({ component: "rotation", requiresNetworkUpdate: vectorRequiresUpdate(0.5) });
-      NAF.schemas.add(schema);
 
       // Hover Visual
       window.APP.utils.GLTFModelPlus
@@ -799,12 +765,34 @@
     tick: function (time, dt) {
       this.activeEmojis.forEach((data, index, arr) => {
         if ((EMOJI_LIFETIME * 1000) >= performance.now() - data.timestamp) {
-          data.recipient.object3D.getWorldPosition(this.activeEmojis[index].entity.object3D.position);
-          this.activeEmojis[index].entity.object3D.matrixNeedsUpdate = true;
+          const current = this.activeEmojis[index].entity.object3D.position;
+          const destination = new THREE.Vector3();
+
+          data.recipient.object3D.getWorldPosition(destination);
+          destination.add(new THREE.Vector3(0, 1.75, 0));
+
+          const pt1 = new THREE.Vector3().lerpVectors(current, destination, 0.25);
+          pt1.y += EMOJI_ARC;
+          const pt2 = new THREE.Vector3().lerpVectors(current, destination, 0.75);
+          pt2.y += EMOJI_ARC;
+
+          const curve = new THREE.CubicBezierCurve3(current, pt1, pt2, destination);
+          const totalTime = (curve.getLength() * 5000) / EMOJI_SPEED;
+          const progress = (performance.now() - data.timestamp) / totalTime;
+
+          if (progress < 1) {
+            this.activeEmojis[index].entity.setAttribute("position", curve.getPointAt(progress));
+            this.activeEmojis[index].entity.object3D.matrixNeedsUpdate = true;
+          } else {
+            this.activeEmojis[index].entity.object3D.position.copy(destination);
+            this.activeEmojis[index].entity.object3D.matrixNeedsUpdate = true;
+            this.activeEmojis[index].reachedEnd = true;
+          }
         } else {
-          console.log("Removing emoji");
-          data.entity.remove();
-          arr.splice(index, 1);
+          if (data.reachedEnd) {
+            data.entity.remove();
+            arr.splice(index, 1);
+          }
         }
       });
     },
@@ -821,13 +809,21 @@
       this.selectionPanel?.remove();
       this.selectionPanel = null;
 
-      const { entity } = window.APP.utils.addMedia(new URL(emoji.model, window.location).href, "#static-media");
+      const { entity } = window.APP.utils.addMedia(new URL(emoji.model, window.location).href, "#sent-emoji");
+      entity.addEventListener("media-loaded", () => {
+        this.activeEmojis.push({
+          entity,
+          sender,
+          recipient,
+          timestamp
+        });
+      }, { once: true });
 
-      this.activeEmojis.push({
-        entity,
-        sender,
-        recipient,
-        timestamp
+      entity.setAttribute("billboard", { onlyY: true });
+      entity.setAttribute("offset-relative-to", {
+        target: "#avatar-pov-node",
+        offset: { x: 0, y: 0, z: -0.5 },
+        selfDestruct: true
       });
     },
 
@@ -1133,8 +1129,6 @@
           this.features = {
               CONVERSATION_BALANCE: {
                   name: "cb",
-                  color: "#6BDE18",
-                  emissiveColor: "#FF4444",
                   icon: "../assets/images/1F4AC_color.png",
                   enabled: false,
                   showButton: true,
@@ -1143,8 +1137,6 @@
               },
               EMOJI: {
                   name: "emoji",
-                  color: "#6BDE18",
-                  emissiveColor: "#FF4444",
                   icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/icons/toggle.png",
                   enabled: false,
                   showButton: true,
@@ -1153,8 +1145,6 @@
               },
               BUILDINGKIT: {
                   name: "buildingkit",
-                  color: "#6BDE18",
-                  emissiveColor: "#FF4444",
                   icon: "../assets/images/1F48C_color.png",
                   enabled: false,
                   showButton: false,
@@ -1163,8 +1153,6 @@
               },
               BARGE: {
                   name: "barge",
-                  color: "#6BDE18",
-                  emissiveColor: "#FF4444",
                   icon: "../assets/images/26F5_color.png",
                   enabled: false,
                   showButton: false,
@@ -1173,8 +1161,6 @@
               },
               HALO: {
                   name: "halo",
-                  color: "#6BDE18",
-                  emissiveColor: "#FF4444",
                   icon: "../assets/images/1F607_color.png",
                   enabled: false,
                   showButton: false,
@@ -1208,7 +1194,7 @@
               if (feature.showButton) {
                   let button = document.createElement("a-entity");
 
-                  button.setAttribute("socialvr-toolbox-dashboard-button", `icon: ${feature.icon}; radius: 0.1; color: ${feature.color}; emissiveColor: ${feature.emissiveColor}; featureName: ${feature.name};`);
+                  button.setAttribute("socialvr-toolbox-dashboard-button", `icon: ${feature.icon}; radius: 0.1; featureName: ${feature.name};`);
                   button.setAttribute("position", feature.button_positon);
                   window.APP.scene.appendChild(button);
               }
@@ -1364,6 +1350,9 @@
   const STATE_OFF = 0;
   const STATE_ON = 1;
 
+  const COLOR_ON = 0x029200;
+  const COLOR_OFF = 0xf30000;
+
   AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
       schema: {
           icon: {
@@ -1377,32 +1366,16 @@
           radius: {
               type: "number",
               default: 0.1
-          },
-          color: {
-              type: "color",
-              default: "#FFF"
-          },
-          emissiveColor: {
-              type: "color",
-              default: "#000"
           }
       },
 
       init: function () {
           this.geometry = new THREE.SphereGeometry(this.data.radius, 16, 8);
-          this.material_off = new THREE.MeshStandardMaterial({
-              color: this.data.color,
-              emissive: this.data.emissiveColor
-          });
-          this.material_on = new THREE.MeshStandardMaterial({
-              color: this.data.color,
-              emissive: this.data.color
-          });
-
+          this.material_off = new THREE.MeshStandardMaterial({ color: COLOR_OFF });
+          this.material_on = new THREE.MeshStandardMaterial({ color: COLOR_ON });
           this.state = STATE_OFF;
-          this.mesh = new THREE.Mesh(this.geometry, this.material_off);
 
-          this.el.setObject3D("mesh", this.mesh);
+          this.el.setObject3D("mesh", new THREE.Mesh(this.geometry, this.material_off));
           this.el.setAttribute("tags", "singleActionButton: true");
           this.el.setAttribute("is-remote-hover-target", "");
           this.el.setAttribute("css-class", "interactable");
@@ -1484,7 +1457,49 @@
 
   // Barge
 
+  const vectorRequiresUpdate = epsilon => {
+    return () => {
+      let prev = null;
+
+      return curr => {
+        if (prev === null) {
+          prev = new THREE.Vector3(curr.x, curr.y, curr.z);
+          return true;
+        } else if (!NAF.utils.almostEqualVec3(prev, curr, epsilon)) {
+          prev.copy(curr);
+          return true;
+        }
+
+        return false;
+      };
+    };
+  };
+
+  function initSchemas() {
+    // NAF Template
+    const assets = document.querySelector("a-assets");
+    const newTemplate = document.createElement("template");
+    newTemplate.id = "sent-emoji";
+
+    const newEntity = document.createElement("a-entity");
+    newEntity.setAttribute("billboard", "");
+
+    newTemplate.content.appendChild(newEntity);
+    assets.appendChild(newTemplate);
+
+    // NAF Schema
+    const schema = { ...NAF.schemas.schemaDict["#static-media"] };
+    schema.template = "#sent-emoji";
+    schema.components.push({ component: "position", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
+    schema.components.push({ component: "rotation", requiresNetworkUpdate: vectorRequiresUpdate(0.5) });
+    schema.components.push({ component: "scale", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
+    schema.components.push({ component: "billboard", property: "onlyY" });
+    NAF.schemas.add(schema);
+  }
+
   APP.scene.addEventListener("environment-scene-loaded", () => {
+    initSchemas();
+
     if (document.querySelector(".barge")) {
       // Button
       let button = document.createElement("a-entity");
@@ -1592,11 +1607,14 @@
       });
 
       window.APP.scene.appendChild(worldMover);
-    } 
+    }
     else {
+      // Ambient Light
+      APP.scene.object3D.add(new THREE.DirectionalLight());
+      APP.scene.object3D.add(new THREE.AmbientLight(0x404040, 0.95));
+
       // Dashboard
       const dashboard = document.createElement("a-entity");
-
       dashboard.setAttribute("socialvr-toolbox-dashboard", "");
       APP.scene.appendChild(dashboard);
 

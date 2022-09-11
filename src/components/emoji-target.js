@@ -47,24 +47,8 @@ const emojis = [
 ];
 
 const EMOJI_LIFETIME = 10;
-
-const vectorRequiresUpdate = epsilon => {
-  return () => {
-    let prev = null;
-
-    return curr => {
-      if (prev === null) {
-        prev = new THREE.Vector3(curr.x, curr.y, curr.z);
-        return true;
-      } else if (!NAF.utils.almostEqualVec3(prev, curr, epsilon)) {
-        prev.copy(curr);
-        return true;
-      }
-
-      return false;
-    };
-  };
-}
+const EMOJI_SPEED = 1;
+const EMOJI_ARC = 0.2;
 
 AFRAME.registerComponent("socialvr-emoji-target", {
   init: function () {
@@ -78,24 +62,6 @@ AFRAME.registerComponent("socialvr-emoji-target", {
     this.el.appendChild(this.hoverVisual);
 
     this.activeEmojis = [];
-
-    // NAF Template
-    const assets = document.querySelector("a-assets");
-    const newTemplate = document.createElement("template");
-    newTemplate.id = "sent-emoji";
-
-    const newEntity = document.createElement("a-entity");
-    newEntity.setAttribute("body-helper", { type: "dynamic", mass: 1, collisionFilterGroup: 1, collisionFilterMask: 15 });
-
-    newTemplate.content.appendChild(newEntity);
-    assets.appendChild(newTemplate);
-
-    // NAF Schema
-    const schema = { ...NAF.schemas.schemaDict["#static-media"] }
-    schema.template = "#sent-emoji";
-    schema.components.push({ component: "position", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
-    schema.components.push({ component: "rotation", requiresNetworkUpdate: vectorRequiresUpdate(0.5) });
-    NAF.schemas.add(schema);
 
     // Hover Visual
     window.APP.utils.GLTFModelPlus
@@ -128,12 +94,34 @@ AFRAME.registerComponent("socialvr-emoji-target", {
   tick: function (time, dt) {
     this.activeEmojis.forEach((data, index, arr) => {
       if ((EMOJI_LIFETIME * 1000) >= performance.now() - data.timestamp) {
-        data.recipient.object3D.getWorldPosition(this.activeEmojis[index].entity.object3D.position);
-        this.activeEmojis[index].entity.object3D.matrixNeedsUpdate = true;
+        const current = this.activeEmojis[index].entity.object3D.position;
+        const destination = new THREE.Vector3();
+
+        data.recipient.object3D.getWorldPosition(destination);
+        destination.add(new THREE.Vector3(0, 1.75, 0));
+
+        const pt1 = new THREE.Vector3().lerpVectors(current, destination, 0.25);
+        pt1.y += EMOJI_ARC;
+        const pt2 = new THREE.Vector3().lerpVectors(current, destination, 0.75);
+        pt2.y += EMOJI_ARC;
+
+        const curve = new THREE.CubicBezierCurve3(current, pt1, pt2, destination);
+        const totalTime = (curve.getLength() * 5000) / EMOJI_SPEED;
+        const progress = (performance.now() - data.timestamp) / totalTime;
+
+        if (progress < 1) {
+          this.activeEmojis[index].entity.setAttribute("position", curve.getPointAt(progress));
+          this.activeEmojis[index].entity.object3D.matrixNeedsUpdate = true;
+        } else {
+          this.activeEmojis[index].entity.object3D.position.copy(destination);
+          this.activeEmojis[index].entity.object3D.matrixNeedsUpdate = true;
+          this.activeEmojis[index].reachedEnd = true;
+        }
       } else {
-        console.log("Removing emoji");
-        data.entity.remove();
-        arr.splice(index, 1);
+        if (data.reachedEnd) {
+          data.entity.remove();
+          arr.splice(index, 1);
+        }
       }
     });
   },
@@ -150,13 +138,21 @@ AFRAME.registerComponent("socialvr-emoji-target", {
     this.selectionPanel?.remove();
     this.selectionPanel = null;
 
-    const { entity } = window.APP.utils.addMedia(new URL(emoji.model, window.location).href, "#static-media");
+    const { entity } = window.APP.utils.addMedia(new URL(emoji.model, window.location).href, "#sent-emoji");
+    entity.addEventListener("media-loaded", () => {
+      this.activeEmojis.push({
+        entity,
+        sender,
+        recipient,
+        timestamp
+      });
+    }, { once: true });
 
-    this.activeEmojis.push({
-      entity,
-      sender,
-      recipient,
-      timestamp
+    entity.setAttribute("billboard", { onlyY: true });
+    entity.setAttribute("offset-relative-to", {
+      target: "#avatar-pov-node",
+      offset: { x: 0, y: 0, z: -0.5 },
+      selfDestruct: true
     });
   },
 

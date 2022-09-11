@@ -1,9 +1,3 @@
-const COLOR_ON = 0x03b300;
-const COLOR_OFF = 0xff0000;
-
-const COLOR_HOVER_ON_OFF = 0xff9999;
-const COLOR_HOVER_SELECTED = 0x9bff99;
-
 AFRAME.registerComponent("socialvr-toolbox-dashboard", {
     init: function () {
         this.geometry = new THREE.SphereGeometry(0.02, 16, 8);
@@ -16,8 +10,6 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
         this.features = {
             CONVERSATION_BALANCE: {
                 name: "cb",
-                color: "#6BDE18",
-                emissiveColor: "#FF4444",
                 icon: "../assets/images/1F4AC_color.png",
                 enabled: false,
                 showButton: true,
@@ -26,8 +18,6 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
             },
             EMOJI: {
                 name: "emoji",
-                color: "#6BDE18",
-                emissiveColor: "#FF4444",
                 icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/icons/toggle.png",
                 enabled: false,
                 showButton: true,
@@ -36,8 +26,6 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
             },
             BUILDINGKIT: {
                 name: "buildingkit",
-                color: "#6BDE18",
-                emissiveColor: "#FF4444",
                 icon: "../assets/images/1F48C_color.png",
                 enabled: false,
                 showButton: false,
@@ -46,8 +34,6 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
             },
             BARGE: {
                 name: "barge",
-                color: "#6BDE18",
-                emissiveColor: "#FF4444",
                 icon: "../assets/images/26F5_color.png",
                 enabled: false,
                 showButton: false,
@@ -56,8 +42,6 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
             },
             HALO: {
                 name: "halo",
-                color: "#6BDE18",
-                emissiveColor: "#FF4444",
                 icon: "../assets/images/1F607_color.png",
                 enabled: false,
                 showButton: false,
@@ -91,7 +75,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
             if (feature.showButton) {
                 let button = document.createElement("a-entity");
 
-                button.setAttribute("socialvr-toolbox-dashboard-button", `icon: ${feature.icon}; radius: 0.1; color: ${feature.color}; emissiveColor: ${feature.emissiveColor}; featureName: ${feature.name};`);
+                button.setAttribute("socialvr-toolbox-dashboard-button", `icon: ${feature.icon}; radius: 0.1; featureName: ${feature.name};`);
                 button.setAttribute("position", feature.button_positon);
                 window.APP.scene.appendChild(button);
             }
