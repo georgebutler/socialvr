@@ -16,34 +16,31 @@ import "./systems/speech";
 import "./components/toolbox-dashboard";
 import "./components/toolbox-dashboard-button";
 
-const vectorRequiresUpdate = epsilon => {
-  return () => {
-    let prev = null;
-
-    return curr => {
-      if (prev === null) {
-        prev = new THREE.Vector3(curr.x, curr.y, curr.z);
-        return true;
-      } else if (!NAF.utils.almostEqualVec3(prev, curr, epsilon)) {
-        prev.copy(curr);
-        return true;
-      }
-
-      return false;
-    };
-  };
-}
-
 function initSchemas() {
+  const vectorRequiresUpdate = epsilon => {
+    return () => {
+      let prev = null;
+  
+      return curr => {
+        if (prev === null) {
+          prev = new THREE.Vector3(curr.x, curr.y, curr.z);
+          return true;
+        } else if (!NAF.utils.almostEqualVec3(prev, curr, epsilon)) {
+          prev.copy(curr);
+          return true;
+        }
+  
+        return false;
+      };
+    };
+  }
+
   // NAF Template
   const assets = document.querySelector("a-assets");
   const newTemplate = document.createElement("template");
   newTemplate.id = "sent-emoji";
 
-  const newEntity = document.createElement("a-entity");
-  newEntity.setAttribute("billboard", "");
-
-  newTemplate.content.appendChild(newEntity);
+  newTemplate.content.appendChild(document.createElement("a-entity"));
   assets.appendChild(newTemplate);
 
   // NAF Schema
@@ -53,6 +50,7 @@ function initSchemas() {
   schema.components.push({ component: "rotation", requiresNetworkUpdate: vectorRequiresUpdate(0.5) });
   schema.components.push({ component: "scale", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
   schema.components.push({ component: "billboard", property: "onlyY" });
+  schema.components.push({ component: "particle-emitter" });
   NAF.schemas.add(schema);
 }
 
@@ -169,8 +167,8 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
   }
   else {
     // Ambient Light
-    APP.scene.object3D.add(new THREE.DirectionalLight());
-    APP.scene.object3D.add(new THREE.AmbientLight(0x404040, 0.95));
+    //APP.scene.object3D.add(new THREE.DirectionalLight());
+    //APP.scene.object3D.add(new THREE.AmbientLight(0x404040, 0.95));
 
     // Dashboard
     const dashboard = document.createElement("a-entity");

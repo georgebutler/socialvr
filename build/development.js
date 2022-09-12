@@ -718,7 +718,7 @@
   ];
 
   const EMOJI_LIFETIME = 10;
-  const EMOJI_SPEED = 1;
+  const EMOJI_SPEED = 0.6;
   const EMOJI_ARC = 0.2;
 
   AFRAME.registerComponent("socialvr-emoji-target", {
@@ -777,7 +777,7 @@
           pt2.y += EMOJI_ARC;
 
           const curve = new THREE.CubicBezierCurve3(current, pt1, pt2, destination);
-          const totalTime = (curve.getLength() * 5000) / EMOJI_SPEED;
+          const totalTime = (curve.getLength() * 10000) / EMOJI_SPEED;
           const progress = (performance.now() - data.timestamp) / totalTime;
 
           if (progress < 1) {
@@ -810,7 +810,26 @@
       this.selectionPanel = null;
 
       const { entity } = window.APP.utils.addMedia(new URL(emoji.model, window.location).href, "#sent-emoji");
+
       entity.addEventListener("media-loaded", () => {
+        const particleEmitterConfig = {
+          src: new URL(emoji.icon, window.location).href,
+          resolve: false,
+          particleCount: 20,
+          startSize: 0.01,
+          endSize: 0.2,
+          sizeRandomness: 0.05,
+          lifetime: 1,
+          lifetimeRandomness: 0.2,
+          ageRandomness: 1,
+          startVelocity: { x: 0, y: 0, z: 0 },
+          endVelocity: { x: 0, y: -1.87, z: 0 },
+          startOpacity: 1,
+          middleOpacity: 1,
+          endOpacity: 0
+        };
+
+        entity.setAttribute("particle-emitter", particleEmitterConfig);
         this.activeEmojis.push({
           entity,
           sender,
@@ -844,19 +863,22 @@
         window.APP.utils.GLTFModelPlus
           .loadModel(emoji.model)
           .then((model) => {
-            const button = document.createElement("a-entity");
-            button.setAttribute("billboard", "");
-            button.setAttribute("tags", "singleActionButton: true");
-            button.setAttribute("is-remote-hover-target", "");
-            button.setAttribute("css-class", "interactable");
-            button.setAttribute("hoverable-visuals", "");
-            button.setObject3D("mesh", window.APP.utils.cloneObject3D(model.scene));
-            button.object3D.scale.set(0.25, 0.25, 0.25);
-            button.object3D.position.set((0.25 * index) - (((1 / emojis.length) * emojis.length) / 2), 0, 0);
-            button.object3D.matrixNeedsUpdate = true;
-            button.object3D.addEventListener("interact", this.sendEmoji.bind(this, emoji, null, this.el, performance.now()));
+            if (this.selectionPanel) {
+              const button = document.createElement("a-entity");
+              button.setAttribute("billboard", "");
+              button.setAttribute("tags", "singleActionButton: true");
+              button.setAttribute("is-remote-hover-target", "");
+              button.setAttribute("css-class", "interactable");
+              button.setAttribute("hoverable-visuals", "");
+              button.setObject3D("mesh", window.APP.utils.cloneObject3D(model.scene));
+              button.object3D.scale.set(0.25, 0.25, 0.25);
+              button.object3D.position.set((0.25 * index) - 0.25, 0, 0);
+              button.object3D.matrixNeedsUpdate = true;
+              button.object3D.addEventListener("interact", this.sendEmoji.bind(this, emoji, null, this.el, performance.now()));
 
-            this.selectionPanel.appendChild(button);
+              this.selectionPanel.appendChild(button);
+              this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundAt(19, button.object3D.position, false);
+            }
           })
           .catch((e) => {
             console.error(e);
@@ -1457,34 +1479,31 @@
 
   // Barge
 
-  const vectorRequiresUpdate = epsilon => {
-    return () => {
-      let prev = null;
-
-      return curr => {
-        if (prev === null) {
-          prev = new THREE.Vector3(curr.x, curr.y, curr.z);
-          return true;
-        } else if (!NAF.utils.almostEqualVec3(prev, curr, epsilon)) {
-          prev.copy(curr);
-          return true;
-        }
-
-        return false;
+  function initSchemas() {
+    const vectorRequiresUpdate = epsilon => {
+      return () => {
+        let prev = null;
+    
+        return curr => {
+          if (prev === null) {
+            prev = new THREE.Vector3(curr.x, curr.y, curr.z);
+            return true;
+          } else if (!NAF.utils.almostEqualVec3(prev, curr, epsilon)) {
+            prev.copy(curr);
+            return true;
+          }
+    
+          return false;
+        };
       };
     };
-  };
 
-  function initSchemas() {
     // NAF Template
     const assets = document.querySelector("a-assets");
     const newTemplate = document.createElement("template");
     newTemplate.id = "sent-emoji";
 
-    const newEntity = document.createElement("a-entity");
-    newEntity.setAttribute("billboard", "");
-
-    newTemplate.content.appendChild(newEntity);
+    newTemplate.content.appendChild(document.createElement("a-entity"));
     assets.appendChild(newTemplate);
 
     // NAF Schema
@@ -1494,6 +1513,7 @@
     schema.components.push({ component: "rotation", requiresNetworkUpdate: vectorRequiresUpdate(0.5) });
     schema.components.push({ component: "scale", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
     schema.components.push({ component: "billboard", property: "onlyY" });
+    schema.components.push({ component: "particle-emitter" });
     NAF.schemas.add(schema);
   }
 
@@ -1610,8 +1630,8 @@
     }
     else {
       // Ambient Light
-      APP.scene.object3D.add(new THREE.DirectionalLight());
-      APP.scene.object3D.add(new THREE.AmbientLight(0x404040, 0.95));
+      //APP.scene.object3D.add(new THREE.DirectionalLight());
+      //APP.scene.object3D.add(new THREE.AmbientLight(0x404040, 0.95));
 
       // Dashboard
       const dashboard = document.createElement("a-entity");
