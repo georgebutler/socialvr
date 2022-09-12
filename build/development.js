@@ -1071,7 +1071,7 @@
         U2E2EZi: 0x7700f4,
         xb4PVBE: 0xffff00,
         Mqpw3tx: 0xf30000,
-        RczWQgy: 0x111111,
+        RczWQgy: 0x000000,
         bs7pLac: 0x010188,
         "4r1KpVk": 0xff5c00
       };
@@ -1081,6 +1081,9 @@
       for (const avatarSID of Object.keys(colorsByAvatar)) {
         if (avatarURL.includes(avatarSID)) {
           return colorsByAvatar[avatarSID];
+        } else {
+          console.warn(`Avatar color not found for ID: ${avatarSID}`);
+          return 0xffffff;
         }
       }
 
@@ -1090,7 +1093,7 @@
     spawnOrb: function (size, in_color) {
       const geometry = new THREE.CylinderGeometry(0.1, 0.1, size);
       const material = new THREE.MeshBasicMaterial({
-        color: in_color || 0xffffff
+        color: in_color
       });
 
       // create, color, position, and scale the orb
