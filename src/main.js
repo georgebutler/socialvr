@@ -20,7 +20,7 @@ function initSchemas() {
   const vectorRequiresUpdate = epsilon => {
     return () => {
       let prev = null;
-  
+
       return curr => {
         if (prev === null) {
           prev = new THREE.Vector3(curr.x, curr.y, curr.z);
@@ -29,7 +29,7 @@ function initSchemas() {
           prev.copy(curr);
           return true;
         }
-  
+
         return false;
       };
     };
@@ -151,7 +151,7 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
       text: "Start",
       radius: 0.1,
       color: 0xC576F6,
-      eventName: "startMovingWorld"
+      phaseID: 1
     });
 
     window.APP.scene.appendChild(button);
@@ -185,6 +185,24 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
       }
     });
   }
+
+  APP.hubChannel.presence.onJoin(() => {
+    // Log Join
+    fetch("https://log.socialsuperpowers.net/api/joined", {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        playerSessionId: window.APP.componentRegistry["player-info"][window.APP.componentRegistry["player-info"].length - 1].playerSessionId,
+        displayName: window.APP.store.state.profile.displayName
+      })
+    })
+      .then((res) => {
+        console.log(res.json());
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+  });
 }, { once: true });
 
 APP.scene.addEventListener("object_spawned", (e) => {

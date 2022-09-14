@@ -122,7 +122,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
         APP.componentRegistry["player-info"].forEach((playerInfo) => {
             if (!playerInfo.socialVREmoji) {
                 const emojiTarget = document.createElement("a-entity");
-                emojiTarget.setAttribute("socialvr-emoji-target", "");
+                emojiTarget.setAttribute("socialvr-emoji-target", { ownerID: playerInfo.playerSessionId });
 
                 playerInfo.el.querySelector(".Spine").appendChild(emojiTarget);
                 playerInfo.socialVREmoji = true;
@@ -198,7 +198,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
 
     _enableFeatureCB: function () {
         this.enableFeatureCB(null, null, {});
-        NAF.connection.broadcastDataGuaranteed("enableFeatureCB", {}); 
+        NAF.connection.broadcastDataGuaranteed("enableFeatureCB", {});
     },
 
     disableFeatureCB: function () {
@@ -213,7 +213,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
 
     _disableFeatureCB: function () {
         this.disableFeatureCB(null, null, {});
-        NAF.connection.broadcastDataGuaranteed("disableFeatureCB", {}); 
+        NAF.connection.broadcastDataGuaranteed("disableFeatureCB", {});
     },
 
     enableFeatureHalo: function () {

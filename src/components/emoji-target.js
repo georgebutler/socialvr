@@ -51,6 +51,13 @@ const EMOJI_SPEED = 0.6;
 const EMOJI_ARC = 0.2;
 
 AFRAME.registerComponent("socialvr-emoji-target", {
+  schema: {
+    ownerID: {
+      type: "string",
+      default: ""
+    }
+  },
+
   init: function () {
     this.el.setAttribute("tags", "singleActionButton: true");
     this.el.setAttribute("is-remote-hover-target", "");
@@ -159,12 +166,29 @@ AFRAME.registerComponent("socialvr-emoji-target", {
       }
 
       entity.setAttribute("particle-emitter", particleEmitterConfig);
+
       this.activeEmojis.push({
         entity,
         sender,
         recipient,
         timestamp
       });
+
+      fetch("https://log.socialsuperpowers.net/api/emojiSent", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          logSender: sender,
+          logReceiver: this.data.ownerID,
+          logEmojiType: emoji.id
+        })
+      })
+        .then((res) => {
+          console.log(res.json());
+        })
+        .catch((e) => {
+          console.error(e);
+        })
     }, { once: true });
 
     entity.setAttribute("billboard", { onlyY: true });

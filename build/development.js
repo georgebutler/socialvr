@@ -63,6 +63,20 @@
 
         if (this.data.phaseID === 1) {
           this.el.sceneEl.emit("startMovingWorld");
+          fetch("https://log.socialsuperpowers.net/api/flyingPlatform", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              displayName: window.APP.store.state.profile.displayName,
+              toggle: true
+             })
+          })
+            .then((res) => {
+              console.log(res.json());
+            })
+            .catch((e) => {
+              console.error(e);
+            });
         } else if (this.data.phaseID === 4) {
           this.el.sceneEl.emit("stopMovingWorld");
           this.el.sceneEl.emit("generateDataEvent");
@@ -722,6 +736,13 @@
   const EMOJI_ARC = 0.2;
 
   AFRAME.registerComponent("socialvr-emoji-target", {
+    schema: {
+      ownerID: {
+        type: "string",
+        default: ""
+      }
+    },
+
     init: function () {
       this.el.setAttribute("tags", "singleActionButton: true");
       this.el.setAttribute("is-remote-hover-target", "");
@@ -830,12 +851,29 @@
         };
 
         entity.setAttribute("particle-emitter", particleEmitterConfig);
+
         this.activeEmojis.push({
           entity,
           sender,
           recipient,
           timestamp
         });
+
+        fetch("https://log.socialsuperpowers.net/api/emojiSent", {
+          method: "POST",
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            logSender: sender,
+            logReceiver: this.data.ownerID,
+            logEmojiType: emoji.id
+          })
+        })
+          .then((res) => {
+            console.log(res.json());
+          })
+          .catch((e) => {
+            console.error(e);
+          });
       }, { once: true });
 
       entity.setAttribute("billboard", { onlyY: true });
@@ -1266,7 +1304,7 @@
           APP.componentRegistry["player-info"].forEach((playerInfo) => {
               if (!playerInfo.socialVREmoji) {
                   const emojiTarget = document.createElement("a-entity");
-                  emojiTarget.setAttribute("socialvr-emoji-target", "");
+                  emojiTarget.setAttribute("socialvr-emoji-target", { ownerID: playerInfo.playerSessionId });
 
                   playerInfo.el.querySelector(".Spine").appendChild(emojiTarget);
                   playerInfo.socialVREmoji = true;
@@ -1342,7 +1380,7 @@
 
       _enableFeatureCB: function () {
           this.enableFeatureCB(null, null, {});
-          NAF.connection.broadcastDataGuaranteed("enableFeatureCB", {}); 
+          NAF.connection.broadcastDataGuaranteed("enableFeatureCB", {});
       },
 
       disableFeatureCB: function () {
@@ -1357,7 +1395,7 @@
 
       _disableFeatureCB: function () {
           this.disableFeatureCB(null, null, {});
-          NAF.connection.broadcastDataGuaranteed("disableFeatureCB", {}); 
+          NAF.connection.broadcastDataGuaranteed("disableFeatureCB", {});
       },
 
       enableFeatureHalo: function () {
@@ -1486,7 +1524,7 @@
     const vectorRequiresUpdate = epsilon => {
       return () => {
         let prev = null;
-    
+
         return curr => {
           if (prev === null) {
             prev = new THREE.Vector3(curr.x, curr.y, curr.z);
@@ -1495,7 +1533,7 @@
             prev.copy(curr);
             return true;
           }
-    
+
           return false;
         };
       };
@@ -1617,7 +1655,7 @@
         text: "Start",
         radius: 0.1,
         color: 0xC576F6,
-        eventName: "startMovingWorld"
+        phaseID: 1
       });
 
       window.APP.scene.appendChild(button);
@@ -1651,6 +1689,24 @@
         }
       });
     }
+
+    APP.hubChannel.presence.onJoin(() => {
+      // Log Join
+      fetch("https://log.socialsuperpowers.net/api/joined", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          playerSessionId: window.APP.componentRegistry["player-info"][window.APP.componentRegistry["player-info"].length - 1].playerSessionId,
+          displayName: window.APP.store.state.profile.displayName
+        })
+      })
+        .then((res) => {
+          console.log(res.json());
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    });
   }, { once: true });
 
   APP.scene.addEventListener("object_spawned", (e) => {
