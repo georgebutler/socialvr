@@ -1664,7 +1664,7 @@
       const worldMover = document.createElement("a-entity");
 
       worldMover.setAttribute("socialvr-world-mover", {
-        modelURL: "https://statuesque-rugelach-4185bd.netlify.app/assets/meeting-hall-3.glb"
+        modelURL: "https://statuesque-rugelach-4185bd.netlify.app/assets/meeting-hall-4.glb"
       });
 
       window.APP.scene.appendChild(worldMover);
