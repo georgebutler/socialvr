@@ -810,10 +810,8 @@
             this.activeEmojis[index].reachedEnd = true;
           }
         } else {
-          if (data.reachedEnd) {
-            data.entity.remove();
-            arr.splice(index, 1);
-          }
+          data.entity.remove();
+          arr.splice(index, 1);
         }
       });
     },
@@ -1119,13 +1117,11 @@
       for (const avatarSID of Object.keys(colorsByAvatar)) {
         if (avatarURL.includes(avatarSID)) {
           return colorsByAvatar[avatarSID];
-        } else {
-          console.warn(`Avatar color not found for ID: ${avatarSID}`);
-          return 0xffffff;
         }
       }
 
-      return this.sessionIDToColor(playerInfo.playerSessionId);
+      return 0xffffff;
+      //return this.sessionIDToColor(playerInfo.playerSessionId);
     },
 
     spawnOrb: function (size, in_color) {

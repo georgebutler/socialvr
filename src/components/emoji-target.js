@@ -125,10 +125,8 @@ AFRAME.registerComponent("socialvr-emoji-target", {
           this.activeEmojis[index].reachedEnd = true;
         }
       } else {
-        if (data.reachedEnd) {
-          data.entity.remove();
-          arr.splice(index, 1);
-        }
+        data.entity.remove();
+        arr.splice(index, 1);
       }
     });
   },

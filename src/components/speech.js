@@ -194,13 +194,11 @@ AFRAME.registerComponent("socialvr-speech", {
     for (const avatarSID of Object.keys(colorsByAvatar)) {
       if (avatarURL.includes(avatarSID)) {
         return colorsByAvatar[avatarSID];
-      } else {
-        console.warn(`Avatar color not found for ID: ${avatarSID}`);
-        return 0xffffff;
       }
     }
 
-    return this.sessionIDToColor(playerInfo.playerSessionId);
+    return 0xffffff;
+    //return this.sessionIDToColor(playerInfo.playerSessionId);
   },
 
   spawnOrb: function (size, in_color) {
