@@ -1109,7 +1109,8 @@
         Mqpw3tx: 0xf30000,
         RczWQgy: 0x000000,
         bs7pLac: 0x010188,
-        "4r1KpVk": 0xff5c00
+        "4r1KpVk": 0xff5c00,
+        ymrnPXW: 0x1da8ff,
       };
 
       const avatarURL = playerInfo.data.avatarSrc;
