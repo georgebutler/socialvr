@@ -205,7 +205,42 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
   });
 }, { once: true });
 
+APP.scene.addEventListener("avatar_updated", (e) => {
+    // Log
+    fetch("https://log.socialsuperpowers.net/api/avatarChange", {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        displayName: "unknown",
+        playerSessionId: "unknown",
+        avatar: "unknown",
+      })
+    })
+      .then((res) => {
+        console.log(res.json());
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+});
+
 APP.scene.addEventListener("object_spawned", (e) => {
+  // Log
+  fetch("https://log.socialsuperpowers.net/api/spaceMakingKit", {
+    method: "POST",
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      objectID: e.detail.objectType,
+      timestamp: Date.now()
+    })
+  })
+    .then((res) => {
+      console.log(res.json());
+    })
+    .catch((e) => {
+      console.error(e);
+    })
+
   const floaties = document.querySelectorAll("[floaty-object]");
 
   floaties.forEach((floaty) => {
