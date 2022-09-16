@@ -60,20 +60,7 @@ AFRAME.registerComponent("socialvr-barge-button", {
 
       if (this.data.phaseID === 1) {
         this.el.sceneEl.emit("startMovingWorld");
-        fetch("https://log.socialsuperpowers.net/api/flyingPlatform", {
-          method: "POST",
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            displayName: window.APP.store.state.profile.displayName,
-            toggle: true
-           })
-        })
-          .then((res) => {
-            console.log(res.json());
-          })
-          .catch((e) => {
-            console.error(e);
-          })
+        sendLog("flyingPlatform", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, toggle: true });
       } else if (this.data.phaseID === 4) {
         this.el.sceneEl.emit("stopMovingWorld");
         this.el.sceneEl.emit("generateDataEvent");

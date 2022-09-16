@@ -63,20 +63,7 @@
 
         if (this.data.phaseID === 1) {
           this.el.sceneEl.emit("startMovingWorld");
-          fetch("https://log.socialsuperpowers.net/api/flyingPlatform", {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              displayName: window.APP.store.state.profile.displayName,
-              toggle: true
-             })
-          })
-            .then((res) => {
-              console.log(res.json());
-            })
-            .catch((e) => {
-              console.error(e);
-            });
+          sendLog("flyingPlatform", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, toggle: true });
         } else if (this.data.phaseID === 4) {
           this.el.sceneEl.emit("stopMovingWorld");
           this.el.sceneEl.emit("generateDataEvent");
@@ -849,29 +836,8 @@
         };
 
         entity.setAttribute("particle-emitter", particleEmitterConfig);
-
-        this.activeEmojis.push({
-          entity,
-          sender,
-          recipient,
-          timestamp
-        });
-
-        fetch("https://log.socialsuperpowers.net/api/emojiSent", {
-          method: "POST",
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            logSender: sender,
-            logReceiver: this.data.ownerID,
-            logEmojiType: emoji.id
-          })
-        })
-          .then((res) => {
-            console.log(res.json());
-          })
-          .catch((e) => {
-            console.error(e);
-          });
+        this.activeEmojis.push({ entity, sender, recipient, timestamp });
+        sendLog("emojiSent", { clientId: NAF.clientId, logSender: sender, logReceiver: this.data.ownerID, logEmojiType: emoji.id });
       }, { once: true });
 
       entity.setAttribute("billboard", { onlyY: true });
@@ -1515,6 +1481,18 @@
       }
   });
 
+  const sendLog$1 = async (endpoint, obj) => {
+      try {
+          return await fetch(`https://log.socialsuperpowers.net/api/${endpoint}`, {
+              method: "POST",
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(obj)
+          })
+      } catch (error) {
+          console.error(error);
+      }
+  };
+
   // Barge
 
   function initSchemas() {
@@ -1686,71 +1664,30 @@
         }
       });
     }
-
-    APP.hubChannel.presence.onJoin(() => {
-      // Log Join
-      fetch("https://log.socialsuperpowers.net/api/joined", {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          playerSessionId: window.APP.componentRegistry["player-info"][window.APP.componentRegistry["player-info"].length - 1].playerSessionId,
-          displayName: window.APP.store.state.profile.displayName
-        })
-      })
-        .then((res) => {
-          console.log(res.json());
-        })
-        .catch((e) => {
-          console.error(e);
-        });
-    });
   }, { once: true });
 
   APP.scene.addEventListener("avatar_updated", (e) => {
-      // Log
-      fetch("https://log.socialsuperpowers.net/api/avatarChange", {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          displayName: "unknown",
-          playerSessionId: "unknown",
-          avatar: "unknown",
-        })
-      })
-        .then((res) => {
-          console.log(res.json());
-        })
-        .catch((e) => {
-          console.error(e);
-        });
+    sendLog$1("avatarChange", { clientId: NAF.clientId, displayName: "unknown", playerSessionId: "unknown", avatar: "unknown" });
   });
 
   APP.scene.addEventListener("object_spawned", (e) => {
-    // Log
-    fetch("https://log.socialsuperpowers.net/api/spaceMakingKit", {
-      method: "POST",
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        objectID: e.detail.objectType,
-        timestamp: Date.now()
-      })
-    })
-      .then((res) => {
-        console.log(res.json());
-      })
-      .catch((e) => {
-        console.error(e);
-      });
+    sendLog$1("spaceMakingKit", { clientId: NAF.clientId, objectID: e.detail.objectType, timestamp: Date.now() });
 
-    const floaties = document.querySelectorAll("[floaty-object]");
-
-    floaties.forEach((floaty) => {
+    document.querySelectorAll("[floaty-object]").forEach((floaty) => {
       floaty.setAttribute("floaty-object", {
         reduceAngularFloat: true,
         autoLockOnRelease: true,
         gravitySpeedLimit: 0
       });
     });
+  });
+
+  document.body.addEventListener("clientConnected", (e) => {
+    sendLog$1("joined", { clientId: NAF.clientId, joinedClientId: e.detail.clientId, joinedOrLeft: "joined" });
+  });
+
+  document.body.addEventListener("clientDisconnected", (e) => {
+    sendLog$1("joined", { clientId: NAF.clientId, joinedClientId: e.detail.clientId, joinedOrLeft: "left" });
   });
 
 })();

@@ -164,29 +164,8 @@ AFRAME.registerComponent("socialvr-emoji-target", {
       }
 
       entity.setAttribute("particle-emitter", particleEmitterConfig);
-
-      this.activeEmojis.push({
-        entity,
-        sender,
-        recipient,
-        timestamp
-      });
-
-      fetch("https://log.socialsuperpowers.net/api/emojiSent", {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          logSender: sender,
-          logReceiver: this.data.ownerID,
-          logEmojiType: emoji.id
-        })
-      })
-        .then((res) => {
-          console.log(res.json());
-        })
-        .catch((e) => {
-          console.error(e);
-        })
+      this.activeEmojis.push({ entity, sender, recipient, timestamp });
+      sendLog("emojiSent", { clientId: NAF.clientId, logSender: sender, logReceiver: this.data.ownerID, logEmojiType: emoji.id });
     }, { once: true });
 
     entity.setAttribute("billboard", { onlyY: true });
