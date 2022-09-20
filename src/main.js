@@ -19,6 +19,7 @@ import "./components/toolbox-dashboard-button";
 // Utils
 import { sendLog } from "./utils";
 
+/* 
 function initSchemas() {
   const vectorRequiresUpdate = epsilon => {
     return () => {
@@ -190,7 +191,7 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
   }
 }, { once: true });
 
-/* APP.scene.addEventListener("avatar_updated", (e) => {
+APP.scene.addEventListener("avatar_updated", (e) => {
   sendLog("avatarChange", { clientId: NAF.clientId, displayName: "unknown", playerSessionId: "unknown", avatar: "unknown" });
 });
 
@@ -212,4 +213,5 @@ document.body.addEventListener("clientConnected", (e) => {
 
 document.body.addEventListener("clientDisconnected", (e) => {
   sendLog("joined", { clientId: NAF.clientId, joinedClientId: e.detail.clientId, joinedOrLeft: "left" });
-}); */
+}); 
+*/
