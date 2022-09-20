@@ -58,7 +58,7 @@ function initSchemas() {
 }
 
 APP.scene.addEventListener("environment-scene-loaded", () => {
-  initSchemas();
+  //initSchemas();
 
   if (document.querySelector(".barge")) {
     // Button
