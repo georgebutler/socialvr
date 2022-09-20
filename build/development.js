@@ -670,6 +670,225 @@
       }
   });
 
+  const emojis = [
+    {
+      icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0000_Rainbow.png",
+      model: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/rainbow.glb",
+      id: "Rainbow"
+    },
+    {
+      icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0001_Star.png",
+      model: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/Star.glb",
+      id: "Star"
+    },
+    {
+      icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0006_Poop.png",
+      model: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/poo.glb",
+      id: "Poop"
+    },
+    {
+      icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0003_Dartt.png",
+      model: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/dart.glb",
+      id: "Dart"
+    },
+    {
+      icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0004_Flower.png",
+      model: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/flower.glb",
+      id: "Flower"
+    },
+    {
+      icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0005_Alarm.png",
+      model: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/alarmclock.glb",
+      id: "Alarm"
+    },
+    {
+      icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0007_Pizza.png",
+      model: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/pizza.glb",
+      id: "Pizza"
+    },
+    {
+      icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0008_Wine.png",
+      model: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/wine.glb",
+      id: "Wine"
+    },
+    {
+      icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0009_Coffee.png",
+      model: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/coffee.glb",
+      id: "Coffee"
+    },
+  ];
+
+  const EMOJI_LIFETIME = 10;
+  const EMOJI_SPEED = 0.6;
+  const EMOJI_ARC = 0.2;
+
+  AFRAME.registerComponent("socialvr-emoji-target", {
+    schema: {
+      ownerID: {
+        type: "string",
+        default: ""
+      }
+    },
+
+    init: function () {
+      this.el.setAttribute("tags", "singleActionButton: true");
+      this.el.setAttribute("is-remote-hover-target", "");
+      // Required hack to make hover states work.
+      this.el.classList.add("interactable", "teleport-waypoint-icon");
+      this.el.setObject3D("mesh", new THREE.Mesh(new THREE.BoxGeometry(0.25, 1.75, 0.25), new THREE.MeshBasicMaterial({ visible: false })));
+
+      this.hoverVisual = document.createElement("a-entity");
+      this.el.appendChild(this.hoverVisual);
+
+      this.activeEmojis = [];
+
+      // Hover Visual
+      window.APP.utils.GLTFModelPlus
+        .loadModel(window.APP.utils.emojis[0].model)
+        .then((model) => {
+          this.hoverVisual.setAttribute("billboard", { onlyY: true });
+          this.hoverVisual.setObject3D("mesh", window.APP.utils.cloneObject3D(model.scene));
+          this.hoverVisual.object3D.scale.set(0.25, 0.25, 0.25);
+          this.hoverVisual.object3D.position.set(0, 0.6, 0);
+          this.hoverVisual.object3D.visible = false;
+          this.hoverVisual.object3D.matrixNeedsUpdate = true;
+
+          this.el.object3D.addEventListener("hovered", this.onHover.bind(this));
+          this.el.object3D.addEventListener("unhovered", this.onUnhover.bind(this));
+          this.el.object3D.addEventListener("interact", this.onClick.bind(this));
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    },
+
+    remove: function () {
+      this.activeEmoji?.remove();
+      this.selectionPanel?.remove();
+
+      this.activeEmoji = null;
+      this.selectionPanel = null;
+    },
+
+    tick: function (time, dt) {
+      this.activeEmojis.forEach((data, index, arr) => {
+        if ((EMOJI_LIFETIME * 1000) >= performance.now() - data.timestamp) {
+          const current = this.activeEmojis[index].entity.object3D.position;
+          const destination = new THREE.Vector3();
+
+          data.recipient.object3D.getWorldPosition(destination);
+          destination.add(new THREE.Vector3(0, 1.75, 0));
+
+          const pt1 = new THREE.Vector3().lerpVectors(current, destination, 0.25);
+          pt1.y += EMOJI_ARC;
+          const pt2 = new THREE.Vector3().lerpVectors(current, destination, 0.75);
+          pt2.y += EMOJI_ARC;
+
+          const curve = new THREE.CubicBezierCurve3(current, pt1, pt2, destination);
+          const totalTime = (curve.getLength() * 10000) / EMOJI_SPEED;
+          const progress = (performance.now() - data.timestamp) / totalTime;
+
+          if (progress < 1) {
+            this.activeEmojis[index].entity.setAttribute("position", curve.getPointAt(progress));
+            this.activeEmojis[index].entity.object3D.matrixNeedsUpdate = true;
+          } else {
+            this.activeEmojis[index].entity.object3D.position.copy(destination);
+            this.activeEmojis[index].entity.object3D.matrixNeedsUpdate = true;
+            this.activeEmojis[index].reachedEnd = true;
+          }
+        } else {
+          data.entity.remove();
+          arr.splice(index, 1);
+        }
+      });
+    },
+
+    onHover: function () {
+      this.hoverVisual.object3D.visible = true;
+    },
+
+    onUnhover: function () {
+      this.hoverVisual.object3D.visible = false;
+    },
+
+    sendEmoji: function (emoji, sender, recipient, timestamp) {
+      this.selectionPanel?.remove();
+      this.selectionPanel = null;
+
+      const { entity } = window.APP.utils.addMedia(new URL(emoji.model, window.location).href, "#sent-emoji");
+
+      entity.addEventListener("media-loaded", () => {
+        const particleEmitterConfig = {
+          src: new URL(emoji.icon, window.location).href,
+          resolve: false,
+          particleCount: 20,
+          startSize: 0.01,
+          endSize: 0.2,
+          sizeRandomness: 0.05,
+          lifetime: 1,
+          lifetimeRandomness: 0.2,
+          ageRandomness: 1,
+          startVelocity: { x: 0, y: 0, z: 0 },
+          endVelocity: { x: 0, y: -1.87, z: 0 },
+          startOpacity: 1,
+          middleOpacity: 1,
+          endOpacity: 0
+        };
+
+        entity.setAttribute("particle-emitter", particleEmitterConfig);
+        this.activeEmojis.push({ entity, sender, recipient, timestamp });
+        sendLog("emojiSent", { clientId: NAF.clientId, logSender: sender, logReceiver: this.data.ownerID, logEmojiType: emoji.id });
+      }, { once: true });
+
+      entity.setAttribute("billboard", { onlyY: true });
+      entity.setAttribute("offset-relative-to", {
+        target: "#avatar-pov-node",
+        offset: { x: 0, y: 0, z: -0.5 },
+        selfDestruct: true
+      });
+    },
+
+    onClick: function () {
+      this.selectionPanel?.remove();
+      this.selectionPanel = null;
+
+      this.selectionPanel = document.createElement("a-entity");
+      this.selectionPanel.setObject3D("mesh", new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.1), new THREE.MeshBasicMaterial({ visible: false })));
+      this.selectionPanel.setAttribute("offset-relative-to", {
+        target: "#avatar-pov-node",
+        offset: { x: 0, y: -0.1, z: -0.5 }
+      });
+
+      this.el.sceneEl.appendChild(this.selectionPanel);
+
+      emojis.forEach((emoji, index) => {
+        window.APP.utils.GLTFModelPlus
+          .loadModel(emoji.model)
+          .then((model) => {
+            if (this.selectionPanel) {
+              const button = document.createElement("a-entity");
+              button.setAttribute("billboard", "");
+              button.setAttribute("tags", "singleActionButton: true");
+              button.setAttribute("is-remote-hover-target", "");
+              button.setAttribute("css-class", "interactable");
+              button.setAttribute("hoverable-visuals", "");
+              button.setObject3D("mesh", window.APP.utils.cloneObject3D(model.scene));
+              button.object3D.scale.set(0.25, 0.25, 0.25);
+              button.object3D.position.set((0.25 * index) - 0.25, 0, 0);
+              button.object3D.matrixNeedsUpdate = true;
+              button.object3D.addEventListener("interact", this.sendEmoji.bind(this, emoji, null, this.el, performance.now()));
+
+              this.selectionPanel.appendChild(button);
+              this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playPositionalSoundAt(19, button.object3D.position, false);
+            }
+          })
+          .catch((e) => {
+            console.error(e);
+          });
+      });
+    }
+  });
+
   const MIC_PRESENCE_VOLUME_THRESHOLD = 0.00001;
 
   const SPEECH_TIME_PER_TICK = 10; // every speech tick = 10ms of realtime
@@ -1260,6 +1479,207 @@
               }
           });
       }
+  });
+
+  const sendLog$1 = async (endpoint, obj) => {
+      try {
+          return await fetch(`https://log.socialsuperpowers.net/api/${endpoint}`, {
+              method: "POST",
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(obj)
+          })
+      } catch (error) {
+          console.error(error);
+      }
+  };
+
+  // Barge
+
+  function initSchemas() {
+    const vectorRequiresUpdate = epsilon => {
+      return () => {
+        let prev = null;
+
+        return curr => {
+          if (prev === null) {
+            prev = new THREE.Vector3(curr.x, curr.y, curr.z);
+            return true;
+          } else if (!NAF.utils.almostEqualVec3(prev, curr, epsilon)) {
+            prev.copy(curr);
+            return true;
+          }
+
+          return false;
+        };
+      };
+    };
+
+    // NAF Template
+    const assets = document.querySelector("a-assets");
+    const newTemplate = document.createElement("template");
+    newTemplate.id = "sent-emoji";
+
+    newTemplate.content.appendChild(document.createElement("a-entity"));
+    assets.appendChild(newTemplate);
+
+    // NAF Schema
+    const schema = { ...NAF.schemas.schemaDict["#static-media"] };
+    schema.template = "#sent-emoji";
+    schema.components.push({ component: "position", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
+    schema.components.push({ component: "rotation", requiresNetworkUpdate: vectorRequiresUpdate(0.5) });
+    schema.components.push({ component: "scale", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
+    schema.components.push({ component: "billboard", property: "onlyY" });
+    schema.components.push({ component: "particle-emitter" });
+    NAF.schemas.add(schema);
+  }
+
+  APP.scene.addEventListener("environment-scene-loaded", () => {
+    initSchemas();
+
+    if (document.querySelector(".barge")) {
+      // Button
+      let button = document.createElement("a-entity");
+      let position = document.querySelector(".startButton").object3D.position.add(new THREE.Vector3(0, 0.5, 0));
+
+      button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.3; color: #C576F6; phaseID: 1");
+      button.setAttribute("position", position);
+      window.APP.scene.appendChild(button);
+
+      // Button
+      button = document.createElement("a-entity");
+      position = document.querySelector(".CompleteButton_phase1").object3D.position.add(new THREE.Vector3(0, 0.5, 0));
+
+      button.setAttribute("socialvr-barge-button", "text: Next Task; radius: 0.3; color: #C576F6; phaseID: 2");
+      button.setAttribute("position", position);
+      window.APP.scene.appendChild(button);
+
+      // Button
+      button = document.createElement("a-entity");
+      position = document.querySelector(".CompleteButton_phase2").object3D.position.add(new THREE.Vector3(0, 0.5, 0));
+
+      button.setAttribute("socialvr-barge-button", "text: Next Task; radius: 0.3; color: #C576F6; phaseID: 3");
+      button.setAttribute("position", position);
+      window.APP.scene.appendChild(button);
+
+      // Button
+      button = document.createElement("a-entity");
+      position = document.querySelector(".CompleteButton_phase3").object3D.position.add(new THREE.Vector3(0, 0.5, 0));
+
+      button.setAttribute("socialvr-barge-button", "text: Complete; radius: 0.3; color: #C576F6; phaseID: 4");
+      button.setAttribute("position", position);
+      window.APP.scene.appendChild(button);
+
+      // Clock
+      const clock = document.createElement("a-entity");
+      clock.setAttribute("radius", 0.1);
+      clock.setAttribute("socialvr-barge-clock", "");
+      clock.setAttribute("position", document.querySelector(".clock-placeholder").object3D.position);
+      window.APP.scene.appendChild(clock);
+
+      // Ranking Slots
+      for (let index = 1; index <= 3; index++) {
+        const slot = document.createElement("a-entity");
+        slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
+        slot.setAttribute("socialvr-barge-slot", `type: knowledge; rank: ${4 - index}`);
+        document.querySelector(".knowledgeFrame_phase1").appendChild(slot);
+      }
+
+      for (let index = 1; index <= 3; index++) {
+        const slot = document.createElement("a-entity");
+        slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
+        slot.setAttribute("socialvr-barge-slot", `type: abilities; rank: ${4 - index}`);
+        document.querySelector(".KSA_ranking_frameglb_1_phase1").appendChild(slot);
+      }
+
+      for (let index = 1; index <= 3; index++) {
+        const slot = document.createElement("a-entity");
+        slot.setAttribute("position", { x: 0, y: -1 + (0.4 * index), z: 0 });
+        slot.setAttribute("socialvr-barge-slot", `type: skills; rank: ${4 - index}`);
+        document.querySelector(".KSA_ranking_frameglb_phase1").appendChild(slot);
+      }
+
+      // Canidate Slot
+      const slot = document.createElement("a-entity");
+      slot.setAttribute("socialvr-barge-slot", `type: canidate; rank: 1; width: 0.5; height: 1; depth: 1;`);
+      document.querySelector(".candidate_frameglb_phase3").appendChild(slot);
+
+      // World Mover
+      const worldMover = document.createElement("a-entity");
+      worldMover.setAttribute("socialvr-world-mover", "overrideSky: true");
+      window.APP.scene.appendChild(worldMover);
+
+      // Data Logger
+      const dataLogger = document.createElement("a-entity");
+      dataLogger.setAttribute("socialvr-barge-data", "");
+      window.APP.scene.appendChild(dataLogger);
+
+      // Backup command
+      window.logBargeData = () => {
+        window.APP.scene.emit("generateDataEvent");
+      };
+
+      // Changes camera inspection system to show background, regardless of user preferences.
+      window.APP.scene.systems["hubs-systems"].cameraSystem.lightsEnabled = true;
+    }
+    else if (document.querySelector(".workshopbargeglb")) {
+      // Button
+      const button = document.createElement("a-entity");
+
+      button.setAttribute("position", new THREE.Vector3(0, 0.65, 0));
+      button.setAttribute("socialvr-barge-button", {
+        text: "Start",
+        radius: 0.1,
+        color: 0xC576F6,
+        phaseID: 1
+      });
+
+      window.APP.scene.appendChild(button);
+
+      // World Mover
+      const worldMover = document.createElement("a-entity");
+
+      worldMover.setAttribute("socialvr-world-mover", {
+        modelURL: "https://statuesque-rugelach-4185bd.netlify.app/assets/meeting-hall-4.glb"
+      });
+
+      window.APP.scene.appendChild(worldMover);
+    }
+    else {
+      const dashboard = document.createElement("a-entity");
+      dashboard.setAttribute("socialvr-toolbox-dashboard", "");
+      APP.scene.appendChild(dashboard);
+
+      APP.hubChannel.presence.onJoin(() => {
+        if (dashboard.components["socialvr-toolbox-dashboard"].features.EMOJI.enabled) {
+          dashboard.components["socialvr-toolbox-dashboard"].initEmoji();
+        }
+      });
+      
+    }
+  }, { once: true });
+
+  APP.scene.addEventListener("avatar_updated", (e) => {
+    sendLog$1("avatarChange", { clientId: NAF.clientId, displayName: "unknown", playerSessionId: "unknown", avatar: "unknown" });
+  });
+
+  APP.scene.addEventListener("object_spawned", (e) => {
+    sendLog$1("spaceMakingKit", { clientId: NAF.clientId, objectID: e.detail.objectType, timestamp: Date.now() });
+
+    document.querySelectorAll("[floaty-object]").forEach((floaty) => {
+      floaty.setAttribute("floaty-object", {
+        reduceAngularFloat: true,
+        autoLockOnRelease: true,
+        gravitySpeedLimit: 0
+      });
+    });
+  });
+
+  document.body.addEventListener("clientConnected", (e) => {
+    sendLog$1("joined", { clientId: NAF.clientId, joinedClientId: e.detail.clientId, joinedOrLeft: "joined" });
+  });
+
+  document.body.addEventListener("clientDisconnected", (e) => {
+    sendLog$1("joined", { clientId: NAF.clientId, joinedClientId: e.detail.clientId, joinedOrLeft: "left" });
   });
 
 })();

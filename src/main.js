@@ -6,7 +6,7 @@ import "./components/barge-data";
 import "./components/world-mover";
 
 // Emoji
-// import "./components/emoji-target";
+import "./components/emoji-target";
 
 // Speech
 import "./components/speech";
@@ -17,9 +17,8 @@ import "./components/toolbox-dashboard";
 import "./components/toolbox-dashboard-button";
 
 // Utils
-// import { sendLog } from "./utils";
+import { sendLog } from "./utils";
 
-/* 
 function initSchemas() {
   const vectorRequiresUpdate = epsilon => {
     return () => {
@@ -57,11 +56,9 @@ function initSchemas() {
   schema.components.push({ component: "particle-emitter" });
   NAF.schemas.add(schema);
 }
-*/
 
-/*
 APP.scene.addEventListener("environment-scene-loaded", () => {
-  //initSchemas();
+  initSchemas();
 
   if (document.querySelector(".barge")) {
     // Button
@@ -176,22 +173,15 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
     dashboard.setAttribute("socialvr-toolbox-dashboard", "");
     APP.scene.appendChild(dashboard);
 
-    
     APP.hubChannel.presence.onJoin(() => {
       if (dashboard.components["socialvr-toolbox-dashboard"].features.EMOJI.enabled) {
         dashboard.components["socialvr-toolbox-dashboard"].initEmoji();
-      }
-
-      if (dashboard.components["socialvr-toolbox-dashboard"].features.HALO.enabled) {
-        dashboard.components["socialvr-toolbox-dashboard"].initHalos();
       }
     });
     
   }
 }, { once: true });
-*/
 
-/*
 APP.scene.addEventListener("avatar_updated", (e) => {
   sendLog("avatarChange", { clientId: NAF.clientId, displayName: "unknown", playerSessionId: "unknown", avatar: "unknown" });
 });
@@ -215,4 +205,3 @@ document.body.addEventListener("clientConnected", (e) => {
 document.body.addEventListener("clientDisconnected", (e) => {
   sendLog("joined", { clientId: NAF.clientId, joinedClientId: e.detail.clientId, joinedOrLeft: "left" });
 }); 
-*/
