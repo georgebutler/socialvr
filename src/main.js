@@ -6,7 +6,7 @@ import "./components/barge-data";
 import "./components/world-mover";
 
 // Emoji
-import "./components/emoji-target";
+// import "./components/emoji-target";
 
 // Speech
 import "./components/speech";
