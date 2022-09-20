@@ -17,7 +17,7 @@ import "./components/toolbox-dashboard";
 import "./components/toolbox-dashboard-button";
 
 // Utils
-import { sendLog } from "./utils";
+// import { sendLog } from "./utils";
 
 /* 
 function initSchemas() {
@@ -57,6 +57,7 @@ function initSchemas() {
   schema.components.push({ component: "particle-emitter" });
   NAF.schemas.add(schema);
 }
+*/
 
 APP.scene.addEventListener("environment-scene-loaded", () => {
   //initSchemas();
@@ -170,15 +171,11 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
     window.APP.scene.appendChild(worldMover);
   }
   else {
-    // Ambient Light
-    //APP.scene.object3D.add(new THREE.DirectionalLight());
-    //APP.scene.object3D.add(new THREE.AmbientLight(0x404040, 0.95));
-
-    // Dashboard
     const dashboard = document.createElement("a-entity");
     dashboard.setAttribute("socialvr-toolbox-dashboard", "");
     APP.scene.appendChild(dashboard);
 
+    /*
     APP.hubChannel.presence.onJoin(() => {
       if (dashboard.components["socialvr-toolbox-dashboard"].features.EMOJI.enabled) {
         dashboard.components["socialvr-toolbox-dashboard"].initEmoji();
@@ -188,9 +185,11 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
         dashboard.components["socialvr-toolbox-dashboard"].initHalos();
       }
     });
+    */
   }
 }, { once: true });
 
+/*
 APP.scene.addEventListener("avatar_updated", (e) => {
   sendLog("avatarChange", { clientId: NAF.clientId, displayName: "unknown", playerSessionId: "unknown", avatar: "unknown" });
 });
