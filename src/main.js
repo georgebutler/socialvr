@@ -20,7 +20,7 @@ function initSchemas() {
   const vectorRequiresUpdate = epsilon => {
     return () => {
       let prev = null;
-  
+
       return curr => {
         if (prev === null) {
           prev = new THREE.Vector3(curr.x, curr.y, curr.z);
@@ -29,7 +29,7 @@ function initSchemas() {
           prev.copy(curr);
           return true;
         }
-  
+
         return false;
       };
     };
@@ -166,10 +166,6 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
     window.APP.scene.appendChild(worldMover);
   }
   else {
-    // Ambient Light
-    //APP.scene.object3D.add(new THREE.DirectionalLight());
-    //APP.scene.object3D.add(new THREE.AmbientLight(0x404040, 0.95));
-
     // Dashboard
     const dashboard = document.createElement("a-entity");
     dashboard.setAttribute("socialvr-toolbox-dashboard", "");
@@ -188,9 +184,14 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
 }, { once: true });
 
 APP.scene.addEventListener("object_spawned", (e) => {
-  const floaties = document.querySelectorAll("[floaty-object]");
+  // LOGGER
+  fetch(`https://log.socialsuperpowers.net/api/spaceMakingKit`, {
+    method: "POST",
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ clientId: NAF.clientId, objectID: e.detail.objectType, timestamp: Date.now() })
+  })
 
-  floaties.forEach((floaty) => {
+  document.querySelectorAll("[floaty-object]").forEach((floaty) => {
     floaty.setAttribute("floaty-object", {
       reduceAngularFloat: true,
       autoLockOnRelease: true,
