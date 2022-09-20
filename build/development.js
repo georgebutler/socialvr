@@ -1647,13 +1647,6 @@
   }, { once: true });
 
   APP.scene.addEventListener("object_spawned", (e) => {
-    // LOGGER
-    fetch(`https://log.socialsuperpowers.net/api/spaceMakingKit`, {
-      method: "POST",
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ clientId: "N/A", objectID: e.detail.objectType, timestamp: Date.now() })
-    });
-
     document.querySelectorAll("[floaty-object]").forEach((floaty) => {
       floaty.setAttribute("floaty-object", {
         reduceAngularFloat: true,
