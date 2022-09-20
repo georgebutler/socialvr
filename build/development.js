@@ -1642,7 +1642,6 @@
       dashboard.setAttribute("socialvr-toolbox-dashboard", "");
       APP.scene.appendChild(dashboard);
 
-      /*
       APP.hubChannel.presence.onJoin(() => {
         if (dashboard.components["socialvr-toolbox-dashboard"].features.EMOJI.enabled) {
           dashboard.components["socialvr-toolbox-dashboard"].initEmoji();
@@ -1652,7 +1651,6 @@
           dashboard.components["socialvr-toolbox-dashboard"].initHalos();
         }
       });
-      */
     }
   }, { once: true });
 
