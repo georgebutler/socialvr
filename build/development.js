@@ -1481,18 +1481,6 @@
       }
   });
 
-  const sendLog$1 = async (endpoint, obj) => {
-      try {
-          return await fetch(`https://log.socialsuperpowers.net/api/${endpoint}`, {
-              method: "POST",
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(obj)
-          })
-      } catch (error) {
-          console.error(error);
-      }
-  };
-
   // Barge
 
   APP.scene.addEventListener("environment-scene-loaded", () => {
@@ -1628,12 +1616,12 @@
     }
   }, { once: true });
 
-  APP.scene.addEventListener("avatar_updated", (e) => {
-    sendLog$1("avatarChange", { clientId: NAF.clientId, displayName: "unknown", playerSessionId: "unknown", avatar: "unknown" });
+  /* APP.scene.addEventListener("avatar_updated", (e) => {
+    sendLog("avatarChange", { clientId: NAF.clientId, displayName: "unknown", playerSessionId: "unknown", avatar: "unknown" });
   });
 
   APP.scene.addEventListener("object_spawned", (e) => {
-    sendLog$1("spaceMakingKit", { clientId: NAF.clientId, objectID: e.detail.objectType, timestamp: Date.now() });
+    sendLog("spaceMakingKit", { clientId: NAF.clientId, objectID: e.detail.objectType, timestamp: Date.now() });
 
     document.querySelectorAll("[floaty-object]").forEach((floaty) => {
       floaty.setAttribute("floaty-object", {
@@ -1645,12 +1633,12 @@
   });
 
   document.body.addEventListener("clientConnected", (e) => {
-    sendLog$1("joined", { clientId: NAF.clientId, joinedClientId: e.detail.clientId, joinedOrLeft: "joined" });
+    sendLog("joined", { clientId: NAF.clientId, joinedClientId: e.detail.clientId, joinedOrLeft: "joined" });
   });
 
   document.body.addEventListener("clientDisconnected", (e) => {
-    sendLog$1("joined", { clientId: NAF.clientId, joinedClientId: e.detail.clientId, joinedOrLeft: "left" });
-  });
+    sendLog("joined", { clientId: NAF.clientId, joinedClientId: e.detail.clientId, joinedOrLeft: "left" });
+  }); */
 
 })();
 //# sourceMappingURL=development.js.map
