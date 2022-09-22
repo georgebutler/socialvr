@@ -1647,7 +1647,9 @@
   }, { once: true });
 
   APP.scene.addEventListener("object_spawned", (e) => {
-    document.querySelectorAll("[floaty-object]").forEach((floaty) => {
+    const floaties = document.querySelectorAll("[floaty-object]");
+
+    floaties.forEach((floaty) => {
       floaty.setAttribute("floaty-object", {
         reduceAngularFloat: true,
         autoLockOnRelease: true,
