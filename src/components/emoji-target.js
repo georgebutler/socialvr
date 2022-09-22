@@ -50,6 +50,9 @@ const EMOJI_LIFETIME = 10;
 const EMOJI_SPEED = 0.6;
 const EMOJI_ARC = 0.2;
 
+// Utils
+import { sendLog } from "../utils";
+
 AFRAME.registerComponent("socialvr-emoji-target", {
   schema: {
     ownerID: {

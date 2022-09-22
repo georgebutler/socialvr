@@ -1,3 +1,6 @@
+// Utils
+import { sendLog } from "../utils";
+
 AFRAME.registerComponent("socialvr-barge-button", {
   schema: {
     text: {
