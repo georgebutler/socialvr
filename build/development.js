@@ -486,7 +486,7 @@
           },
           modelURL: {
               type: 'string',
-              default: "https://statuesque-rugelach-4185bd.netlify.app/assets/moving-world-8.glb"
+              default: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/moving-world-8.glb"
           }
       },
 
@@ -1639,7 +1639,7 @@
       const worldMover = document.createElement("a-entity");
 
       worldMover.setAttribute("socialvr-world-mover", {
-        modelURL: "https://statuesque-rugelach-4185bd.netlify.app/assets/meeting-hall-5.glb"
+        modelURL: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/meeting-hall-5.glb"
       });
 
       window.APP.scene.appendChild(worldMover);
