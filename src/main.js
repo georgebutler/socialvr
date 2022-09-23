@@ -147,8 +147,7 @@ APP.scene.addEventListener("object_spawned", (e) => {
   document.querySelectorAll("[floaty-object]").forEach((floaty) => {
     floaty.setAttribute("floaty-object", {
       reduceAngularFloat: true,
-      autoLockOnRelease: true,
-      gravitySpeedLimit: 0
+      unthrowable: true
     });
   });
 });
