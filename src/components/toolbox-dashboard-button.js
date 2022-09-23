@@ -40,7 +40,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
         this.text.setAttribute("position", `0 ${this.data.radius + 0.2} 0`);
         this.text.setAttribute("text", `value: OFF; side: double;`);
         this.text.setAttribute("geometry", `primitive: plane; height: auto; width: 0.75;`);
-        this.text.setAttribute("material", "color: #807e7e;");
+        this.text.setAttribute("material", { color: 0x807e7e });
         this.text.setAttribute("billboard", "onlyY: true;");
         this.el.appendChild(this.text);
 
