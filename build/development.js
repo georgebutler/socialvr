@@ -1648,7 +1648,7 @@
       window.APP.scene.appendChild(worldMover);
     }
     else {
-      dashboard = document.createElement("a-entity");
+      const dashboard = document.createElement("a-entity");
       dashboard.setAttribute("socialvr-toolbox-dashboard", "");
       APP.scene.appendChild(dashboard);
     }
