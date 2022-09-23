@@ -35,6 +35,15 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
         this.el.setAttribute("hoverable-visuals", "");
         this.el.setAttribute("billboard", "onlyY: true;");
 
+        // Text
+        this.text = document.createElement("a-entity");
+        this.text.setAttribute("position", `0 ${this.data.radius + 0.2} 0`);
+        this.text.setAttribute("text", `value: OFF; side: double;`);
+        this.text.setAttribute("geometry", `primitive: plane; height: auto; width: 0.75;`);
+        this.text.setAttribute("material", "color: #807e7e;");
+        this.text.setAttribute("billboard", "onlyY: true;");
+        this.el.appendChild(this.text);
+
         //this.icon_image = document.createElement("a-image");
         //this.icon_image.setAttribute("position", `0 ${this.data.radius + 0.01} 0`);
         //this.icon_image.setAttribute("rotation", "90 180 0");
@@ -60,6 +69,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
         if (this.state === STATE_OFF) {
             this.state = STATE_ON;
             this.el.setObject3D("mesh", new THREE.Mesh(this.geometry, this.material_on));
+            this.text.setAttribute("text", `value: ON; side: double;`);
 
             if (this.data.featureName === "halo") {
                 this.el.sceneEl.emit("enableFeatureHalo", {});
@@ -74,6 +84,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
         else if (this.state === STATE_ON) {
             this.state = STATE_OFF;
             this.el.setObject3D("mesh", new THREE.Mesh(this.geometry, this.material_off));
+            this.text.setAttribute("text", `value: OFF; side: double;`);
 
             if (this.data.featureName === "halo") {
                 this.el.sceneEl.emit("disableFeatureHalo", {});

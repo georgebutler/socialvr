@@ -46,15 +46,25 @@ function initSchemas() {
   newTemplate.content.appendChild(document.createElement("a-entity"));
   assets.appendChild(newTemplate);
 
-  // NAF Schema
-  const schema = { ...NAF.schemas.schemaDict["#static-media"] }
-  schema.template = "#sent-emoji";
-  schema.components.push({ component: "position", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
-  schema.components.push({ component: "rotation", requiresNetworkUpdate: vectorRequiresUpdate(0.5) });
-  schema.components.push({ component: "scale", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
-  schema.components.push({ component: "billboard", property: "onlyY" });
-  schema.components.push({ component: "particle-emitter" });
-  NAF.schemas.add(schema);
+  // NAF Schema (Emoji)
+  const emojiSchema = { ...NAF.schemas.schemaDict["#static-media"] }
+  emojiSchema.template = "#sent-emoji";
+  emojiSchema.components.push({ component: "position", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
+  emojiSchema.components.push({ component: "rotation", requiresNetworkUpdate: vectorRequiresUpdate(0.5) });
+  emojiSchema.components.push({ component: "scale", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
+  emojiSchema.components.push({ component: "billboard", property: "onlyY" });
+  emojiSchema.components.push({ component: "particle-emitter" });
+  NAF.schemas.add(emojiSchema);
+
+  // NAF Schema (World Mover)
+  /*   
+  const worldMoverSchema = { ...NAF.schemas.schemaDict["#static-media"] }
+  worldMoverSchema.template = "#moving-world";
+  worldMoverSchema.components.push({ component: "position", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
+  worldMoverSchema.components.push({ component: "rotation", requiresNetworkUpdate: vectorRequiresUpdate(0.5) });
+  worldMoverSchema.components.push({ component: "scale", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
+  NAF.schemas.add(worldMoverSchema); 
+  */
 }
 
 APP.scene.addEventListener("environment-scene-loaded", () => {
@@ -197,10 +207,10 @@ document.body.addEventListener("clientConnected", (e) => {
   if (dashboard && dashboard.components["socialvr-toolbox-dashboard"].features.EMOJI.enabled) {
     dashboard.components["socialvr-toolbox-dashboard"].initEmoji();
   }
-  
+
   sendLog("joined", { clientId: NAF.clientId, joinedClientId: e.detail.clientId, joinedOrLeft: "joined" });
 });
 
 document.body.addEventListener("clientDisconnected", (e) => {
   sendLog("joined", { clientId: NAF.clientId, joinedClientId: e.detail.clientId, joinedOrLeft: "left" });
-}); 
+});

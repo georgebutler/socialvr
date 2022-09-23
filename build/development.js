@@ -1423,6 +1423,15 @@
           this.el.setAttribute("hoverable-visuals", "");
           this.el.setAttribute("billboard", "onlyY: true;");
 
+          // Text
+          this.text = document.createElement("a-entity");
+          this.text.setAttribute("position", `0 ${this.data.radius + 0.2} 0`);
+          this.text.setAttribute("text", `value: OFF; side: double;`);
+          this.text.setAttribute("geometry", `primitive: plane; height: auto; width: 0.75;`);
+          this.text.setAttribute("material", "color: #807e7e;");
+          this.text.setAttribute("billboard", "onlyY: true;");
+          this.el.appendChild(this.text);
+
           //this.icon_image = document.createElement("a-image");
           //this.icon_image.setAttribute("position", `0 ${this.data.radius + 0.01} 0`);
           //this.icon_image.setAttribute("rotation", "90 180 0");
@@ -1448,6 +1457,7 @@
           if (this.state === STATE_OFF) {
               this.state = STATE_ON;
               this.el.setObject3D("mesh", new THREE.Mesh(this.geometry, this.material_on));
+              this.text.setAttribute("text", `value: ON; side: double;`);
 
               if (this.data.featureName === "halo") {
                   this.el.sceneEl.emit("enableFeatureHalo", {});
@@ -1462,6 +1472,7 @@
           else if (this.state === STATE_ON) {
               this.state = STATE_OFF;
               this.el.setObject3D("mesh", new THREE.Mesh(this.geometry, this.material_off));
+              this.text.setAttribute("text", `value: OFF; side: double;`);
 
               if (this.data.featureName === "halo") {
                   this.el.sceneEl.emit("disableFeatureHalo", {});
@@ -1525,15 +1536,25 @@
     newTemplate.content.appendChild(document.createElement("a-entity"));
     assets.appendChild(newTemplate);
 
-    // NAF Schema
-    const schema = { ...NAF.schemas.schemaDict["#static-media"] };
-    schema.template = "#sent-emoji";
-    schema.components.push({ component: "position", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
-    schema.components.push({ component: "rotation", requiresNetworkUpdate: vectorRequiresUpdate(0.5) });
-    schema.components.push({ component: "scale", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
-    schema.components.push({ component: "billboard", property: "onlyY" });
-    schema.components.push({ component: "particle-emitter" });
-    NAF.schemas.add(schema);
+    // NAF Schema (Emoji)
+    const emojiSchema = { ...NAF.schemas.schemaDict["#static-media"] };
+    emojiSchema.template = "#sent-emoji";
+    emojiSchema.components.push({ component: "position", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
+    emojiSchema.components.push({ component: "rotation", requiresNetworkUpdate: vectorRequiresUpdate(0.5) });
+    emojiSchema.components.push({ component: "scale", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
+    emojiSchema.components.push({ component: "billboard", property: "onlyY" });
+    emojiSchema.components.push({ component: "particle-emitter" });
+    NAF.schemas.add(emojiSchema);
+
+    // NAF Schema (World Mover)
+    /*   
+    const worldMoverSchema = { ...NAF.schemas.schemaDict["#static-media"] }
+    worldMoverSchema.template = "#moving-world";
+    worldMoverSchema.components.push({ component: "position", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
+    worldMoverSchema.components.push({ component: "rotation", requiresNetworkUpdate: vectorRequiresUpdate(0.5) });
+    worldMoverSchema.components.push({ component: "scale", requiresNetworkUpdate: vectorRequiresUpdate(0.001) });
+    NAF.schemas.add(worldMoverSchema); 
+    */
   }
 
   APP.scene.addEventListener("environment-scene-loaded", () => {
@@ -1676,7 +1697,7 @@
     if (dashboard && dashboard.components["socialvr-toolbox-dashboard"].features.EMOJI.enabled) {
       dashboard.components["socialvr-toolbox-dashboard"].initEmoji();
     }
-    
+
     sendLog("joined", { clientId: NAF.clientId, joinedClientId: e.detail.clientId, joinedOrLeft: "joined" });
   });
 
