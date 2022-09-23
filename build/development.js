@@ -1648,16 +1648,9 @@
       window.APP.scene.appendChild(worldMover);
     }
     else {
-      const dashboard = document.createElement("a-entity");
+      dashboard = document.createElement("a-entity");
       dashboard.setAttribute("socialvr-toolbox-dashboard", "");
       APP.scene.appendChild(dashboard);
-
-      APP.hubChannel.presence.onJoin(() => {
-        if (dashboard.components["socialvr-toolbox-dashboard"].features.EMOJI.enabled) {
-          dashboard.components["socialvr-toolbox-dashboard"].initEmoji();
-        }
-      });
-      
     }
   }, { once: true });
 
@@ -1678,6 +1671,12 @@
   });
 
   document.body.addEventListener("clientConnected", (e) => {
+    const dashboard = document.querySelector('[socialvr-toolbox-dashboard=""]');
+
+    if (dashboard && dashboard.components["socialvr-toolbox-dashboard"].features.EMOJI.enabled) {
+      dashboard.components["socialvr-toolbox-dashboard"].initEmoji();
+    }
+    
     sendLog("joined", { clientId: NAF.clientId, joinedClientId: e.detail.clientId, joinedOrLeft: "joined" });
   });
 
