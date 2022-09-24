@@ -1659,19 +1659,12 @@
       }
       else if (SELECTOR_BARGE_WORKSHOP) {
         const button = document.createElement("a-entity");
-
         button.setAttribute("position", new THREE.Vector3(0, 0.65, 0));
         button.setAttribute("socialvr-barge-button", { text: "Start", radius: 0.1, color: COLOR_OFF, phaseID: 1 });
-
         window.APP.scene.appendChild(button);
 
-        // World Mover
         const worldMover = document.createElement("a-entity");
-
-        worldMover.setAttribute("socialvr-world-mover", {
-          modelURL: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/meeting-hall-6.glb"
-        });
-
+        worldMover.setAttribute("socialvr-world-mover", { modelURL: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/meeting-hall-6.glb" });
         window.APP.scene.appendChild(worldMover);
       }
       else {
