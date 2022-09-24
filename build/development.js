@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    const vectorRequiresUpdate = epsilon => {
+    const vectorRequiresUpdate = (epsilon) => {
         return () => {
             let prev = null;
 
@@ -27,7 +27,7 @@
                 body: JSON.stringify(obj)
             })
         } catch (error) {
-            console.error(error);
+            console.error(`Log could not be sent: ${error}`);
         }
     };
 
@@ -1436,11 +1436,23 @@
         }
     });
 
+    const COLOR_ON = 0x029200;
+    const COLOR_OFF = 0xf30000;
+
     const STATE_OFF = 0;
     const STATE_ON = 1;
 
-    const COLOR_ON = 0x029200;
-    const COLOR_OFF = 0xf30000;
+    const SELECTOR_BARGE = () => {
+        return () => {
+            document.querySelector(".barge");
+        };
+    };
+
+    const SELECTOR_BARGE_WORKSHOP = () => {
+        return () => {
+            document.querySelector(".workshopbargeglb");
+        };
+    };
 
     AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
         schema: {
@@ -1560,7 +1572,7 @@
     APP.scene.addEventListener("environment-scene-loaded", () => {
       initSchemas();
 
-      if (document.querySelector(".barge")) {
+      if (SELECTOR_BARGE) {
         // Button
         let button = document.createElement("a-entity");
         let position = document.querySelector(".startButton").object3D.position.add(new THREE.Vector3(0, 0.5, 0));
@@ -1645,17 +1657,11 @@
         // Changes camera inspection system to show background, regardless of user preferences.
         window.APP.scene.systems["hubs-systems"].cameraSystem.lightsEnabled = true;
       }
-      else if (document.querySelector(".workshopbargeglb")) {
-        // Button
+      else if (SELECTOR_BARGE_WORKSHOP) {
         const button = document.createElement("a-entity");
 
         button.setAttribute("position", new THREE.Vector3(0, 0.65, 0));
-        button.setAttribute("socialvr-barge-button", {
-          text: "Start",
-          radius: 0.1,
-          color: 0xC576F6,
-          phaseID: 1
-        });
+        button.setAttribute("socialvr-barge-button", { text: "Start", radius: 0.1, color: COLOR_OFF, phaseID: 1 });
 
         window.APP.scene.appendChild(button);
 

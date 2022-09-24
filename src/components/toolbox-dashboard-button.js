@@ -1,10 +1,4 @@
-const STATE_OFF = 0
-const STATE_ON = 1
-
-const COLOR_ON = 0x029200;
-const COLOR_OFF = 0xf30000;
-const COLOR_HOVER_ON_OFF = 0xff9999;
-const COLOR_HOVER_SELECTED = 0x9bff99;
+import { STATE_OFF, STATE_ON, COLOR_ON, COLOR_OFF, COLOR_HOVER_ON_OFF, COLOR_HOVER_SELECTED } from "../config";
 
 AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
     schema: {

@@ -1,4 +1,4 @@
-const vectorRequiresUpdate = epsilon => {
+const vectorRequiresUpdate = (epsilon) => {
     return () => {
         let prev = null;
 
@@ -24,7 +24,7 @@ export const sendLog = async (endpoint, obj) => {
             body: JSON.stringify(obj)
         })
     } catch (error) {
-        console.error(error);
+        console.error(`Log could not be sent: ${error}`);
     }
 }
 
