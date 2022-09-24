@@ -1443,15 +1443,11 @@
     const STATE_ON = 1;
 
     const SELECTOR_BARGE = () => {
-        return () => {
-            document.querySelector(".barge");
-        };
+        return document.querySelector(".barge");
     };
 
     const SELECTOR_BARGE_WORKSHOP = () => {
-        return () => {
-            document.querySelector(".workshopbargeglb");
-        };
+        return document.querySelector(".workshopbargeglb");
     };
 
     AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {

@@ -7,13 +7,9 @@ export const STATE_OFF = 0;
 export const STATE_ON = 1;
 
 export const SELECTOR_BARGE = () => {
-    return () => {
-        document.querySelector(".barge")
-    };
+    return document.querySelector(".barge");
 }
 
 export const SELECTOR_BARGE_WORKSHOP = () => {
-    return () => {
-        document.querySelector(".workshopbargeglb")
-    };
+    return document.querySelector(".workshopbargeglb");
 }
