@@ -16,7 +16,6 @@ import "./systems/speech";
 import "./components/toolbox-dashboard";
 import "./components/toolbox-dashboard-button";
 
-// Utils
 import { initSchemas, sendLog } from "./utils";
 import { COLOR_OFF, SELECTOR_BARGE, SELECTOR_BARGE_WORKSHOP } from "./config";
 

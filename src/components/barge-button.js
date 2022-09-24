@@ -60,7 +60,6 @@ AFRAME.registerComponent("socialvr-barge-button", {
   onClick: function () {
     if (this.data.phaseID >= 0) {
       this.el.sceneEl.emit("logPhaseEvent", { detail: this.data.phaseID });
-
       if (this.data.phaseID === 1) {
         this.el.sceneEl.emit("startMovingWorld");
         sendLog("flyingPlatform", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, toggle: true });
