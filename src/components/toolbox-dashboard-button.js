@@ -24,8 +24,8 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
 
     init: function () {
         this.geometry = new THREE.SphereGeometry(this.data.radius, 16, 8);
-        this.material_off = new THREE.MeshStandardMaterial({ color: COLOR_OFF });
-        this.material_on = new THREE.MeshStandardMaterial({ color: COLOR_ON });
+        this.material_off = new THREE.MeshStandardMaterial({ color: COLOR_OFF, roughness: 0.5 });
+        this.material_on = new THREE.MeshStandardMaterial({ color: COLOR_ON, roughness: 0.5 });
         this.state = STATE_OFF;
 
         this.el.setObject3D("mesh", new THREE.Mesh(this.geometry, this.material_off));

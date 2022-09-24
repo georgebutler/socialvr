@@ -146,9 +146,6 @@ APP.scene.addEventListener("object_spawned", (e) => {
 
   document.querySelectorAll("[floaty-object]").forEach((floaty) => {
     floaty.setAttribute("floaty-object", {
-      modifyGravityOnRelease: true,
-      releaseGravity: 0,
-      reduceAngularFloat: true,
       unthrowable: true
     });
   });

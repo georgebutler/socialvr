@@ -1,5 +1,5 @@
 // Utils
-//import { sendLog } from "../utils";
+import { sendLog } from "../utils";
 
 AFRAME.registerComponent("socialvr-barge-button", {
   schema: {
@@ -63,10 +63,11 @@ AFRAME.registerComponent("socialvr-barge-button", {
 
       if (this.data.phaseID === 1) {
         this.el.sceneEl.emit("startMovingWorld");
-        //sendLog("flyingPlatform", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, toggle: true });
+        sendLog("flyingPlatform", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, toggle: true });
       } else if (this.data.phaseID === 4) {
         this.el.sceneEl.emit("stopMovingWorld");
         this.el.sceneEl.emit("generateDataEvent");
+        sendLog("flyingPlatform", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, toggle: false });
       }
     } else {
       this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playSoundOneShot(18);
