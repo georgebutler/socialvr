@@ -23,7 +23,7 @@ import { COLOR_OFF, SELECTOR_BARGE, SELECTOR_BARGE_WORKSHOP } from "./config";
 APP.scene.addEventListener("environment-scene-loaded", () => {
   initSchemas();
 
-  if (SELECTOR_BARGE) {
+  if (document.querySelector(SELECTOR_BARGE)) {
     // Button
     let button = document.createElement("a-entity");
     let position = document.querySelector(".startButton").object3D.position.add(new THREE.Vector3(0, 0.5, 0))
@@ -108,7 +108,7 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
     // Changes camera inspection system to show background, regardless of user preferences.
     window.APP.scene.systems["hubs-systems"].cameraSystem.lightsEnabled = true;
   }
-  else if (SELECTOR_BARGE_WORKSHOP) {
+  else if (document.querySelector(SELECTOR_BARGE_WORKSHOP)) {
     const button = document.createElement("a-entity");
     button.setAttribute("position", new THREE.Vector3(0, 0.65, 0));
     button.setAttribute("socialvr-barge-button", { text: "Start", radius: 0.1, color: COLOR_OFF, phaseID: 1 });

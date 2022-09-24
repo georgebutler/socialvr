@@ -6,10 +6,5 @@ export const COLOR_HOVER_SELECTED = 0x9bff99;
 export const STATE_OFF = 0;
 export const STATE_ON = 1;
 
-export const SELECTOR_BARGE = () => {
-    return document.querySelector(".barge");
-}
-
-export const SELECTOR_BARGE_WORKSHOP = () => {
-    return document.querySelector(".workshopbargeglb");
-}
+export const SELECTOR_BARGE = ".barge";
+export const SELECTOR_BARGE_WORKSHOP = ".workshopbargeglb";
