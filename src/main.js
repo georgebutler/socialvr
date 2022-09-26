@@ -145,7 +145,7 @@ document.body.addEventListener("clientConnected", (e) => {
     dashboard.components["socialvr-toolbox-dashboard"].initEmoji();
   }
 
-  sendLog("joined", { clientId: NAF.clientId, joinedClientId: e.detail.clientId, joinedOrLeft: "joined" });
+  sendLog("joined", { clientId: NAF.clientId, clientName: APP.store.state.profile.displayName, joinedClientId: e.detail.clientId, joinedOrLeft: "joined" });
 });
 
 document.body.addEventListener("clientDisconnected", (e) => {
