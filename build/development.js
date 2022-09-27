@@ -1362,6 +1362,8 @@
             APP.scene.appendChild(cb);
 
             this.features.CONVERSATION_BALANCE.elements.push(cb);
+            console.log(cb.getAttribute("position"));
+            console.log(cb.object3D.position);
             console.log("[SocialVR]: Coversation Balance Enabled");
         },
 
