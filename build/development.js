@@ -1357,8 +1357,8 @@
             const position = document.querySelector(".conversation-vis-table").object3D.position;
 
             cb.setAttribute("socialvr-speech", "");
-            cb.setAttribute("position", `${position}`);
-            cb.object3D.position.set(position);
+            cb.setAttribute("position", `${position.x}, ${position.y}, ${position.z}`);
+            cb.object3D.position.copy(position);
             APP.scene.appendChild(cb);
 
             this.features.CONVERSATION_BALANCE.elements.push(cb);
