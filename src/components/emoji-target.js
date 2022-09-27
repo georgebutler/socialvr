@@ -15,9 +15,9 @@ const emojis = [
     id: "Poop"
   },
   {
-    icon: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0003_Dartt.png",
-    model: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/emoji/dart.glb",
-    id: "Dart"
+    icon: window.APP.utils.emojis[0].particleEmitterConfig.src,
+    model: window.APP.utils.emojis[0].model,
+    id: window.APP.utils.emojis[0].id
   },
   {
     icon: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0004_Flower.png",
@@ -25,9 +25,9 @@ const emojis = [
     id: "Flower"
   },
   {
-    icon: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0005_Alarm.png",
-    model: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/emoji/alarmclock.glb",
-    id: "Alarm"
+    icon: window.APP.utils.emojis[1].particleEmitterConfig.src,
+    model: window.APP.utils.emojis[1].model,
+    id: window.APP.utils.emojis[1].id
   },
   {
     icon: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0007_Pizza.png",
@@ -35,14 +35,14 @@ const emojis = [
     id: "Pizza"
   },
   {
-    icon: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0008_Wine.png",
-    model: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/emoji/wine.glb",
-    id: "Wine"
+    icon: window.APP.utils.emojis[3].particleEmitterConfig.src,
+    model: window.APP.utils.emojis[3].model,
+    id: window.APP.utils.emojis[3].id
   },
   {
-    icon: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0009_Coffee.png",
-    model: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/emoji/coffee.glb",
-    id: "Coffee"
+    icon: window.APP.utils.emojis[2].particleEmitterConfig.src,
+    model: window.APP.utils.emojis[2].model,
+    id: window.APP.utils.emojis[2].id
   },
 ];
 
