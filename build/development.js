@@ -1221,7 +1221,7 @@
                     icon: "../assets/images/1F4AC_color.png",
                     enabled: false,
                     showButton: true,
-                    button_positon: new THREE.Vector3(-11.01, 1.2, 2.25),
+                    selector: ".conversation-vis-button",
                     elements: []
                 },
                 EMOJI: {
@@ -1229,31 +1229,7 @@
                     icon: "https://statuesque-rugelach-4185bd.netlify.app/assets/emoji/icons/toggle.png",
                     enabled: false,
                     showButton: true,
-                    button_positon: new THREE.Vector3(-8.43, 1.2, -7.565),
-                    elements: []
-                },
-                BUILDINGKIT: {
-                    name: "buildingkit",
-                    icon: "../assets/images/1F48C_color.png",
-                    enabled: false,
-                    showButton: false,
-                    button_positon: new THREE.Vector3(-11.01, -2.25, 1.17),
-                    elements: []
-                },
-                BARGE: {
-                    name: "barge",
-                    icon: "../assets/images/26F5_color.png",
-                    enabled: false,
-                    showButton: false,
-                    button_positon: new THREE.Vector3(-11.01, -2.25, 1.17),
-                    elements: []
-                },
-                HALO: {
-                    name: "halo",
-                    icon: "../assets/images/1F607_color.png",
-                    enabled: false,
-                    showButton: false,
-                    button_positon: new THREE.Vector3(-11.01, -2.25, 1.17),
+                    selector: ".emoji-sending-button",
                     elements: []
                 }
             };
@@ -1263,9 +1239,6 @@
 
             this.el.sceneEl.addEventListener("disableFeatureEmoji", (e) => { this._disableFeatureEmoji.call(this); });
             NAF.connection.subscribeToDataChannel("disableFeatureEmoji", this.disableFeatureEmoji.bind(this));
-
-            this.el.sceneEl.addEventListener("enableFeatureHalo", (e) => { this._enableFeatureHalo.call(this); });
-            NAF.connection.subscribeToDataChannel("enableFeatureHalo", this.enableFeatureHalo.bind(this));
 
             this.el.sceneEl.addEventListener("enableFeatureCB", (e) => { this._enableFeatureCB.call(this); });
             NAF.connection.subscribeToDataChannel("enableFeatureCB", this.enableFeatureCB.bind(this));
@@ -1282,9 +1255,10 @@
 
                 if (feature.showButton) {
                     let button = document.createElement("a-entity");
+                    let position = document.querySelector(`${this.features[key].selector}`).object3D.position;
 
                     button.setAttribute("socialvr-toolbox-dashboard-button", `icon: ${feature.icon}; radius: 0.1; featureName: ${feature.name};`);
-                    button.setAttribute("position", feature.button_positon);
+                    button.setAttribute("position", position);
                     window.APP.scene.appendChild(button);
                 }
             });
@@ -1340,21 +1314,6 @@
             });
         },
 
-        initHalos: function () {
-            APP.componentRegistry["player-info"].forEach((playerInfo) => {
-                if (!playerInfo.socialVRHalo) {
-                    const halo = document.createElement("a-entity");
-                    halo.setAttribute("socialvr-halo", "");
-                    halo.setAttribute("position", "0 1.75 0");
-
-                    playerInfo.el.appendChild(halo);
-                    playerInfo.socialVRHalo = true;
-
-                    this.features.HALO.elements.push(halo);
-                }
-            });
-        },
-
         enableFeatureEmoji: function () {
             this.features.EMOJI.enabled = true;
             this.initEmoji();
@@ -1395,9 +1354,11 @@
             this.features.CONVERSATION_BALANCE.enabled = true;
 
             const cb = document.createElement("a-entity");
+            const position = document.querySelector(".conversation-vis-table").object3D.position;
+
             cb.setAttribute("socialvr-speech", "");
-            cb.setAttribute("position", "-12.9 1.2 2.2");
-            cb.object3D.position.set(-12.9, 1.2, 2.2);
+            cb.setAttribute("position", `${position}`);
+            cb.object3D.position.set(position);
             APP.scene.appendChild(cb);
 
             this.features.CONVERSATION_BALANCE.elements.push(cb);
@@ -1422,17 +1383,6 @@
         _disableFeatureCB: function () {
             this.disableFeatureCB(null, null, {});
             NAF.connection.broadcastDataGuaranteed("disableFeatureCB", {});
-        },
-
-        enableFeatureHalo: function () {
-            this.features.HALO.enabled = true;
-            this.initHalos();
-            console.log("[SocialVR]: Halos Enabled");
-        },
-
-        _enableFeatureHalo: function () {
-            this.enableFeatureHalo(null, null, {});
-            NAF.connection.broadcastDataGuaranteed("enableFeatureHalo", {});
         }
     });
 
@@ -1510,10 +1460,7 @@
                 this.el.setObject3D("mesh", new THREE.Mesh(this.geometry, this.material_on));
                 this.text.setAttribute("text", { value: "On", side: THREE.DoubleSide });
 
-                if (this.data.featureName === "halo") {
-                    this.el.sceneEl.emit("enableFeatureHalo", {});
-                }
-                else if (this.data.featureName === "emoji") {
+                if (this.data.featureName === "emoji") {
                     this.el.sceneEl.emit("enableFeatureEmoji", {});
                 }
                 else if (this.data.featureName === "cb") {
@@ -1525,10 +1472,7 @@
                 this.el.setObject3D("mesh", new THREE.Mesh(this.geometry, this.material_off));
                 this.text.setAttribute("text", { value: "Off", side: THREE.DoubleSide });
 
-                if (this.data.featureName === "halo") {
-                    this.el.sceneEl.emit("disableFeatureHalo", {});
-                }
-                else if (this.data.featureName === "emoji") {
+                if (this.data.featureName === "emoji") {
                     this.el.sceneEl.emit("disableFeatureEmoji", {});
                 }
                 else if (this.data.featureName === "cb") {

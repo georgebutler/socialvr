@@ -65,10 +65,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
             this.el.setObject3D("mesh", new THREE.Mesh(this.geometry, this.material_on));
             this.text.setAttribute("text", { value: "On", side: THREE.DoubleSide });
 
-            if (this.data.featureName === "halo") {
-                this.el.sceneEl.emit("enableFeatureHalo", {});
-            }
-            else if (this.data.featureName === "emoji") {
+            if (this.data.featureName === "emoji") {
                 this.el.sceneEl.emit("enableFeatureEmoji", {});
             }
             else if (this.data.featureName === "cb") {
@@ -80,10 +77,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
             this.el.setObject3D("mesh", new THREE.Mesh(this.geometry, this.material_off));
             this.text.setAttribute("text", { value: "Off", side: THREE.DoubleSide });
 
-            if (this.data.featureName === "halo") {
-                this.el.sceneEl.emit("disableFeatureHalo", {});
-            }
-            else if (this.data.featureName === "emoji") {
+            if (this.data.featureName === "emoji") {
                 this.el.sceneEl.emit("disableFeatureEmoji", {});
             }
             else if (this.data.featureName === "cb") {
