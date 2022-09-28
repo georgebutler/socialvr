@@ -1135,10 +1135,10 @@
           U2E2EZi: 0x7700f4,
           xb4PVBE: 0xffff00,
           Mqpw3tx: 0xf30000,
-          RczWQgy: 0x111111,
+          RczWQgy: 0x7700f4,
           bs7pLac: 0x010188,
           s8SKL4B: 0x1da8ff,
-          "4r1KpVk": 0xff2e00,
+          "4r1KpVk": 0x7700f4,
           ymrnPXW: 0x1da8ff,
         };
 
