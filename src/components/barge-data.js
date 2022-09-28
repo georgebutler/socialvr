@@ -1,3 +1,5 @@
+import { BARGE_DATA } from "../config";
+
 AFRAME.registerComponent("socialvr-barge-data", {
     init: function () {
         this.started = -1;
@@ -11,101 +13,11 @@ AFRAME.registerComponent("socialvr-barge-data", {
         this.pov_raycaster = new THREE.Raycaster();
         this.last_clock_time = -1;
 
-        this.knowledge_blocks = [
-            {
-                name: "Transportation",
-                model: "https://hubscloud-assets.socialsuperpowers.net/files/16cf08c7-315e-41fb-a2b1-08602faef8d4.glb",
-            },
-            {
-                name: "Customer Service",
-                model: "https://hubscloud-assets.socialsuperpowers.net/files/1c852441-a9a5-468b-b567-65a9b3f80006.glb",
-            },
-            {
-                name: "Geography",
-                model: "https://hubscloud-assets.socialsuperpowers.net/files/ae06eebb-9fc4-4310-a4dd-5286ebcb3ffd.glb",
-            },
-            {
-                name: "Public Safety",
-                model: "https://hubscloud-assets.socialsuperpowers.net/files/5b19b8ed-32f7-4669-b42c-0b871659bb97.glb",
-            }
-        ];
-
-        this.skills_blocks = [
-            {
-                name: "Troubleshooting",
-                model: "https://hubscloud-assets.socialsuperpowers.net/files/13c0b66c-f392-4d2e-bc83-0001c8f12caf.glb"
-            },
-            {
-                name: "Time Management",
-                model: "https://hubscloud-assets.socialsuperpowers.net/files/db4a4fbf-7ccf-483a-afe2-380cee5e24d9.glb"
-            },
-            {
-                name: "Operations",
-                model: "https://hubscloud-assets.socialsuperpowers.net/files/a64ad1c3-dc8a-45f4-9b04-0217c0594c05.glb"
-            },
-            {
-                name: "Oral & Written Communication",
-                model: "https://hubscloud-assets.socialsuperpowers.net/files/a64ad1c3-dc8a-45f4-9b04-0217c0594c05.glb"
-            },
-            {
-                name: "Coordination",
-                model: "https://hubscloud-assets.socialsuperpowers.net/files/760aa9ae-5622-4fa7-8972-0dc251bea580.glb"
-            },
-            {
-                name: "Critical Decision Making",
-                model: "https://hubscloud-assets.socialsuperpowers.net/files/f730c483-084e-4d72-896c-9beee800e0da.glb"
-            },
-            {
-                name: "Systems Analysis",
-                model: "https://hubscloud-assets.socialsuperpowers.net/files/2ad03466-e33b-48cd-80eb-342f212be870.glb"
-            }
-        ];
-
-        this.abilities_blocks = [
-            {
-                name: "Auditory Attention",
-                model: "https://hubscloud-assets.socialsuperpowers.net/files/1a2ed09b-f5c7-4945-8d1a-a1413cb3394a.glb"
-            },
-            {
-                name: "Physical Dexterity",
-                model: "https://hubscloud-assets.socialsuperpowers.net/files/baa69f70-0418-4175-a160-507e4bdc8443.glb"
-            },
-            {
-                name: "Visual Attention",
-                model: "https://hubscloud-assets.socialsuperpowers.net/files/9e44c094-6cee-4cd4-be42-129e873e4408.glb"
-            },
-            {
-                name: "Problem Sensitivity",
-                model: "https://hubscloud-assets.socialsuperpowers.net/files/6841869e-9cac-4cb0-9b3d-af04f316880a.glb"
-            },
-            {
-                name: "Concentration",
-                model: "https://hubscloud-assets.socialsuperpowers.net/files/7b4d91c6-faa3-454a-8681-c07f8fce9966.glb"
-            },
-            {
-                name: "Mental Reasoning",
-                model: "https://hubscloud-assets.socialsuperpowers.net/files/62ff8ac3-c2d0-4e9e-9440-c1f0c8c6c77f.glb"
-            }
-        ];
-
-        this.canidate_blocks = [
-            {
-                name: "Zoya A. Chopra",
-                model: "https://hubscloud-assets.socialsuperpowers.net/files/dec43ec6-a9a3-4400-b3db-6adc3cce4666.glb",
-            },
-            {
-                name: "Robert P. Johnson",
-                model: "https://hubscloud-assets.socialsuperpowers.net/files/a135ec4e-615c-455b-9a58-7412403a522b.glb",
-            },
-            {
-                name: "William K. Bevins",
-                model: "https://hubscloud-assets.socialsuperpowers.net/files/62f03c4b-3bb5-4998-8bd6-2fdbe6b9fd6b.glb",
-            },
-            {
-                name: "Kathy L. Stromm",
-                model: "https://hubscloud-assets.socialsuperpowers.net/files/d3a50b69-9340-4eab-b8f0-bb8eac5b2080.glb",
-            },
-        ];
+        // Uses config file now.
+        this.knowledge_blocks = BARGE_DATA.KNOWLEDGE_BLOCKS;
+        this.skills_blocks = BARGE_DATA.SKILL_BLOCKS;
+        this.abilities_blocks = BARGE_DATA.ABILITY_BLOCKS;
+        this.canidate_blocks = BARGE_DATA.CANIDATE_BLOCKS;
 
         this.knowledge_blocks.forEach((item) => { item.distance = 9999; });
         this.skills_blocks.forEach((item) => { item.distance = 9999; });

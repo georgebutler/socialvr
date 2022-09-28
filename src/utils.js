@@ -19,7 +19,7 @@ const vectorRequiresUpdate = (epsilon) => {
 export const sendLog = async (endpoint, obj) => {
     try {
         return await fetch(`https://log.socialsuperpowers.net/api/${endpoint}`, {
-            method: "POST",
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(obj)
         })
@@ -29,7 +29,7 @@ export const sendLog = async (endpoint, obj) => {
 }
 
 export function initSchemas() {
-    // NAF Template
+    // NAF Template (Emoji)
     const assets = document.querySelector("a-assets");
     const newTemplate = document.createElement("template");
     newTemplate.id = "sent-emoji";
@@ -46,6 +46,13 @@ export function initSchemas() {
     emojiSchema.components.push({ component: "billboard", property: "onlyY" });
     emojiSchema.components.push({ component: "particle-emitter" });
     NAF.schemas.add(emojiSchema);
+
+    // NAF Template (World Mover)
+    /* 
+    const assets = document.querySelector("a-assets");
+    const newTemplate = document.createElement("template");
+    newTemplate.id = "sent-emoji";
+    */
 
     // NAF Schema (World Mover)
     /*   
