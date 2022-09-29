@@ -236,6 +236,26 @@
     const SELECTOR_BARGE = ".barge";
     const SELECTOR_BARGE_WORKSHOP = ".workshopbargeglb";
 
+    const SPEECH_AVATAR_COLORS = {
+        "4rtlr6I": 0x1da8ff,
+        "WPYjPmv": 0xff2190,
+        "1S9JzDB": 0xf30000,
+        "jZWyDGm": 0x00e000,
+        "II9rXJD": 0xffff00,
+        "HrP4pCf": 0x7700f4,
+        "sEj4i7J": 0xff2e00,
+        "vm3cTy7": 0x010188,
+        "Mih5HF7": 0x111111,
+        "U2E2EZi": 0x7700f4,
+        "xb4PVBE": 0xffff00,
+        "Mqpw3tx": 0xf30000,
+        "RczWQgy": 0x7700f4,
+        "bs7pLac": 0x010188,
+        "s8SKL4B": 0x1da8ff,
+        "4r1KpVk": 0x7700f4,
+        "ymrnPXW": 0x1da8ff,
+    };
+
     const BARGE_DATA = {
         KNOWLEDGE_BLOCKS: [
             {
@@ -822,7 +842,7 @@
         this.el.setAttribute("is-remote-hover-target", "");
         // Required hack to make hover states work.
         this.el.classList.add("interactable", "teleport-waypoint-icon");
-        this.el.setObject3D("mesh", new THREE.Mesh(new THREE.BoxGeometry(0.25, 1.75, 0.25), new THREE.MeshBasicMaterial({ visible: false })));
+        this.el.setObject3D("mesh", new THREE.Mesh(new THREE.BoxGeometry(0.35, 1.75, 0.35), new THREE.MeshBasicMaterial({ visible: false })));
 
         this.hoverVisual = document.createElement("a-entity");
         this.el.appendChild(this.hoverVisual);
@@ -930,7 +950,7 @@
         entity.setAttribute("billboard", { onlyY: true });
         entity.setAttribute("offset-relative-to", {
           target: "#avatar-pov-node",
-          offset: { x: 0, y: 0, z: -0.5 },
+          offset: { x: 0, y: 0, z: -0.6 },
           selfDestruct: true
         });
       },
@@ -943,7 +963,7 @@
         this.selectionPanel.setObject3D("mesh", new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.1), new THREE.MeshBasicMaterial({ visible: false })));
         this.selectionPanel.setAttribute("offset-relative-to", {
           target: "#avatar-pov-node",
-          offset: { x: 0, y: -0.1, z: -0.5 }
+          offset: { x: -0.45, y: -0.1, z: -0.6 }
         });
 
         this.el.sceneEl.appendChild(this.selectionPanel);
@@ -1147,31 +1167,11 @@
 
       // keys are "Avatar listing sid"s from Approved Avatars admin tab
       playerInfoToColor: function (playerInfo) {
-        const colorsByAvatar = {
-          "4rtlr6I": 0x1da8ff,
-          WPYjPmv: 0xff2190,
-          "1S9JzDB": 0xf30000,
-          jZWyDGm: 0x00e000,
-          II9rXJD: 0xffff00,
-          HrP4pCf: 0x7700f4,
-          sEj4i7J: 0xff2e00,
-          vm3cTy7: 0x010188,
-          Mih5HF7: 0x111111,
-          U2E2EZi: 0x7700f4,
-          xb4PVBE: 0xffff00,
-          Mqpw3tx: 0xf30000,
-          RczWQgy: 0x7700f4,
-          bs7pLac: 0x010188,
-          s8SKL4B: 0x1da8ff,
-          "4r1KpVk": 0x7700f4,
-          ymrnPXW: 0x1da8ff,
-        };
-
         const avatarURL = playerInfo.data.avatarSrc;
 
-        for (const avatarSID of Object.keys(colorsByAvatar)) {
+        for (const avatarSID of Object.keys(SPEECH_AVATAR_COLORS)) {
           if (avatarURL.includes(avatarSID)) {
-            return colorsByAvatar[avatarSID];
+            return SPEECH_AVATAR_COLORS[avatarSID];
           }
         }
 

@@ -66,7 +66,7 @@ AFRAME.registerComponent("socialvr-emoji-target", {
     this.el.setAttribute("is-remote-hover-target", "");
     // Required hack to make hover states work.
     this.el.classList.add("interactable", "teleport-waypoint-icon");
-    this.el.setObject3D("mesh", new THREE.Mesh(new THREE.BoxGeometry(0.25, 1.75, 0.25), new THREE.MeshBasicMaterial({ visible: false })));
+    this.el.setObject3D("mesh", new THREE.Mesh(new THREE.BoxGeometry(0.35, 1.75, 0.35), new THREE.MeshBasicMaterial({ visible: false })));
 
     this.hoverVisual = document.createElement("a-entity");
     this.el.appendChild(this.hoverVisual);
@@ -174,7 +174,7 @@ AFRAME.registerComponent("socialvr-emoji-target", {
     entity.setAttribute("billboard", { onlyY: true });
     entity.setAttribute("offset-relative-to", {
       target: "#avatar-pov-node",
-      offset: { x: 0, y: 0, z: -0.5 },
+      offset: { x: 0, y: 0, z: -0.6 },
       selfDestruct: true
     });
   },
@@ -187,7 +187,7 @@ AFRAME.registerComponent("socialvr-emoji-target", {
     this.selectionPanel.setObject3D("mesh", new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.1), new THREE.MeshBasicMaterial({ visible: false })));
     this.selectionPanel.setAttribute("offset-relative-to", {
       target: "#avatar-pov-node",
-      offset: { x: 0, y: -0.1, z: -0.5 }
+      offset: { x: -0.45, y: -0.1, z: -0.6 }
     });
 
     this.el.sceneEl.appendChild(this.selectionPanel);
