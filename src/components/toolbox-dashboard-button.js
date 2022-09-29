@@ -1,4 +1,5 @@
 import { STATE_OFF, STATE_ON, COLOR_ON, COLOR_OFF, COLOR_HOVER_ON_OFF, COLOR_HOVER_SELECTED } from "../config";
+import { sendLog } from "../utils";
 
 AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
     schema: {
@@ -66,9 +67,11 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
             this.text.setAttribute("text", { value: "On", side: THREE.DoubleSide });
 
             if (this.data.featureName === "emoji") {
+                sendLog("emojiToggle", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, toggle: true });
                 this.el.sceneEl.emit("enableFeatureEmoji", {});
             }
             else if (this.data.featureName === "cb") {
+                sendLog("conversationVisualization", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, toggle: true });
                 this.el.sceneEl.emit("enableFeatureCB", {});
             }
         }
@@ -78,9 +81,11 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
             this.text.setAttribute("text", { value: "Off", side: THREE.DoubleSide });
 
             if (this.data.featureName === "emoji") {
+                sendLog("emojiToggle", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, toggle: false });
                 this.el.sceneEl.emit("disableFeatureEmoji", {});
             }
             else if (this.data.featureName === "cb") {
+                sendLog("conversationVisualization", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, toggle: false });
                 this.el.sceneEl.emit("disableFeatureCB", {});
             }
         }

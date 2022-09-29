@@ -1477,9 +1477,11 @@
                 this.text.setAttribute("text", { value: "On", side: THREE.DoubleSide });
 
                 if (this.data.featureName === "emoji") {
+                    sendLog("emojiToggle", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, toggle: true });
                     this.el.sceneEl.emit("enableFeatureEmoji", {});
                 }
                 else if (this.data.featureName === "cb") {
+                    sendLog("conversationVisualization", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, toggle: true });
                     this.el.sceneEl.emit("enableFeatureCB", {});
                 }
             }
@@ -1489,9 +1491,11 @@
                 this.text.setAttribute("text", { value: "Off", side: THREE.DoubleSide });
 
                 if (this.data.featureName === "emoji") {
+                    sendLog("emojiToggle", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, toggle: false });
                     this.el.sceneEl.emit("disableFeatureEmoji", {});
                 }
                 else if (this.data.featureName === "cb") {
+                    sendLog("conversationVisualization", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, toggle: false });
                     this.el.sceneEl.emit("disableFeatureCB", {});
                 }
             }
