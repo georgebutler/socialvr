@@ -14,6 +14,8 @@ const MAX_ORB_SIZE = 0.9;
 const SPEECH_ORB_LIFETIME = 1000 * 60 * 5; // 5mins realtime
 const ORB_GROWTH_PER_TICK = (MAX_ORB_SIZE - MIN_ORB_SIZE) / ((MAX_SPEECH_TIME_FOR_EVENT - MIN_SPEECH_TIME_FOR_EVENT) / SPEECH_TIME_PER_TICK);
 
+import { SPEECH_AVATAR_COLORS } from "../config";
+
 AFRAME.registerComponent("socialvr-speech", {
   init: function () {
     this.localAudioAnalyser = this.el.sceneEl.systems["local-audio-analyser"];
@@ -171,31 +173,11 @@ AFRAME.registerComponent("socialvr-speech", {
 
   // keys are "Avatar listing sid"s from Approved Avatars admin tab
   playerInfoToColor: function (playerInfo) {
-    const colorsByAvatar = {
-      "4rtlr6I": 0x1da8ff,
-      WPYjPmv: 0xff2190,
-      "1S9JzDB": 0xf30000,
-      jZWyDGm: 0x00e000,
-      II9rXJD: 0xffff00,
-      HrP4pCf: 0x7700f4,
-      sEj4i7J: 0xff2e00,
-      vm3cTy7: 0x010188,
-      Mih5HF7: 0x111111,
-      U2E2EZi: 0x7700f4,
-      xb4PVBE: 0xffff00,
-      Mqpw3tx: 0xf30000,
-      RczWQgy: 0x7700f4,
-      bs7pLac: 0x010188,
-      s8SKL4B: 0x1da8ff,
-      "4r1KpVk": 0x7700f4,
-      ymrnPXW: 0x1da8ff,
-    };
-
     const avatarURL = playerInfo.data.avatarSrc;
 
-    for (const avatarSID of Object.keys(colorsByAvatar)) {
+    for (const avatarSID of Object.keys(SPEECH_AVATAR_COLORS)) {
       if (avatarURL.includes(avatarSID)) {
-        return colorsByAvatar[avatarSID];
+        return SPEECH_AVATAR_COLORS[avatarSID];
       }
     }
 

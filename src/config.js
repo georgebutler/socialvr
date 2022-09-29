@@ -9,6 +9,26 @@ export const STATE_ON = 1;
 export const SELECTOR_BARGE = ".barge";
 export const SELECTOR_BARGE_WORKSHOP = ".workshopbargeglb";
 
+export const SPEECH_AVATAR_COLORS = {
+    "4rtlr6I": 0x1da8ff,
+    "WPYjPmv": 0xff2190,
+    "1S9JzDB": 0xf30000,
+    "jZWyDGm": 0x00e000,
+    "II9rXJD": 0xffff00,
+    "HrP4pCf": 0x7700f4,
+    "sEj4i7J": 0xff2e00,
+    "vm3cTy7": 0x010188,
+    "Mih5HF7": 0x111111,
+    "U2E2EZi": 0x7700f4,
+    "xb4PVBE": 0xffff00,
+    "Mqpw3tx": 0xf30000,
+    "RczWQgy": 0x7700f4,
+    "bs7pLac": 0x010188,
+    "s8SKL4B": 0x1da8ff,
+    "4r1KpVk": 0x7700f4,
+    "ymrnPXW": 0x1da8ff,
+}
+
 export const BARGE_DATA = {
     KNOWLEDGE_BLOCKS: [
         {
