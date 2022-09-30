@@ -131,11 +131,21 @@
           this.el.sceneEl.emit("logPhaseEvent", { detail: this.data.phaseID });
           if (this.data.phaseID === 1) {
             this.el.sceneEl.emit("startMovingWorld");
-            sendLog("flyingPlatform", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, toggle: true });
+            sendLog("flyingPlatform", { 
+              clientId: NAF.clientId, 
+              displayName: window.APP.store.state.profile.displayName,
+              sceneName: window.APP.hub.name,
+              toggle: true 
+            });
           } else if (this.data.phaseID === 4) {
             this.el.sceneEl.emit("stopMovingWorld");
             this.el.sceneEl.emit("generateDataEvent");
-            sendLog("flyingPlatform", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, toggle: false });
+            sendLog("flyingPlatform", { 
+              clientId: NAF.clientId,
+              displayName: window.APP.store.state.profile.displayName,
+              sceneName: window.APP.hub.name,
+              toggle: false 
+            });
           }
         } else {
           this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playSoundOneShot(18);
