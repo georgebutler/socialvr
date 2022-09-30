@@ -944,7 +944,7 @@
 
           entity.setAttribute("particle-emitter", particleEmitterConfig);
           this.activeEmojis.push({ entity, sender, recipient, timestamp });
-          sendLog("emojiSent", { clientId: NAF.clientId, logSender: sender, logReceiver: this.data.ownerID, logEmojiType: emoji.id });
+          sendLog("emojiSent", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, logSender: sender, logReceiver: this.data.ownerID, logEmojiType: emoji.id });
         }, { once: true });
 
         entity.setAttribute("billboard", { onlyY: true });
