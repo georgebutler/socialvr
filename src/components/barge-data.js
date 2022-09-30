@@ -14,10 +14,10 @@ AFRAME.registerComponent("socialvr-barge-data", {
         this.last_clock_time = -1;
 
         // Uses config file now.
-        this.knowledge_blocks = BARGE_DATA.KNOWLEDGE_BLOCKS;
-        this.skills_blocks = BARGE_DATA.SKILL_BLOCKS;
-        this.abilities_blocks = BARGE_DATA.ABILITY_BLOCKS;
-        this.canidate_blocks = BARGE_DATA.CANIDATE_BLOCKS;
+        this.knowledge_blocks = [...BARGE_DATA.KNOWLEDGE_BLOCKS];
+        this.skills_blocks = [...BARGE_DATA.SKILL_BLOCKS];
+        this.abilities_blocks = [...BARGE_DATA.ABILITY_BLOCKS];
+        this.canidate_blocks = [...BARGE_DATA.CANIDATE_BLOCKS];
 
         this.knowledge_blocks.forEach((item) => { item.distance = 9999; });
         this.skills_blocks.forEach((item) => { item.distance = 9999; });
