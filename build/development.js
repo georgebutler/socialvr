@@ -389,6 +389,11 @@
             this.abilities_blocks.forEach((item) => { item.distance = 9999; });
             this.canidate_blocks.forEach((item) => { item.distance = 9999; });
 
+            console.log(this.knowledge_blocks);
+            console.log(this.skills_blocks);
+            console.log(this.abilities_blocks);
+            console.log(this.canidate_blocks);
+
             this.el.sceneEl.addEventListener("logPhaseEvent", (e) => { this._logPhaseEvent.call(this, e.detail); });
             NAF.connection.subscribeToDataChannel("logPhaseEvent", this.logPhaseEvent.bind(this));
 
