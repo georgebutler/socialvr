@@ -434,6 +434,7 @@
             document.querySelectorAll('[socialvr-barge-slot=""]').forEach((slot) => {
                 slot.object3D.getWorldPosition(slotPosition);
 
+                // Should just use a loop to compare at some point (if this is the cause of the mismatch)
                 if (slot.components["socialvr-barge-slot"].data.type === "knowledge") {
                     document.querySelectorAll('.interactable:not([super-spawner=""])').forEach((interactable) => {
                         if (interactable.components["gltf-model-plus"]) {
@@ -448,6 +449,12 @@
                             }
                             else if (interactable.components["gltf-model-plus"].data.src === this.knowledge_blocks[3].model) {
                                 this.knowledge_blocks[3].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
+                            }
+                            else if (interactable.components["gltf-model-plus"].data.src === this.knowledge_blocks[4].model) {
+                                this.knowledge_blocks[4].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
+                            }
+                            else if (interactable.components["gltf-model-plus"].data.src === this.knowledge_blocks[5].model) {
+                                this.knowledge_blocks[5].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
                             }
                         }
                     });
@@ -467,6 +474,12 @@
                             else if (interactable.components["gltf-model-plus"].data.src === this.skills_blocks[3].model) {
                                 this.skills_blocks[3].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
                             }
+                            else if (interactable.components["gltf-model-plus"].data.src === this.skills_blocks[4].model) {
+                                this.skills_blocks[4].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
+                            }
+                            else if (interactable.components["gltf-model-plus"].data.src === this.skills_blocks[5].model) {
+                                this.skills_blocks[5].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
+                            }
                         }
                     });
                 }
@@ -484,6 +497,12 @@
                             }
                             else if (interactable.components["gltf-model-plus"].data.src === this.abilities_blocks[3].model) {
                                 this.abilities_blocks[3].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
+                            }
+                            else if (interactable.components["gltf-model-plus"].data.src === this.abilities_blocks[4].model) {
+                                this.abilities_blocks[4].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
+                            }
+                            else if (interactable.components["gltf-model-plus"].data.src === this.abilities_blocks[5].model) {
+                                this.abilities_blocks[5].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
                             }
                         }
                     });
