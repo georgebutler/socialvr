@@ -233,7 +233,7 @@
 
             this.mesh = new THREE.Mesh(this.geometry, this.material);
             this.el.setObject3D("mesh", this.mesh);
-            this.el.getObject3D("mesh").visible = false;
+            this.el.getObject3D("mesh").visible = true;
         }
     });
 
