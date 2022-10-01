@@ -7,10 +7,10 @@ AFRAME.registerComponent("socialvr-barge-clock", {
     this.el.setObject3D("mesh", this.mesh);
 
     this.bg = document.createElement("a-entity");
-    this.bg.setObject3D("mesh", new THREE.Mesh(new THREE.SphereGeometry(2, 16, 8), new THREE.MeshStandardMaterial({ 
-      color: 0x5800FF,
+    this.bg.setObject3D("mesh", new THREE.Mesh(new THREE.SphereGeometry(1, 8, 4), new THREE.MeshBasicMaterial({ 
+      color: 0x5800ff,
       transparent: true,
-      opacity: 0.5,
+      opacity: 0.8,
       side: THREE.BackSide
     })));
 
@@ -18,13 +18,17 @@ AFRAME.registerComponent("socialvr-barge-clock", {
     this.text.setAttribute("text", "value: Time;");
     this.text.setAttribute("rotation", "0, 0, 0");
     this.text.setAttribute("geometry", "primitive: plane; height: auto; width: 2;");
-    this.text.setAttribute("material", "color: #807e7e;");
+    this.text.setAttribute("material", { color: 0x807e7e });
+    this.text.object3D.scale.set(2, 2, 2);
+    this.text.object3D.matrixNeedsUpdate = true;
 
     this.text2 = document.createElement("a-entity");
     this.text2.setAttribute("text", "value: Time;");
     this.text2.setAttribute("rotation", "0, 180, 0");
     this.text2.setAttribute("geometry", "primitive: plane; height: auto; width: 2;");
-    this.text2.setAttribute("material", "color: #807e7e;");
+    this.text2.setAttribute("material", { color: 0x807e7e });
+    this.text2.object3D.scale.set(2, 2, 2);
+    this.text2.object3D.matrixNeedsUpdate = true;
 
     this.el.appendChild(this.bg);
     this.el.appendChild(this.text);
