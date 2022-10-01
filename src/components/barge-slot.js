@@ -29,7 +29,7 @@ AFRAME.registerComponent("socialvr-barge-slot", {
     init: function () {
         this.geometry = new THREE.BoxGeometry(this.data.width, this.data.height, this.data.depth);
         this.material = new THREE.MeshStandardMaterial({
-            color: "#FF0000",
+            color: 0x5800FF,
             transparent: true,
             opacity: 0.5
         });
