@@ -8,7 +8,7 @@ AFRAME.registerComponent("socialvr-barge-clock", {
 
     this.bg = document.createElement("a-entity");
     this.bg.setObject3D("mesh", new THREE.Mesh(new THREE.SphereGeometry(0.5, 16, 8), new THREE.MeshBasicMaterial({ 
-      color: 0x5800ff,
+      color: 0x6b6b6b,
       transparent: true,
       opacity: 0.3,
       side: THREE.BackSide
