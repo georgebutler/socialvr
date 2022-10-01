@@ -88,9 +88,6 @@ AFRAME.registerComponent("socialvr-barge-data", {
                         else if (interactable.components["gltf-model-plus"].data.src === this.knowledge_blocks[4].model) {
                             this.knowledge_blocks[4].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
                         }
-                        else if (interactable.components["gltf-model-plus"].data.src === this.knowledge_blocks[5].model) {
-                            this.knowledge_blocks[5].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
-                        }
                     }
                 });
             }
@@ -114,6 +111,9 @@ AFRAME.registerComponent("socialvr-barge-data", {
                         }
                         else if (interactable.components["gltf-model-plus"].data.src === this.skills_blocks[5].model) {
                             this.skills_blocks[5].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
+                        }
+                        else if (interactable.components["gltf-model-plus"].data.src === this.skills_blocks[6].model) {
+                            this.skills_blocks[6].distance = slotPosition.distanceToSquared(interactable.object3D.getWorldPosition(new THREE.Vector3()));
                         }
                     }
                 });
