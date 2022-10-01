@@ -164,7 +164,7 @@
 
         this.bg = document.createElement("a-entity");
         this.bg.setObject3D("mesh", new THREE.Mesh(new THREE.SphereGeometry(0.5, 16, 8), new THREE.MeshBasicMaterial({ 
-          color: 0x6b6b6b,
+          color: 0x3a3a3a,
           transparent: true,
           opacity: 0.3,
           side: THREE.BackSide
