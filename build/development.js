@@ -1059,14 +1059,14 @@
     const SPEECH_TIME_PER_TICK = 10; // every speech tick = 10ms of realtime
     const MIN_SPEECH_TIME_FOR_EVENT = 100; // 0.1s realtime
     const MAX_SPEECH_TIME_FOR_EVENT = 5000; // 5s realtime
-    const CONTINUOUS_SPEECH_LENIENCY_TIME = 250; // 0.1s realtime
+    const CONTINUOUS_SPEECH_LENIENCY_TIME = 100; // 0.1s realtime
 
     const ORB_CONTAINER_POS = [0, 0, 0]; // [7,0,2]
 
     const MIN_ORB_SIZE = 0.05;
     const MAX_ORB_SIZE = 0.9;
     const SPEECH_ORB_LIFETIME = 1000 * 60 * 5; // 5mins realtime
-    const ORB_GROWTH_PER_TICK = ((MAX_ORB_SIZE - MIN_ORB_SIZE) / ((MAX_SPEECH_TIME_FOR_EVENT - MIN_SPEECH_TIME_FOR_EVENT) / SPEECH_TIME_PER_TICK)) * 5;
+    const ORB_GROWTH_PER_TICK = (MAX_ORB_SIZE - MIN_ORB_SIZE) / ((MAX_SPEECH_TIME_FOR_EVENT - MIN_SPEECH_TIME_FOR_EVENT) / SPEECH_TIME_PER_TICK);
 
     AFRAME.registerComponent("socialvr-speech", {
       init: function () {
