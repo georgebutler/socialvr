@@ -3,7 +3,7 @@ const MIC_PRESENCE_VOLUME_THRESHOLD = 0.00001;
 const SPEECH_TIME_PER_TICK = 10; // every speech tick = 10ms of realtime
 const MIN_SPEECH_TIME_FOR_EVENT = 100; // 0.1s realtime
 const MAX_SPEECH_TIME_FOR_EVENT = 5000; // 5s realtime
-const CONTINUOUS_SPEECH_LENIENCY_TIME = 100; // 0.1s realtime
+const CONTINUOUS_SPEECH_LENIENCY_TIME = 250; // 0.1s realtime
 
 const ORB_CONTAINER_POS = [0, 0, 0]; // [7,0,2]
 const ORB_CONTAINER_SIZE = 1;
@@ -93,7 +93,7 @@ AFRAME.registerComponent("socialvr-speech", {
     // update speech orb sizes and positions
     for (const finishedOrb of document.querySelectorAll(".speechOrb.finished")) {
       const pos = finishedOrb.getAttribute("position");
-      pos.y += ORB_GROWTH_PER_TICK / 2; // synchronize movement speed with orb growth rate
+      pos.y += finishedOrb.object3D.scale.y / 2; // synchronize movement speed with orb growth rate
       finishedOrb.setAttribute("position", pos);
     }
 
@@ -105,7 +105,7 @@ AFRAME.registerComponent("socialvr-speech", {
       // move its center upward by half of the growth amount,
       // to keep the bottom position fixed at the "now" plane
       const pos = activeOrb.getAttribute("position");
-      pos.y += ORB_GROWTH_PER_TICK / 2;
+      pos.y += activeOrb.object3D.scale.y / 2;
       activeOrb.setAttribute("position", pos);
     }
   },
@@ -186,7 +186,7 @@ AFRAME.registerComponent("socialvr-speech", {
   },
 
   spawnOrb: function (size, in_color) {
-    const geometry = new THREE.CylinderGeometry(0.1, 0.1, size);
+    const geometry = new THREE.CylinderGeometry(0.09, 0.09, size);
     const material = new THREE.MeshBasicMaterial({
       color: in_color
     });
