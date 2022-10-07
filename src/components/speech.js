@@ -72,8 +72,10 @@ AFRAME.registerComponent("socialvr-speech", {
         this._startSpeech(null, null, eventData, null); // local
         NAF.connection.broadcastDataGuaranteed("startSpeech", eventData); // networked
       }
+      
       this.continuousSpeechTime += SPEECH_TIME_PER_TICK;
       this.continuousSpeechLeniencyTime = CONTINUOUS_SPEECH_LENIENCY_TIME;
+
       // if this is a single really long speech event, break it off and start a new one
       if (this.continuousSpeechTime >= MAX_SPEECH_TIME_FOR_EVENT) {
         this.doStopSpeech(this.continuousSpeechTime);
@@ -83,6 +85,7 @@ AFRAME.registerComponent("socialvr-speech", {
       if (this.continuousSpeechLeniencyTime > 0) {
         this.continuousSpeechLeniencyTime -= SPEECH_TIME_PER_TICK;
       }
+
       if (this.continuousSpeechLeniencyTime <= 0 && this.continuousSpeechTime >= MIN_SPEECH_TIME_FOR_EVENT) {
         // speech event ended
         this.doStopSpeech(this.continuousSpeechTime);
