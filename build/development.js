@@ -1145,19 +1145,19 @@
         // update speech orb sizes and positions
         for (const finishedOrb of document.querySelectorAll(".speechOrb.finished")) {
           const pos = finishedOrb.getAttribute("position");
-          pos.y += ORB_GROWTH_PER_TICK / 2; // synchronize movement speed with orb growth rate
+          pos.y += ORB_GROWTH_PER_TICK / 3; // synchronize movement speed with orb growth rate
           finishedOrb.setAttribute("position", pos);
         }
 
         for (const activeOrb of Object.values(this.activeSpeechOrbs)) {
           // grow each active speech orb by ORB_GROWTH_PER_TICK
-          activeOrb.object3D.scale.add(new THREE.Vector3(0, ORB_GROWTH_PER_TICK * 5, 0));
+          activeOrb.object3D.scale.add(new THREE.Vector3(0, ORB_GROWTH_PER_TICK * 6, 0));
           activeOrb.matrixNeedsUpdate = true;
 
           // move its center upward by half of the growth amount,
           // to keep the bottom position fixed at the "now" plane
           const pos = activeOrb.getAttribute("position");
-          pos.y += ORB_GROWTH_PER_TICK / 2;
+          pos.y += ORB_GROWTH_PER_TICK / 3;
           activeOrb.setAttribute("position", pos);
         }
       },
