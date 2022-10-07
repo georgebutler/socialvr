@@ -1160,7 +1160,7 @@
           // move its center upward by half of the growth amount,
           // to keep the bottom position fixed at the "now" plane
           const pos = activeOrb.getAttribute("position");
-          pos.y += ORB_GROWTH_PER_TICK / 15;
+          pos.y += ORB_GROWTH_PER_TICK / 10;
           activeOrb.setAttribute("position", pos);
         }
       },
