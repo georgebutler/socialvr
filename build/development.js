@@ -1151,7 +1151,7 @@
 
         for (const activeOrb of Object.values(this.activeSpeechOrbs)) {
           // grow each active speech orb by ORB_GROWTH_PER_TICK
-          activeOrb.object3D.scale.add(new THREE.Vector3(0, ORB_GROWTH_PER_TICK * 50, 0));
+          activeOrb.object3D.scale.add(new THREE.Vector3(0, ORB_GROWTH_PER_TICK * 25, 0));
           activeOrb.matrixNeedsUpdate = true;
 
           // move its center upward by half of the growth amount,
