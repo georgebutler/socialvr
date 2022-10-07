@@ -93,13 +93,13 @@ AFRAME.registerComponent("socialvr-speech", {
     // update speech orb sizes and positions
     for (const finishedOrb of document.querySelectorAll(".speechOrb.finished")) {
       const pos = finishedOrb.getAttribute("position");
-      pos.y += ORB_GROWTH_PER_TICK; // synchronize movement speed with orb growth rate
+      pos.y += ORB_GROWTH_PER_TICK / 2; // synchronize movement speed with orb growth rate
       finishedOrb.setAttribute("position", pos);
     }
 
     for (const activeOrb of Object.values(this.activeSpeechOrbs)) {
       // grow each active speech orb by ORB_GROWTH_PER_TICK
-      activeOrb.object3D.scale.add(new THREE.Vector3(0, ORB_GROWTH_PER_TICK * 10, 0));
+      activeOrb.object3D.scale.add(new THREE.Vector3(0, ORB_GROWTH_PER_TICK * 5, 0));
       activeOrb.matrixNeedsUpdate = true;
 
       // move its center upward by half of the growth amount,

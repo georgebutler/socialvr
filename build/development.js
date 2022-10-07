@@ -91,6 +91,10 @@
         color: {
           type: "color",
           default: "#FFF"
+        },
+        hideOnTrigger: {
+          type: "boolean",
+          default: false
         }
       },
 
@@ -120,6 +124,11 @@
 
         this.onClick = this.onClick.bind(this);
         this.el.object3D.addEventListener("interact", this.onClick);
+        this.el.object3D.addEventListener("hideBargeButton", (e) => {
+          if (e.detail === this) {
+            console.log("\n\n\n\n\nWorking");
+          }
+        });
       },
 
       remove: function () {
@@ -129,27 +138,32 @@
       onClick: function () {
         if (this.data.phaseID >= 0) {
           this.el.sceneEl.emit("logPhaseEvent", { detail: this.data.phaseID });
+
           if (this.data.phaseID === 1) {
             this.el.sceneEl.emit("startMovingWorld");
-            sendLog("flyingPlatform", { 
-              clientId: NAF.clientId, 
+            sendLog("flyingPlatform", {
+              clientId: NAF.clientId,
               displayName: window.APP.store.state.profile.displayName,
               sceneName: window.APP.hub.name,
-              toggle: true 
+              toggle: true
             });
           } else if (this.data.phaseID === 4) {
             this.el.sceneEl.emit("stopMovingWorld");
             this.el.sceneEl.emit("generateDataEvent");
-            sendLog("flyingPlatform", { 
+            sendLog("flyingPlatform", {
               clientId: NAF.clientId,
               displayName: window.APP.store.state.profile.displayName,
               sceneName: window.APP.hub.name,
-              toggle: false 
+              toggle: false
             });
           }
         } else {
           this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playSoundOneShot(18);
           this.el.sceneEl.emit(this.data.eventName);
+        }
+
+        if (this.data.hideOnTrigger) {
+          this.el.sceneEl.emit("hideBargeButton", { detail: this });
         }
       }
     });
@@ -1131,13 +1145,13 @@
         // update speech orb sizes and positions
         for (const finishedOrb of document.querySelectorAll(".speechOrb.finished")) {
           const pos = finishedOrb.getAttribute("position");
-          pos.y += ORB_GROWTH_PER_TICK; // synchronize movement speed with orb growth rate
+          pos.y += ORB_GROWTH_PER_TICK / 2; // synchronize movement speed with orb growth rate
           finishedOrb.setAttribute("position", pos);
         }
 
         for (const activeOrb of Object.values(this.activeSpeechOrbs)) {
           // grow each active speech orb by ORB_GROWTH_PER_TICK
-          activeOrb.object3D.scale.add(new THREE.Vector3(0, ORB_GROWTH_PER_TICK * 10, 0));
+          activeOrb.object3D.scale.add(new THREE.Vector3(0, ORB_GROWTH_PER_TICK * 5, 0));
           activeOrb.matrixNeedsUpdate = true;
 
           // move its center upward by half of the growth amount,
