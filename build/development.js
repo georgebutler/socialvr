@@ -1063,7 +1063,7 @@
 
     const ORB_CONTAINER_POS = [0, 0, 0]; // [7,0,2]
 
-    const MIN_ORB_SIZE = 0.05;
+    const MIN_ORB_SIZE = 0.01;
     const MAX_ORB_SIZE = 0.9;
     const SPEECH_ORB_LIFETIME = 1000 * 60 * 5; // 5mins realtime
     const ORB_GROWTH_PER_TICK = (MAX_ORB_SIZE - MIN_ORB_SIZE) / ((MAX_SPEECH_TIME_FOR_EVENT - MIN_SPEECH_TIME_FOR_EVENT) / SPEECH_TIME_PER_TICK);
@@ -1145,7 +1145,7 @@
         // update speech orb sizes and positions
         for (const finishedOrb of document.querySelectorAll(".speechOrb.finished")) {
           const pos = finishedOrb.getAttribute("position");
-          pos.y += ORB_GROWTH_PER_TICK / 3; // synchronize movement speed with orb growth rate
+          pos.y += ORB_GROWTH_PER_TICK / 2.5; // synchronize movement speed with orb growth rate
           finishedOrb.setAttribute("position", pos);
         }
 
@@ -1157,7 +1157,7 @@
           // move its center upward by half of the growth amount,
           // to keep the bottom position fixed at the "now" plane
           const pos = activeOrb.getAttribute("position");
-          pos.y += ORB_GROWTH_PER_TICK / 3;
+          pos.y += ORB_GROWTH_PER_TICK / 2.5;
           activeOrb.setAttribute("position", pos);
         }
       },
