@@ -1148,7 +1148,7 @@
         // update speech orb sizes and positions
         for (const finishedOrb of document.querySelectorAll(".speechOrb.finished")) {
           const pos = finishedOrb.getAttribute("position");
-          pos.y += ORB_GROWTH_PER_TICK / 2; // synchronize movement speed with orb growth rate
+          pos.y += ORB_GROWTH_PER_TICK / 1.5; // synchronize movement speed with orb growth rate
           finishedOrb.setAttribute("position", pos);
         }
 
