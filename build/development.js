@@ -1697,11 +1697,13 @@
     APP.scene.addEventListener("object_spawned", (e) => {
       sendLog("spaceMakingKit", { clientId: NAF.clientId, objectID: e.detail.objectType, timestamp: Date.now() });
 
+      /*
       document.querySelectorAll("[floaty-object]").forEach((floaty) => {
         floaty.setAttribute("floaty-object", {
           unthrowable: true
         });
       });
+      */
     });
 
     document.body.addEventListener("clientConnected", (e) => {
