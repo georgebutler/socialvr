@@ -102,7 +102,8 @@ AFRAME.registerComponent("socialvr-speech", {
 
     for (const activeOrb of Object.values(this.activeSpeechOrbs)) {
       // grow each active speech orb by ORB_GROWTH_PER_TICK
-      activeOrb.object3D.scale.add(new THREE.Vector3(0, ORB_GROWTH_PER_TICK, 0));
+      const size = parseFloat(activeOrb.getAttribute("height")) + ORB_GROWTH_PER_TICK;
+      activeOrb.object3D.scale.set(new THREE.Vector3(0.09, size, 0.09));
       activeOrb.matrixNeedsUpdate = true;
 
       // move its center upward by half of the growth amount,
