@@ -1063,7 +1063,7 @@
 
     const ORB_CONTAINER_POS = [0, 0, 0]; // [7,0,2]
 
-    const MIN_ORB_SIZE = 0.01;
+    const MIN_ORB_SIZE = 0.05;
     const MAX_ORB_SIZE = 0.9;
     const SPEECH_ORB_LIFETIME = 1000 * 60 * 5; // 5mins realtime
     const ORB_GROWTH_PER_TICK = (MAX_ORB_SIZE - MIN_ORB_SIZE) / ((MAX_SPEECH_TIME_FOR_EVENT - MIN_SPEECH_TIME_FOR_EVENT) / SPEECH_TIME_PER_TICK);
