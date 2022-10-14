@@ -96,20 +96,21 @@ AFRAME.registerComponent("socialvr-speech", {
     // update speech orb sizes and positions
     for (const finishedOrb of document.querySelectorAll(".speechOrb.finished")) {
       const pos = finishedOrb.getAttribute("position");
-      pos.y += ORB_GROWTH_PER_TICK; // synchronize movement speed with orb growth rate
+      pos.y += ORB_GROWTH_PER_TICK * 0.8; // synchronize movement speed with orb growth rate
       finishedOrb.setAttribute("position", pos);
     }
 
+    // TODO: Eventually change all the setAttribute to use Object3D right from ThreeJS. - have fun
+
     for (const activeOrb of Object.values(this.activeSpeechOrbs)) {
       // grow each active speech orb by ORB_GROWTH_PER_TICK
-      const size = parseFloat(activeOrb.getAttribute("height")) + ORB_GROWTH_PER_TICK;
-      activeOrb.object3D.scale.set(new THREE.Vector3(0.09, size, 0.09));
+      activeOrb.object3D.scale.add(new THREE.Vector3(0, ORB_GROWTH_PER_TICK * 7, 0));
       activeOrb.matrixNeedsUpdate = true;
 
       // move its center upward by half of the growth amount,
       // to keep the bottom position fixed at the "now" plane
       const pos = activeOrb.getAttribute("position");
-      pos.y += ORB_GROWTH_PER_TICK / 2;
+      //pos.y += ORB_GROWTH_PER_TICK * 0.8;
       activeOrb.setAttribute("position", pos);
     }
   },
@@ -199,6 +200,7 @@ AFRAME.registerComponent("socialvr-speech", {
     const orb = document.createElement("a-entity");
     orb.classList.add("speechOrb");
     orb.setObject3D("mesh", new THREE.Mesh(geometry, material));
+    orb.getObject3D("mesh").applyMatrix4(new THREE.Matrix4().makeTranslation(0, size / 2, 0 ));
 
     // add the orb to the scene
     this.el.appendChild(orb);
