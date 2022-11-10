@@ -16,9 +16,6 @@
 
         if (waypoint) {
           this.destinations.push(waypoint.object3D.position.negate());
-
-          console.log(`Waypoint [${i}]`);
-          console.log(waypoint.object3D.position);
         }
       }
 
