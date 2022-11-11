@@ -43,20 +43,21 @@ Iteration cycles for custom Mozilla Hubs functionality can involve tedious modif
 `toolbox-dashboard.js` - Instantiates toolbox features such as conversation visualization and emoji sending
 
 ### `src/systems` is deprecated
+
+<br/>
+
 # Instructions
-– creator of the room needs to add the script URL
-Dashboard & selection
+This code base requires a custom Mozilla Hubs instance. In order to use this script, it must be compiled and hosted on an external server that is cleared for cross scripting via the admin panel. When you create a room, put the link to the external script in More > Room Info & Settings > Edit > Custom Script URL
 
-## Instructions
-`npm run build` -> `production` is true
-
-`npm run dev` -> `production` is false
+In order to determine whether the scene should as barge or toolbox, an item in the world must have selectors denoted in `config.js`. This is done in [Spoke](https://hubs.mozilla.com/spoke)
+## Build
 
 `npm run build` builds the application to `build/production.js`, along with a sourcemap file for debugging.
 
 `npm run dev` builds the application to `build/development.js`, along with a sourcemap file for debugging.
 
 ### Local Development
+
 `npm run dev` starts server at localhost:3000
 
 `ngrok http 3000` starts ngrok server at url in terminal output
