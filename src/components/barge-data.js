@@ -54,7 +54,7 @@ AFRAME.registerComponent("socialvr-barge-data", {
                 if (intersected.length >= 1) {
                     this.el.sceneEl.emit("logClockEvent", { 
                         detail: {
-                            displayName: playerInfo.displayName,
+                            displayName: APP.store.state.profile.displayName,
                             playerSessionId: playerInfo.playerSessionId
                         }
                     });
