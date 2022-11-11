@@ -28,6 +28,13 @@ AFRAME.registerComponent("leeds-world-mover", {
       .loadModel("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/environment-11.8.glb")
       .then((model) => {
         this.el.setObject3D("mesh", window.APP.utils.cloneObject3D(model.scene));
+        this.el.setAttribute("animation__worldshrink", {
+          property: "scale",
+          from: "0.01 0.01 0.01",
+          to: "1 1 1",
+          dur: 10000,
+          startEvents: 'startworldshrink'
+        });
       })
       .catch((e) => {
         console.error(e);
@@ -88,7 +95,7 @@ AFRAME.registerComponent("leeds-world-mover", {
 AFRAME.registerComponent("leeds-button", {
   init: function () {
     this.geometry = new THREE.SphereGeometry(0.2, 16, 8);
-    this.material = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5, });
+    this.material = new THREE.MeshBasicMaterial({ color: 0xffffff });
     this.mesh = new THREE.Mesh(this.geometry, this.material);
 
     this.el.setObject3D("mesh", this.mesh);
@@ -107,22 +114,17 @@ AFRAME.registerComponent("leeds-button", {
 
   onClick: function () {
     this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playSoundOneShot(18);
+    document.querySelector("#leedsworld").emit("startworldshrink", null, false);
     this.el.sceneEl.emit("startMovingWorld");
+    this.el.sceneEl.removeChild(this.el);
   }
 });
 
 APP.scene.addEventListener("environment-scene-loaded", () => {
   const world = document.createElement("a-entity");
+  world.id = "leedsworld";
   world.setAttribute("leeds-world-mover", "");
-  world.setAttribute("animation", {
-    property: "scale",
-    from: "0.01 0.01 0.01",
-    to: "0.2 0.2 0.2",
-    easing: "easeInQuad",
-    dur: 10000,
-    autoplay: false
-  });
-
+  world.object3D.scale.set(0.01, 0.01, 0.01);
   window.APP.scene.appendChild(world);
 
   const button = document.createElement("a-entity");
