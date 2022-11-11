@@ -44,8 +44,6 @@ Iteration cycles for custom Mozilla Hubs functionality can involve tedious modif
 
 ### `src/systems` is deprecated
 
-<br/>
-
 # Instructions
 This code base requires a custom Mozilla Hubs instance. In order to use this script, it must be compiled and hosted on an external server that is cleared for cross scripting via the admin panel. When you create a room, put the link to the external script in More > Room Info & Settings > Edit > Custom Script URL
 
@@ -63,5 +61,3 @@ In order to determine whether the scene should as barge or toolbox, an item in t
 `ngrok http 3000` starts ngrok server at url in terminal output
 
 injection url: `ngrok_terminal_output_url/development.js`
-
-<br/>
