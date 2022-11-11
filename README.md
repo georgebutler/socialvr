@@ -16,7 +16,7 @@ Iteration cycles for custom Mozilla Hubs functionality can involve tedious modif
 
 `util.js` - Collection of functions that are referenced across files such as logging or [NAF](https://github.com/networked-aframe/networked-aframe#documentation) schema modification 
 
-`config.js - Configurations for avatar colors in conversation balance and time barge
+`config.js` - Configurations for avatar colors in conversation balance and time barge
 ### `src/components`
 **Barge components**
 
