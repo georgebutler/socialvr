@@ -45,7 +45,7 @@ Iteration cycles for custom Mozilla Hubs functionality can involve tedious modif
 ### `src/systems` is deprecated
 
 # Instructions
-This code base requires a custom Mozilla Hubs instance. In order to use this script, it must be compiled and hosted on an external server that is cleared for cross scripting via the admin panel. When you create a room, put the link to the external script in More > Room Info & Settings > Edit > Custom Script URL
+This code base requires a [custom Mozilla Hubs instance](https://github.com/georgebutler/hubs). In order to use this script, it must be compiled and hosted on an external server that is cleared for cross scripting via the admin panel. When you create a room, put the link to the external script in More > Room Info & Settings > Edit > Custom Script URL
 
 In order to determine whether the scene should as barge or toolbox, an item in the world must have selectors denoted in `config.js`. This is done in [Spoke](https://hubs.mozilla.com/spoke)
 ## Build
