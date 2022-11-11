@@ -1,5 +1,6 @@
 # SocialVR
 *This repo is currently not maintained*
+
 Social VR is a code base that modifies a [Mozilla Hubs](https://hubs.mozilla.com/) room via [code injection](https://github.com/georgebutler/hubs/commit/f9ceaf3bf06596dc008489f2b2a7a802974a4fd6) in order to provide experimental tools for VR meetings. To learn more about the tools, go to the [Social Superpowers website](https://socialsuperpowers.net/).
 ## Injection methodology
 Iteration cycles for custom Mozilla Hubs functionality can involve tedious modification of back-end code and redeployment. With code injection, a developer works on self contained scripts hosted on an external server that are loaded when a user joins a room. This method has several advantages:
