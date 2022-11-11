@@ -64,15 +64,3 @@ Dashboard & selection
 injection url: `ngrok_terminal_output_url/development.js`
 
 <br/>
-
-## Components
-Naming convention: Filenames should be concise and specific, i.e. "barge.js". The respective component name registered with A-Frame is "socialvr-filename", i.e. "socialvr-barge".
-
-`toolbox-button`<br/>
-Buttons located within the scene that allow participants to turn on/off specific features within the Social VR Toolbox.
-
-`barge`<br/>
-Feature within the Social VR Toolbox. A moving platform that takes participants on a set path through the environment aimed to promote better time management.
-
-`barge-button`<br/>
-Buttons on the barge that allow participants to pause, resume, or reset the barge motion.
