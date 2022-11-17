@@ -51,7 +51,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
 
                 button.setAttribute("socialvr-toolbox-dashboard-button", `icon: ${feature.icon}; radius: 0.1; featureName: ${feature.name};`);
                 button.setAttribute("position", position);
-                window.APP.scene.appendChild(button);
+                APP.scene.appendChild(button);
             }
         });
     },
@@ -84,7 +84,7 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard", {
 
                 button.setAttribute("socialvr-toolbox-dashboard-button", `icon: ${feature.icon}; radius: 0.1; color: ${feature.color}; emissiveColor: ${feature.emissiveColor}; featureName: ${feature.name};`);
                 button.setAttribute("position", position);
-                window.APP.scene.appendChild(button);
+                APP.scene.appendChild(button);
 
                 angle += step;
             }

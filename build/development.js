@@ -143,8 +143,8 @@
             this.el.sceneEl.emit("startMovingWorld");
             sendLog("flyingPlatform", {
               clientId: NAF.clientId,
-              displayName: window.APP.store.state.profile.displayName,
-              sceneName: window.APP.hub.name,
+              displayName: APP.store.state.profile.displayName,
+              sceneName: APP.hub.name,
               toggle: true
             });
           } else if (this.data.phaseID === 4) {
@@ -152,8 +152,8 @@
             this.el.sceneEl.emit("generateDataEvent");
             sendLog("flyingPlatform", {
               clientId: NAF.clientId,
-              displayName: window.APP.store.state.profile.displayName,
-              sceneName: window.APP.hub.name,
+              displayName: APP.store.state.profile.displayName,
+              sceneName: APP.hub.name,
               toggle: false
             });
           }
@@ -269,6 +269,7 @@
 
     const SELECTOR_BARGE = ".barge";
     const SELECTOR_BARGE_WORKSHOP = ".workshopbargeglb";
+    const SELECTOR_TUTORIAL = ".ssptoolboxscene1116";
 
     const SPEECH_AVATAR_COLORS = {
         "4rtlr6I": 0x1da8ff,
@@ -695,10 +696,10 @@
             NAF.connection.subscribeToDataChannel("stopMovingWorld", this.stop.bind(this));
 
             // Load environment
-            window.APP.utils.GLTFModelPlus
+            APP.utils.GLTFModelPlus
                 .loadModel(this.data.modelURL)
                 .then((model) => {
-                    this.el.setObject3D("mesh", window.APP.utils.cloneObject3D(model.scene));
+                    this.el.setObject3D("mesh", APP.utils.cloneObject3D(model.scene));
                 })
                 .finally(() => {
                     if (this.data.overrideSky) {
@@ -852,9 +853,9 @@
         id: "Poop"
       },
       {
-        icon: window.APP.utils.emojis[0].particleEmitterConfig.src,
-        model: window.APP.utils.emojis[0].model,
-        id: window.APP.utils.emojis[0].id
+        icon: APP.utils.emojis[0].particleEmitterConfig.src,
+        model: APP.utils.emojis[0].model,
+        id: APP.utils.emojis[0].id
       },
       {
         icon: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0004_Flower.png",
@@ -862,9 +863,9 @@
         id: "Flower"
       },
       {
-        icon: window.APP.utils.emojis[1].particleEmitterConfig.src,
-        model: window.APP.utils.emojis[1].model,
-        id: window.APP.utils.emojis[1].id
+        icon: APP.utils.emojis[1].particleEmitterConfig.src,
+        model: APP.utils.emojis[1].model,
+        id: APP.utils.emojis[1].id
       },
       {
         icon: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0007_Pizza.png",
@@ -872,14 +873,14 @@
         id: "Pizza"
       },
       {
-        icon: window.APP.utils.emojis[3].particleEmitterConfig.src,
-        model: window.APP.utils.emojis[3].model,
-        id: window.APP.utils.emojis[3].id
+        icon: APP.utils.emojis[3].particleEmitterConfig.src,
+        model: APP.utils.emojis[3].model,
+        id: APP.utils.emojis[3].id
       },
       {
-        icon: window.APP.utils.emojis[2].particleEmitterConfig.src,
-        model: window.APP.utils.emojis[2].model,
-        id: window.APP.utils.emojis[2].id
+        icon: APP.utils.emojis[2].particleEmitterConfig.src,
+        model: APP.utils.emojis[2].model,
+        id: APP.utils.emojis[2].id
       },
     ];
 
@@ -908,11 +909,11 @@
         this.activeEmojis = [];
 
         // Hover Visual
-        window.APP.utils.GLTFModelPlus
-          .loadModel(window.APP.utils.emojis[0].model)
+        APP.utils.GLTFModelPlus
+          .loadModel(APP.utils.emojis[0].model)
           .then((model) => {
             this.hoverVisual.setAttribute("billboard", { onlyY: true });
-            this.hoverVisual.setObject3D("mesh", window.APP.utils.cloneObject3D(model.scene));
+            this.hoverVisual.setObject3D("mesh", APP.utils.cloneObject3D(model.scene));
             this.hoverVisual.object3D.scale.set(0.25, 0.25, 0.25);
             this.hoverVisual.object3D.position.set(0, 0.6, 0);
             this.hoverVisual.object3D.visible = false;
@@ -980,7 +981,7 @@
         this.selectionPanel?.remove();
         this.selectionPanel = null;
 
-        const { entity } = window.APP.utils.addMedia(new URL(emoji.model, window.location).href, "#sent-emoji");
+        const { entity } = APP.utils.addMedia(new URL(emoji.model, window.location).href, "#sent-emoji");
 
         entity.addEventListener("media-loaded", () => {
           const particleEmitterConfig = {
@@ -1002,7 +1003,7 @@
 
           entity.setAttribute("particle-emitter", particleEmitterConfig);
           this.activeEmojis.push({ entity, sender, recipient, timestamp });
-          sendLog("emojiSent", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, logSender: sender, logReceiver: this.data.ownerID, logEmojiType: emoji.id });
+          sendLog("emojiSent", { clientId: NAF.clientId, displayName: APP.store.state.profile.displayName, logSender: sender, logReceiver: this.data.ownerID, logEmojiType: emoji.id });
         }, { once: true });
 
         entity.setAttribute("billboard", { onlyY: true });
@@ -1027,7 +1028,7 @@
         this.el.sceneEl.appendChild(this.selectionPanel);
 
         emojis.forEach((emoji, index) => {
-          window.APP.utils.GLTFModelPlus
+          APP.utils.GLTFModelPlus
             .loadModel(emoji.model)
             .then((model) => {
               if (this.selectionPanel) {
@@ -1037,7 +1038,7 @@
                 button.setAttribute("is-remote-hover-target", "");
                 button.setAttribute("css-class", "interactable");
                 button.setAttribute("hoverable-visuals", "");
-                button.setObject3D("mesh", window.APP.utils.cloneObject3D(model.scene));
+                button.setObject3D("mesh", APP.utils.cloneObject3D(model.scene));
                 button.object3D.scale.set(0.25, 0.25, 0.25);
                 button.object3D.position.set((0.25 * index) - 0.25, 0, 0);
                 button.object3D.matrixNeedsUpdate = true;
@@ -1348,7 +1349,7 @@
 
                     button.setAttribute("socialvr-toolbox-dashboard-button", `icon: ${feature.icon}; radius: 0.1; featureName: ${feature.name};`);
                     button.setAttribute("position", position);
-                    window.APP.scene.appendChild(button);
+                    APP.scene.appendChild(button);
                 }
             });
         },
@@ -1381,7 +1382,7 @@
 
                     button.setAttribute("socialvr-toolbox-dashboard-button", `icon: ${feature.icon}; radius: 0.1; color: ${feature.color}; emissiveColor: ${feature.emissiveColor}; featureName: ${feature.name};`);
                     button.setAttribute("position", position);
-                    window.APP.scene.appendChild(button);
+                    APP.scene.appendChild(button);
 
                     angle += step;
                 }
@@ -1541,11 +1542,11 @@
                 this.text.setAttribute("text", { value: "On", side: THREE.DoubleSide });
 
                 if (this.data.featureName === "emoji") {
-                    sendLog("emojiToggle", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, toggle: true });
+                    sendLog("emojiToggle", { clientId: NAF.clientId, displayName: APP.store.state.profile.displayName, toggle: true });
                     this.el.sceneEl.emit("enableFeatureEmoji", {});
                 }
                 else if (this.data.featureName === "cb") {
-                    sendLog("conversationVisualization", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, toggle: true });
+                    sendLog("conversationVisualization", { clientId: NAF.clientId, displayName: APP.store.state.profile.displayName, toggle: true });
                     this.el.sceneEl.emit("enableFeatureCB", {});
                 }
             }
@@ -1555,11 +1556,11 @@
                 this.text.setAttribute("text", { value: "Off", side: THREE.DoubleSide });
 
                 if (this.data.featureName === "emoji") {
-                    sendLog("emojiToggle", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, toggle: false });
+                    sendLog("emojiToggle", { clientId: NAF.clientId, displayName: APP.store.state.profile.displayName, toggle: false });
                     this.el.sceneEl.emit("disableFeatureEmoji", {});
                 }
                 else if (this.data.featureName === "cb") {
-                    sendLog("conversationVisualization", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, toggle: false });
+                    sendLog("conversationVisualization", { clientId: NAF.clientId, displayName: APP.store.state.profile.displayName, toggle: false });
                     this.el.sceneEl.emit("disableFeatureCB", {});
                 }
             }
@@ -1598,7 +1599,7 @@
 
         button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.3; color: #C576F6; phaseID: 1");
         button.setAttribute("position", position);
-        window.APP.scene.appendChild(button);
+        APP.scene.appendChild(button);
 
         // Button
         button = document.createElement("a-entity");
@@ -1606,7 +1607,7 @@
 
         button.setAttribute("socialvr-barge-button", "text: Next Task; radius: 0.3; color: #C576F6; phaseID: 2");
         button.setAttribute("position", position);
-        window.APP.scene.appendChild(button);
+        APP.scene.appendChild(button);
 
         // Button
         button = document.createElement("a-entity");
@@ -1614,7 +1615,7 @@
 
         button.setAttribute("socialvr-barge-button", "text: Next Task; radius: 0.3; color: #C576F6; phaseID: 3");
         button.setAttribute("position", position);
-        window.APP.scene.appendChild(button);
+        APP.scene.appendChild(button);
 
         // Button
         button = document.createElement("a-entity");
@@ -1622,14 +1623,14 @@
 
         button.setAttribute("socialvr-barge-button", "text: Complete; radius: 0.3; color: #C576F6; phaseID: 4");
         button.setAttribute("position", position);
-        window.APP.scene.appendChild(button);
+        APP.scene.appendChild(button);
 
         // Clock
         const clock = document.createElement("a-entity");
         clock.setAttribute("radius", 0.1);
         clock.setAttribute("socialvr-barge-clock", "");
         clock.setAttribute("position", document.querySelector(".clock-placeholder").object3D.position);
-        window.APP.scene.appendChild(clock);
+        APP.scene.appendChild(clock);
 
         // Ranking Slots
         for (let index = 1; index <= 3; index++) {
@@ -1661,30 +1662,44 @@
         // World Mover
         const worldMover = document.createElement("a-entity");
         worldMover.setAttribute("socialvr-world-mover", "overrideSky: true");
-        window.APP.scene.appendChild(worldMover);
+        APP.scene.appendChild(worldMover);
 
         // Data Logger
         const dataLogger = document.createElement("a-entity");
         dataLogger.setAttribute("socialvr-barge-data", "");
-        window.APP.scene.appendChild(dataLogger);
+        APP.scene.appendChild(dataLogger);
 
         // Backup command
         window.logBargeData = () => {
-          window.APP.scene.emit("generateDataEvent");
+          APP.scene.emit("generateDataEvent");
         };
 
         // Changes camera inspection system to show background, regardless of user preferences.
-        window.APP.scene.systems["hubs-systems"].cameraSystem.lightsEnabled = true;
+        APP.scene.systems["hubs-systems"].cameraSystem.lightsEnabled = true;
       }
       else if (document.querySelector(SELECTOR_BARGE_WORKSHOP)) {
         const button = document.createElement("a-entity");
         button.setAttribute("position", new THREE.Vector3(0, 0.65, 0));
         button.setAttribute("socialvr-barge-button", { text: "Start", radius: 0.1, color: COLOR_OFF, phaseID: 1 });
-        window.APP.scene.appendChild(button);
+        APP.scene.appendChild(button);
 
         const worldMover = document.createElement("a-entity");
         worldMover.setAttribute("socialvr-world-mover", { modelURL: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/meeting-hall-6.glb" });
-        window.APP.scene.appendChild(worldMover);
+        APP.scene.appendChild(worldMover);
+      }
+      else if (document.querySelector(SELECTOR_TUTORIAL)) {
+        const button = document.createElement("a-entity");
+        button.setAttribute("position", new THREE.Vector3(0, 0.65, 0));
+        button.setAttribute("socialvr-barge-button", { text: "Start", radius: 0.1, color: COLOR_OFF, phaseID: 1 });
+        APP.scene.appendChild(button);
+
+        const worldMover = document.createElement("a-entity");
+        worldMover.setAttribute("socialvr-world-mover", { modelURL: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/hubstutorialenvironment11.15.glb" });
+        APP.scene.appendChild(worldMover);
+        
+        const dashboard = document.createElement("a-entity");
+        dashboard.setAttribute("socialvr-toolbox-dashboard", "");
+        APP.scene.appendChild(dashboard);
       }
       else {
         const dashboard = document.createElement("a-entity");

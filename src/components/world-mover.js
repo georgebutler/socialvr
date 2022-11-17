@@ -50,10 +50,10 @@ AFRAME.registerComponent("socialvr-world-mover", {
         NAF.connection.subscribeToDataChannel("stopMovingWorld", this.stop.bind(this));
 
         // Load environment
-        window.APP.utils.GLTFModelPlus
+        APP.utils.GLTFModelPlus
             .loadModel(this.data.modelURL)
             .then((model) => {
-                this.el.setObject3D("mesh", window.APP.utils.cloneObject3D(model.scene));
+                this.el.setObject3D("mesh", APP.utils.cloneObject3D(model.scene));
             })
             .finally(() => {
                 if (this.data.overrideSky) {

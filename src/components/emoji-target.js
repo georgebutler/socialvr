@@ -15,9 +15,9 @@ const emojis = [
     id: "Poop"
   },
   {
-    icon: window.APP.utils.emojis[0].particleEmitterConfig.src,
-    model: window.APP.utils.emojis[0].model,
-    id: window.APP.utils.emojis[0].id
+    icon: APP.utils.emojis[0].particleEmitterConfig.src,
+    model: APP.utils.emojis[0].model,
+    id: APP.utils.emojis[0].id
   },
   {
     icon: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0004_Flower.png",
@@ -25,9 +25,9 @@ const emojis = [
     id: "Flower"
   },
   {
-    icon: window.APP.utils.emojis[1].particleEmitterConfig.src,
-    model: window.APP.utils.emojis[1].model,
-    id: window.APP.utils.emojis[1].id
+    icon: APP.utils.emojis[1].particleEmitterConfig.src,
+    model: APP.utils.emojis[1].model,
+    id: APP.utils.emojis[1].id
   },
   {
     icon: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/emoji/particles/Emojis_0007_Pizza.png",
@@ -35,14 +35,14 @@ const emojis = [
     id: "Pizza"
   },
   {
-    icon: window.APP.utils.emojis[3].particleEmitterConfig.src,
-    model: window.APP.utils.emojis[3].model,
-    id: window.APP.utils.emojis[3].id
+    icon: APP.utils.emojis[3].particleEmitterConfig.src,
+    model: APP.utils.emojis[3].model,
+    id: APP.utils.emojis[3].id
   },
   {
-    icon: window.APP.utils.emojis[2].particleEmitterConfig.src,
-    model: window.APP.utils.emojis[2].model,
-    id: window.APP.utils.emojis[2].id
+    icon: APP.utils.emojis[2].particleEmitterConfig.src,
+    model: APP.utils.emojis[2].model,
+    id: APP.utils.emojis[2].id
   },
 ];
 
@@ -74,11 +74,11 @@ AFRAME.registerComponent("socialvr-emoji-target", {
     this.activeEmojis = [];
 
     // Hover Visual
-    window.APP.utils.GLTFModelPlus
-      .loadModel(window.APP.utils.emojis[0].model)
+    APP.utils.GLTFModelPlus
+      .loadModel(APP.utils.emojis[0].model)
       .then((model) => {
         this.hoverVisual.setAttribute("billboard", { onlyY: true });
-        this.hoverVisual.setObject3D("mesh", window.APP.utils.cloneObject3D(model.scene));
+        this.hoverVisual.setObject3D("mesh", APP.utils.cloneObject3D(model.scene));
         this.hoverVisual.object3D.scale.set(0.25, 0.25, 0.25);
         this.hoverVisual.object3D.position.set(0, 0.6, 0);
         this.hoverVisual.object3D.visible = false;
@@ -146,7 +146,7 @@ AFRAME.registerComponent("socialvr-emoji-target", {
     this.selectionPanel?.remove();
     this.selectionPanel = null;
 
-    const { entity } = window.APP.utils.addMedia(new URL(emoji.model, window.location).href, "#sent-emoji");
+    const { entity } = APP.utils.addMedia(new URL(emoji.model, window.location).href, "#sent-emoji");
 
     entity.addEventListener("media-loaded", () => {
       const particleEmitterConfig = {
@@ -168,7 +168,7 @@ AFRAME.registerComponent("socialvr-emoji-target", {
 
       entity.setAttribute("particle-emitter", particleEmitterConfig);
       this.activeEmojis.push({ entity, sender, recipient, timestamp });
-      sendLog("emojiSent", { clientId: NAF.clientId, displayName: window.APP.store.state.profile.displayName, logSender: sender, logReceiver: this.data.ownerID, logEmojiType: emoji.id });
+      sendLog("emojiSent", { clientId: NAF.clientId, displayName: APP.store.state.profile.displayName, logSender: sender, logReceiver: this.data.ownerID, logEmojiType: emoji.id });
     }, { once: true });
 
     entity.setAttribute("billboard", { onlyY: true });
@@ -193,7 +193,7 @@ AFRAME.registerComponent("socialvr-emoji-target", {
     this.el.sceneEl.appendChild(this.selectionPanel);
 
     emojis.forEach((emoji, index) => {
-      window.APP.utils.GLTFModelPlus
+      APP.utils.GLTFModelPlus
         .loadModel(emoji.model)
         .then((model) => {
           if (this.selectionPanel) {
@@ -203,7 +203,7 @@ AFRAME.registerComponent("socialvr-emoji-target", {
             button.setAttribute("is-remote-hover-target", "");
             button.setAttribute("css-class", "interactable");
             button.setAttribute("hoverable-visuals", "");
-            button.setObject3D("mesh", window.APP.utils.cloneObject3D(model.scene));
+            button.setObject3D("mesh", APP.utils.cloneObject3D(model.scene));
             button.object3D.scale.set(0.25, 0.25, 0.25);
             button.object3D.position.set((0.25 * index) - 0.25, 0, 0);
             button.object3D.matrixNeedsUpdate = true;

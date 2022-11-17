@@ -17,7 +17,7 @@ import "./components/toolbox-dashboard";
 import "./components/toolbox-dashboard-button";
 
 import { initSchemas, sendLog } from "./utils";
-import { COLOR_OFF, SELECTOR_BARGE, SELECTOR_BARGE_WORKSHOP } from "./config";
+import { COLOR_OFF, SELECTOR_BARGE, SELECTOR_BARGE_WORKSHOP, SELECTOR_TUTORIAL } from "./config";
 
 APP.scene.addEventListener("environment-scene-loaded", () => {
   initSchemas();
@@ -29,7 +29,7 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
 
     button.setAttribute("socialvr-barge-button", "text: Start; radius: 0.3; color: #C576F6; phaseID: 1");
     button.setAttribute("position", position);
-    window.APP.scene.appendChild(button);
+    APP.scene.appendChild(button);
 
     // Button
     button = document.createElement("a-entity");
@@ -37,7 +37,7 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
 
     button.setAttribute("socialvr-barge-button", "text: Next Task; radius: 0.3; color: #C576F6; phaseID: 2");
     button.setAttribute("position", position);
-    window.APP.scene.appendChild(button);
+    APP.scene.appendChild(button);
 
     // Button
     button = document.createElement("a-entity");
@@ -45,7 +45,7 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
 
     button.setAttribute("socialvr-barge-button", "text: Next Task; radius: 0.3; color: #C576F6; phaseID: 3");
     button.setAttribute("position", position);
-    window.APP.scene.appendChild(button);
+    APP.scene.appendChild(button);
 
     // Button
     button = document.createElement("a-entity");
@@ -53,14 +53,14 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
 
     button.setAttribute("socialvr-barge-button", "text: Complete; radius: 0.3; color: #C576F6; phaseID: 4");
     button.setAttribute("position", position);
-    window.APP.scene.appendChild(button);
+    APP.scene.appendChild(button);
 
     // Clock
     const clock = document.createElement("a-entity");
     clock.setAttribute("radius", 0.1);
     clock.setAttribute("socialvr-barge-clock", "");
     clock.setAttribute("position", document.querySelector(".clock-placeholder").object3D.position);
-    window.APP.scene.appendChild(clock);
+    APP.scene.appendChild(clock);
 
     // Ranking Slots
     for (let index = 1; index <= 3; index++) {
@@ -92,30 +92,44 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
     // World Mover
     const worldMover = document.createElement("a-entity");
     worldMover.setAttribute("socialvr-world-mover", "overrideSky: true");
-    window.APP.scene.appendChild(worldMover);
+    APP.scene.appendChild(worldMover);
 
     // Data Logger
     const dataLogger = document.createElement("a-entity");
     dataLogger.setAttribute("socialvr-barge-data", "");
-    window.APP.scene.appendChild(dataLogger);
+    APP.scene.appendChild(dataLogger);
 
     // Backup command
     window.logBargeData = () => {
-      window.APP.scene.emit("generateDataEvent");
+      APP.scene.emit("generateDataEvent");
     }
 
     // Changes camera inspection system to show background, regardless of user preferences.
-    window.APP.scene.systems["hubs-systems"].cameraSystem.lightsEnabled = true;
+    APP.scene.systems["hubs-systems"].cameraSystem.lightsEnabled = true;
   }
   else if (document.querySelector(SELECTOR_BARGE_WORKSHOP)) {
     const button = document.createElement("a-entity");
     button.setAttribute("position", new THREE.Vector3(0, 0.65, 0));
     button.setAttribute("socialvr-barge-button", { text: "Start", radius: 0.1, color: COLOR_OFF, phaseID: 1 });
-    window.APP.scene.appendChild(button);
+    APP.scene.appendChild(button);
 
     const worldMover = document.createElement("a-entity");
     worldMover.setAttribute("socialvr-world-mover", { modelURL: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/meeting-hall-6.glb" });
-    window.APP.scene.appendChild(worldMover);
+    APP.scene.appendChild(worldMover);
+  }
+  else if (document.querySelector(SELECTOR_TUTORIAL)) {
+    const button = document.createElement("a-entity");
+    button.setAttribute("position", new THREE.Vector3(0, 0.65, 0));
+    button.setAttribute("socialvr-barge-button", { text: "Start", radius: 0.1, color: COLOR_OFF, phaseID: 1 });
+    APP.scene.appendChild(button);
+
+    const worldMover = document.createElement("a-entity");
+    worldMover.setAttribute("socialvr-world-mover", { modelURL: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/hubstutorialenvironment11.15.glb" });
+    APP.scene.appendChild(worldMover);
+    
+    const dashboard = document.createElement("a-entity");
+    dashboard.setAttribute("socialvr-toolbox-dashboard", "");
+    APP.scene.appendChild(dashboard);
   }
   else {
     const dashboard = document.createElement("a-entity");

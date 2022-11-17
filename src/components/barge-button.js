@@ -74,8 +74,8 @@ AFRAME.registerComponent("socialvr-barge-button", {
         this.el.sceneEl.emit("startMovingWorld");
         sendLog("flyingPlatform", {
           clientId: NAF.clientId,
-          displayName: window.APP.store.state.profile.displayName,
-          sceneName: window.APP.hub.name,
+          displayName: APP.store.state.profile.displayName,
+          sceneName: APP.hub.name,
           toggle: true
         });
       } else if (this.data.phaseID === 4) {
@@ -83,8 +83,8 @@ AFRAME.registerComponent("socialvr-barge-button", {
         this.el.sceneEl.emit("generateDataEvent");
         sendLog("flyingPlatform", {
           clientId: NAF.clientId,
-          displayName: window.APP.store.state.profile.displayName,
-          sceneName: window.APP.hub.name,
+          displayName: APP.store.state.profile.displayName,
+          sceneName: APP.hub.name,
           toggle: false
         });
       }

@@ -8,6 +8,7 @@ export const STATE_ON = 1;
 
 export const SELECTOR_BARGE = ".barge";
 export const SELECTOR_BARGE_WORKSHOP = ".workshopbargeglb";
+export const SELECTOR_TUTORIAL = ".ssptoolboxscene1116";
 
 export const SPEECH_AVATAR_COLORS = {
     "4rtlr6I": 0x1da8ff,
