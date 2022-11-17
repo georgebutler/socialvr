@@ -1689,7 +1689,7 @@
       }
       else if (document.querySelector(SELECTOR_TUTORIAL)) {
         const button = document.createElement("a-entity");
-        button.setAttribute("position", new THREE.Vector3(0, 0.65, 0));
+        button.setAttribute("position", document.querySelector(".flying-platform-button").object3D.position);
         button.setAttribute("socialvr-barge-button", { text: "Start", radius: 0.1, color: COLOR_OFF, phaseID: 1 });
         APP.scene.appendChild(button);
 
