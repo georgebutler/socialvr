@@ -111,3 +111,4 @@ AFRAME.registerComponent("socialvr-toolbox-dashboard-button", {
         });
     }
 });
+

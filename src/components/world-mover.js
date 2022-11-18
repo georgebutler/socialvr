@@ -42,13 +42,6 @@ AFRAME.registerComponent("socialvr-world-mover", {
             this.destinations.push(new THREE.Vector3(-10, 20, 30).negate());
         }
 
-        // Networked Events
-        this.el.sceneEl.addEventListener("startMovingWorld", this._start.bind(this));
-        this.el.sceneEl.addEventListener("stopMovingWorld", this._stop.bind(this));
-
-        NAF.connection.subscribeToDataChannel("startMovingWorld", this.start.bind(this));
-        NAF.connection.subscribeToDataChannel("stopMovingWorld", this.stop.bind(this));
-
         // Load environment
         APP.utils.GLTFModelPlus
             .loadModel(this.data.modelURL)
@@ -80,24 +73,24 @@ AFRAME.registerComponent("socialvr-world-mover", {
                             }
                         },
                         vertexShader: `
-                        varying vec2 vUv;
-                    
-                        void main() {
-                          vUv = uv;
-                          gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
-                        }
-                      `,
-                        fragmentShader: `
-                        uniform vec3 color1;
-                        uniform vec3 color2;
-                      
-                        varying vec2 vUv;
+                            varying vec2 vUv;
                         
-                        void main() {
+                            void main() {
+                              vUv = uv;
+                              gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+                            }
+                          `,
+                        fragmentShader: `
+                            uniform vec3 color1;
+                            uniform vec3 color2;
                           
-                          gl_FragColor = vec4(mix(color1, color2, vUv.y), 1.0);
-                        }
-                      `
+                            varying vec2 vUv;
+                            
+                            void main() {
+                              
+                              gl_FragColor = vec4(mix(color1, color2, vUv.y), 1.0);
+                            }
+                          `
                     });
 
                     sky.setObject3D("mesh", new THREE.Mesh(geometry, material));
@@ -107,6 +100,24 @@ AFRAME.registerComponent("socialvr-world-mover", {
             .catch((e) => {
                 console.error(e);
             });
+
+        // Networked Events
+        this.el.sceneEl.addEventListener("startMovingWorld", this._start.bind(this));
+        NAF.connection.subscribeToDataChannel("startMovingWorld", this.start.bind(this));
+
+        this.el.sceneEl.addEventListener("stopMovingWorld", this._stop.bind(this));
+        NAF.connection.subscribeToDataChannel("stopMovingWorld", this.stop.bind(this));
+        
+        this.el.sceneEl.addEventListener("adjustMovingWorld", (e) => { this._adjust.call(this, e) });
+        NAF.connection.subscribeToDataChannel("adjustMovingWorld", this.adjust.bind(this));
+
+        document.body.addEventListener("clientConnected", (e) => {
+            if (this.moving) {
+                // TODO: Broadcast to only the newly connected client
+                this.el.sceneEl.emit("startMovingWorld");
+                this.el.sceneEl.emit("adjustMovingWorld", { position: this.el.object3D.position, currentDestination: this.currentDestination });
+            }
+        });
     },
 
     remove: function () {
@@ -179,6 +190,13 @@ AFRAME.registerComponent("socialvr-world-mover", {
         this.moving = false;
     },
 
+    adjust: function (data) {
+        this.el.object3D.position.set(data.position);
+        this.currentDestination = data.currentDestination;
+
+        console.log("Updated");
+    },
+
     _start: function () {
         this.start(null, null, {});
         NAF.connection.broadcastDataGuaranteed("startMovingWorld", {});
@@ -187,5 +205,10 @@ AFRAME.registerComponent("socialvr-world-mover", {
     _stop: function () {
         this.stop(null, null, {});
         NAF.connection.broadcastDataGuaranteed("stopMovingWorld", {});
+    },
+
+    _adjust: function () {
+        this.adjust(null, null, {});
+        NAF.connection.broadcastDataGuaranteed("adjustMovingWorld", { position: this.el.object3D.position, currentDestination: this.currentDestination });
     }
 })

@@ -31,11 +31,11 @@ export const sendLog = async (endpoint, obj) => {
 export function initSchemas() {
     // NAF Template (Emoji)
     const assets = document.querySelector("a-assets");
-    const newTemplate = document.createElement("template");
-    newTemplate.id = "sent-emoji";
+    const emojiTemplate = document.createElement("template");
+    emojiTemplate.id = "sent-emoji";
 
-    newTemplate.content.appendChild(document.createElement("a-entity"));
-    assets.appendChild(newTemplate);
+    emojiTemplate.content.appendChild(document.createElement("a-entity"));
+    assets.appendChild(emojiTemplate);
 
     // NAF Schema (Emoji)
     const emojiSchema = { ...NAF.schemas.schemaDict["#static-media"] }
@@ -46,6 +46,23 @@ export function initSchemas() {
     emojiSchema.components.push({ component: "billboard", property: "onlyY" });
     emojiSchema.components.push({ component: "particle-emitter" });
     NAF.schemas.add(emojiSchema);
+
+    // NAF Template (Button)
+    /*
+    const buttonTemplate = document.createElement("template");
+    buttonTemplate.id = "socialvr-button";
+
+    buttonTemplate.content.appendChild(document.createElement("a-entity"));
+    assets.appendChild(buttonTemplate);
+    */
+
+    // NAF Schema (Button)
+    /* 
+    const buttonSchema = { ...NAF.schemas.schemaDict["#static-media"] }
+    buttonSchema.template = "#socialvr-button";
+    buttonSchema.components.push({ component: "position" });
+    NAF.schemas.add(buttonSchema);
+    */
 
     // NAF Template (World Mover)
     /* 
