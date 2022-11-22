@@ -1,3 +1,5 @@
+const intro = new Audio("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/audio/intro.mp3");
+
 AFRAME.registerComponent("leeds-world-mover", {
   init: function () {
     this.moving = false;
@@ -63,6 +65,11 @@ AFRAME.registerComponent("leeds-world-mover", {
           });
         } else {
           if (isNaN(this.lastCheck) || time >= this.lastCheck) {
+            // Audio
+            if (this.currentDestination === 1) {
+              intro.play();
+            }
+
             this.lastCheck = time + 100;
             this.currentDestination = this.currentDestination + 1;
           }
