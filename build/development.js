@@ -55,6 +55,11 @@
       if (this.moving) {
         const target = this.destinations[this.currentDestination];
 
+        if (!intro.playedAudio && this.currentDestination === 0) {
+          intro.playedAudio = true;
+          intro.play();
+        }
+
         if (target) {
           this.direction.copy(target).sub(this.el.object3D.position);
 
@@ -66,13 +71,8 @@
               y: this.el.object3D.position.y + this.direction.y,
               z: this.el.object3D.position.z + this.direction.z,
             });
-          } else {
+          } else {          
             if (isNaN(this.lastCheck) || time >= this.lastCheck) {
-              // Audio
-              if (this.currentDestination === 1) {
-                intro.play();
-              }
-
               this.lastCheck = time + 100;
               this.currentDestination = this.currentDestination + 1;
             }
