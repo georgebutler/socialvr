@@ -46,6 +46,12 @@
             dur: 10000,
             startEvents: 'startworldshrink'
           });
+          this.el.setAttribute("animation__worldshrink2", {
+            property: "position",
+            to: "10 0 0",
+            dur: 10000,
+            startEvents: 'startworldshrink'
+          });
         })
         .catch((e) => {
           console.error(e);
