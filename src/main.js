@@ -27,7 +27,7 @@ AFRAME.registerComponent("leeds-world-mover", {
 
     // Load Model
     window.APP.utils.GLTFModelPlus
-      .loadModel("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/environment-11.8.glb")
+      .loadModel("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/environment-11.23.glb")
       .then((model) => {
         this.el.setObject3D("mesh", window.APP.utils.cloneObject3D(model.scene));
         this.el.setAttribute("animation__worldshrink", {
