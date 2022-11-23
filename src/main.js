@@ -35,7 +35,6 @@ AFRAME.registerComponent("leeds-world-mover", {
       .loadModel("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/environment-11.23.glb")
       .then((model) => {
         this.el.setObject3D("mesh", window.APP.utils.cloneObject3D(model.scene));
-        /*
         this.el.setAttribute("animation__worldshrink", {
           property: "scale",
           from: "0.01 0.01 0.01",
@@ -43,7 +42,6 @@ AFRAME.registerComponent("leeds-world-mover", {
           dur: 10000,
           startEvents: 'startworldshrink'
         });
-        */
       })
       .catch((e) => {
         console.error(e);
