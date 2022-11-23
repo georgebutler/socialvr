@@ -45,7 +45,7 @@ AFRAME.registerComponent("leeds-world-mover", {
         });
         this.el.setAttribute("animation__worldshrink2", {
           property: "position",
-          to: "999 0 0",
+          to: "1000 0 0",
           dur: 10000,
           startEvents: 'startworldshrink'
         });
