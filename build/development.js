@@ -2,6 +2,11 @@
   'use strict';
 
   const intro = new Audio("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/audio/intro.mp3");
+  new Audio("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/audio/outro.mp3");
+  new Audio("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/audio/section2.mp3");
+  new Audio("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/audio/section3.mp3");
+  new Audio("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/audio/section4.mp3");
+  new Audio("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/audio/section5.mp3");
 
   AFRAME.registerComponent("leeds-world-mover", {
     init: function () {
