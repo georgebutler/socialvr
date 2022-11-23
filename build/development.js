@@ -22,6 +22,7 @@
         const waypoint = document.querySelector(".waypoint-" + i);
 
         if (waypoint) {
+          console.log(waypoint.object3D.position);
           this.destinations.push(waypoint.object3D.position.negate());
         }
       }
