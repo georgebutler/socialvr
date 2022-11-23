@@ -48,7 +48,7 @@
           });
           this.el.setAttribute("animation__worldshrink2", {
             property: "position",
-            to: "-10 0 0",
+            to: "-100 0 0",
             dur: 10000,
             startEvents: 'startworldshrink'
           });
