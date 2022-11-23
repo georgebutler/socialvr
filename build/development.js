@@ -38,8 +38,6 @@
         .loadModel("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/environment-11.23.glb")
         .then((model) => {
           this.el.setObject3D("mesh", window.APP.utils.cloneObject3D(model.scene));
-          this.el.object3D.scale.set(10, 10, 10);
-          this.el.object3D.matrixNeedsUpdate = true;
           /*
           this.el.setAttribute("animation__worldshrink", {
             property: "scale",
