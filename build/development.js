@@ -14,7 +14,7 @@
       this.destinations = [];
       this.currentDestination = 0;
       this.direction = new THREE.Vector3(0, 0, 0);
-      this.speed = 1;
+      this.speed = 5;
       this.lastCheck = 0;
 
       // Register Waypoints
