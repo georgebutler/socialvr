@@ -165,6 +165,7 @@ AFRAME.registerComponent("leeds-world-mover", {
 
   start: function () {
     this.moving = true;
+    document.querySelector("#leedsworld").emit("startworldshrink", null, false);
   },
 
   stop: function () {
@@ -204,7 +205,6 @@ AFRAME.registerComponent("leeds-button", {
 
   onClick: function () {
     this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem.playSoundOneShot(18);
-    document.querySelector("#leedsworld").emit("startworldshrink", null, false);
     this.el.sceneEl.emit("startMovingWorld");
     this.el.sceneEl.removeChild(this.el);
   }
@@ -219,7 +219,7 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
 
   const button = document.createElement("a-entity");
   button.setAttribute("leeds-button", "");
-  button.object3D.position.set(0, 2, 0);
+  button.object3D.position.set(0, 1, 0);
 
   window.APP.scene.appendChild(button);
 }, { once: true });
