@@ -69,6 +69,31 @@ AFRAME.registerComponent("leeds-world-mover", {
         intro.play();
       }
 
+      if (!section2.playedAudio && this.currentDestination === 3) {
+        section2.playedAudio = true;
+        section2.play();
+      }
+
+      if (!section3.playedAudio && this.currentDestination === 7) {
+        section3.playedAudio = true;
+        section3.play();
+      }
+
+      if (!section4.playedAudio && this.currentDestination === 17) {
+        section4.playedAudio = true;
+        section4.play();
+      }
+
+      if (!section5.playedAudio && this.currentDestination === 30) {
+        section5.playedAudio = true;
+        section5.play();
+      }
+
+      if (!outro.playedAudio && this.currentDestination === 51) {
+        outro.playedAudio = true;
+        outro.play();
+      }
+
       if (target) {
         this.direction.copy(target).sub(this.el.object3D.position);
 

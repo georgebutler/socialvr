@@ -2,11 +2,11 @@
   'use strict';
 
   const intro = new Audio("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/audio/intro.mp3");
-  new Audio("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/audio/outro.mp3");
-  new Audio("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/audio/section2.mp3");
-  new Audio("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/audio/section3.mp3");
-  new Audio("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/audio/section4.mp3");
-  new Audio("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/audio/section5.mp3");
+  const outro = new Audio("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/audio/outro.mp3");
+  const section2 = new Audio("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/audio/section2.mp3");
+  const section3 = new Audio("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/audio/section3.mp3");
+  const section4 = new Audio("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/audio/section4.mp3");
+  const section5 = new Audio("https://alex-leeds--statuesque-rugelach-4185bd.netlify.app/assets/audio/section5.mp3");
 
   AFRAME.registerComponent("leeds-world-mover", {
     init: function () {
@@ -70,6 +70,31 @@
         if (!intro.playedAudio && this.currentDestination === 2) {
           intro.playedAudio = true;
           intro.play();
+        }
+
+        if (!section2.playedAudio && this.currentDestination === 3) {
+          section2.playedAudio = true;
+          section2.play();
+        }
+
+        if (!section3.playedAudio && this.currentDestination === 7) {
+          section3.playedAudio = true;
+          section3.play();
+        }
+
+        if (!section4.playedAudio && this.currentDestination === 17) {
+          section4.playedAudio = true;
+          section4.play();
+        }
+
+        if (!section5.playedAudio && this.currentDestination === 30) {
+          section5.playedAudio = true;
+          section5.play();
+        }
+
+        if (!outro.playedAudio && this.currentDestination === 51) {
+          outro.playedAudio = true;
+          outro.play();
         }
 
         if (target) {
