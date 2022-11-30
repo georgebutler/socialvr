@@ -1232,7 +1232,7 @@
 
         orbPos.y = 0;
         newOrb.object3D.position.copy(orbPos);
-        console.log(orbPos);
+        //console.log(orbPos);
       },
 
       doStopSpeech: function (speechTime) {
