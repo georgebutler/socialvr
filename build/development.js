@@ -53,6 +53,52 @@
             startEvents: 'startworldshrink'
           });
         })
+        .finally(() => {
+          const skybox = document.querySelector('[skybox=""]');
+
+          if (skybox) {
+            skybox.removeObject3D("mesh");
+          }
+
+          // Create sky
+          const sky = document.createElement("a-entity");
+          const geometry = new THREE.SphereGeometry(8192, 8, 8);
+          const material = new THREE.ShaderMaterial({
+            side: THREE.BackSide,
+            transparent: false,
+            fog: false,
+            uniforms: {
+              color1: {
+                value: new THREE.Color(0x7BA7C6)
+              },
+              color2: {
+                value: new THREE.Color(0x798188)
+              }
+            },
+            vertexShader: `
+                    varying vec2 vUv;
+                
+                    void main() {
+                      vUv = uv;
+                      gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+                    }
+                  `,
+            fragmentShader: `
+                    uniform vec3 color1;
+                    uniform vec3 color2;
+                  
+                    varying vec2 vUv;
+                    
+                    void main() {
+                      
+                      gl_FragColor = vec4(mix(color1, color2, vUv.y), 1.0);
+                    }
+                  `
+          });
+
+          sky.setObject3D("mesh", new THREE.Mesh(geometry, material));
+          this.el.sceneEl.appendChild(sky);
+        })
         .catch((e) => {
           console.error(e);
         });
@@ -108,7 +154,7 @@
               y: this.el.object3D.position.y + this.direction.y,
               z: this.el.object3D.position.z + this.direction.z,
             });
-          } else {          
+          } else {
             if (isNaN(this.lastCheck) || time >= this.lastCheck) {
               this.lastCheck = time + 100;
               this.currentDestination = this.currentDestination + 1;
