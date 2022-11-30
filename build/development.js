@@ -67,7 +67,7 @@
       if (this.moving) {
         const target = this.destinations[this.currentDestination];
 
-        if (!intro.playedAudio && this.currentDestination === 2) {
+        if (!intro.playedAudio && this.currentDestination === 1) {
           intro.playedAudio = true;
           intro.play();
         }
