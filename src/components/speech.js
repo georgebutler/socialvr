@@ -1,9 +1,9 @@
 const MIC_PRESENCE_VOLUME_THRESHOLD = 0.00001;
 
 const SPEECH_TIME_PER_TICK = 10; // every speech tick = 10ms of realtime
-const MIN_SPEECH_TIME_FOR_EVENT = 100; // 0.1s realtime
+const MIN_SPEECH_TIME_FOR_EVENT = 50; // 0.1s realtime
 const MAX_SPEECH_TIME_FOR_EVENT = 5000; // 5s realtime
-const CONTINUOUS_SPEECH_LENIENCY_TIME = 100; // 0.1s realtime
+const CONTINUOUS_SPEECH_LENIENCY_TIME = 50; // 0.1s realtime
 
 const ORB_CONTAINER_POS = [0, 0, 0]; // [7,0,2]
 const ORB_CONTAINER_SIZE = 1;
