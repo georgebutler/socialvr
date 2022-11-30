@@ -66,10 +66,10 @@ AFRAME.registerComponent("leeds-world-mover", {
           fog: false,
           uniforms: {
             color1: {
-              value: new THREE.Color(0x7BA7C6)
+              value: new THREE.Color(0x798188)
             },
             color2: {
-              value: new THREE.Color(0x798188)
+              value: new THREE.Color(0x7BA7C6)
             }
           },
           vertexShader: `
