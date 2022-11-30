@@ -1198,15 +1198,13 @@
         for (const activeOrb of Object.values(this.activeSpeechOrbs)) {
           // grow each active speech orb by ORB_GROWTH_PER_TICK
           activeOrb.object3D.scale.add(new THREE.Vector3(0, ORB_GROWTH_PER_TICK * 7, 0));
-          //activeOrb.matrixNeedsUpdate = true;
+          activeOrb.matrixNeedsUpdate = true;
 
           // move its center upward by half of the growth amount,
           // to keep the bottom position fixed at the "now" plane
-          // const pos = activeOrb.getAttribute("position");
-          // pos.y += ORB_GROWTH_PER_TICK * 0.8;
-          // activeOrb.setAttribute("position", pos);
-          activeOrb.object3D.position.add(new THREE.Vector3(0, (ORB_GROWTH_PER_TICK * 7) / 2, 0));
-          activeOrb.object3D.matrixNeedsUpdate = true;
+          const pos = activeOrb.getAttribute("position");
+          //pos.y += ORB_GROWTH_PER_TICK * 0.8;
+          activeOrb.setAttribute("position", pos);
         }
       },
 
@@ -1216,6 +1214,7 @@
         if (activeOrb) {
           activeOrb.classList.add("finished"); // FIXME replace w/ stopSpeech call for consistency?
         }
+
         const speakerInfo = this.getPlayerInfo(data.speaker);
         const newOrb = this.spawnOrb(MIN_ORB_SIZE, this.playerInfoToColor(speakerInfo));
         this.activeSpeechOrbs[data.speaker] = newOrb;
@@ -1232,6 +1231,7 @@
         const orbPos = new THREE.Vector3().addVectors(centerPos, offset);
 
         newOrb.object3D.position.copy(orbPos);
+        console.log(orbPos);
       },
 
       doStopSpeech: function (speechTime) {
@@ -1295,7 +1295,7 @@
         const orb = document.createElement("a-entity");
         orb.classList.add("speechOrb");
         orb.setObject3D("mesh", new THREE.Mesh(geometry, material));
-        //orb.getObject3D("mesh").applyMatrix4(new THREE.Matrix4().makeTranslation(0, size / 2, 0 ));
+        orb.getObject3D("mesh").applyMatrix4(new THREE.Matrix4().makeTranslation(0, size / 2, 0 ));
 
         // add the orb to the scene
         this.el.appendChild(orb);
