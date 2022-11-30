@@ -137,6 +137,7 @@ AFRAME.registerComponent("socialvr-speech", {
     const offset = new THREE.Vector3().subVectors(playerPos, this.el.object3D.position).normalize();
     const orbPos = new THREE.Vector3().addVectors(centerPos, offset);
 
+    orbPos.y = 0;
     newOrb.object3D.position.copy(orbPos);
     console.log(orbPos);
   },
