@@ -114,7 +114,7 @@ APP.scene.addEventListener("environment-scene-loaded", () => {
     APP.scene.appendChild(button);
 
     const worldMover = document.createElement("a-entity");
-    worldMover.setAttribute("socialvr-world-mover", { modelURL: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/meeting-hall-6.glb" });
+    worldMover.setAttribute("socialvr-world-mover", { modelURL: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/meeting-hall-6.glb", speed: 0.68 });
     APP.scene.appendChild(worldMover);
   }
   else if (document.querySelector(SELECTOR_TUTORIAL)) {

@@ -670,6 +670,10 @@
             modelURL: {
                 type: 'string',
                 default: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/moving-world-8.glb"
+            },
+            speed: {
+                type: 'number',
+                default: 1
             }
         },
 
@@ -678,7 +682,6 @@
             this.destinations = [];
             this.currentDestination = 0;
             this.direction = new THREE.Vector3(0, 0, 0);
-            this.speed = 0.68;
             this.lastCheck = 0;
 
             // Initialize Waypoints
@@ -796,7 +799,7 @@
                     this.direction.copy(target).sub(this.el.object3D.position);
 
                     if (this.el.object3D.position.distanceToSquared(target) >= 1) {
-                        this.direction.multiplyScalar(this.speed / this.direction.length() * (delta / 1000));
+                        this.direction.multiplyScalar(this.data.speed / this.direction.length() * (delta / 1000));
 
                         this.el.setAttribute("position", {
                             x: this.el.object3D.position.x + this.direction.x,
@@ -1727,7 +1730,7 @@
         APP.scene.appendChild(button);
 
         const worldMover = document.createElement("a-entity");
-        worldMover.setAttribute("socialvr-world-mover", { modelURL: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/meeting-hall-6.glb" });
+        worldMover.setAttribute("socialvr-world-mover", { modelURL: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/meeting-hall-6.glb", speed: 0.68 });
         APP.scene.appendChild(worldMover);
       }
       else if (document.querySelector(SELECTOR_TUTORIAL)) {

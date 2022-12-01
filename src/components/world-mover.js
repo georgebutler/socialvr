@@ -7,6 +7,10 @@ AFRAME.registerComponent("socialvr-world-mover", {
         modelURL: {
             type: 'string',
             default: "https://master--statuesque-rugelach-4185bd.netlify.app/assets/moving-world-8.glb"
+        },
+        speed: {
+            type: 'number',
+            default: 1
         }
     },
 
@@ -15,7 +19,6 @@ AFRAME.registerComponent("socialvr-world-mover", {
         this.destinations = [];
         this.currentDestination = 0;
         this.direction = new THREE.Vector3(0, 0, 0);
-        this.speed = 0.68;
         this.lastCheck = 0;
 
         // Initialize Waypoints
@@ -133,7 +136,7 @@ AFRAME.registerComponent("socialvr-world-mover", {
                 this.direction.copy(target).sub(this.el.object3D.position);
 
                 if (this.el.object3D.position.distanceToSquared(target) >= 1) {
-                    this.direction.multiplyScalar(this.speed / this.direction.length() * (delta / 1000));
+                    this.direction.multiplyScalar(this.data.speed / this.direction.length() * (delta / 1000));
 
                     this.el.setAttribute("position", {
                         x: this.el.object3D.position.x + this.direction.x,
