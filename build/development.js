@@ -43,13 +43,13 @@
             property: "scale",
             from: "0.01 0.01 0.01",
             to: "1 1 1",
-            dur: 10000,
+            dur: 20000,
             startEvents: 'startworldshrink'
           });
           this.el.setAttribute("animation__worldshrink2", {
             property: "position",
             to: "-300 0 0",
-            dur: 10000,
+            dur: 20000,
             startEvents: 'startworldshrink'
           });
         })
